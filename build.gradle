@@ -25,8 +25,6 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
-        typingLabelVersion = '1.1.0'
-        regExodusVersion = '0.1.10' // Only if you're using HTML / GWT
     }
 
     repositories {
@@ -62,8 +60,8 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        api "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
-        api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion:sources"
+        api 'com.github.tommyettinger:regexodus:0.1.10:sources'
+        api 'com.rafaskoberg.gdx:typing-label:1.1.0:sources'
         api 'com.github.earlygrey:shapedrawer:master-SNAPSHOT:sources'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0:sources'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1:sources'
@@ -76,7 +74,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
+        api 'com.rafaskoberg.gdx:typing-label:1.1.0'
         api 'com.github.earlygrey:shapedrawer:master-SNAPSHOT'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
