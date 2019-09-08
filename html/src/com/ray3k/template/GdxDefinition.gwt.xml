@@ -7,9 +7,9 @@
 	<inherits name="com.rafaskoberg.gdx.typinglabel.typinglabel" />
 	<inherits name="regexodus"/>
 	<inherits name="com.esotericsoftware.spine"/>
-<!--	<inherits name='com.crashinvaders.vfx.GdxVfxCore' />-->
-<!--	<inherits name='com.crashinvaders.vfx.GdxVfxEffects' />   &lt;!&ndash; Optional, in case you use "gdx-vfx-effects" module &ndash;&gt;-->
-<!--	<inherits name='com.crashinvaders.vfx.GdxVfxGwt' />-->
+	<inherits name='com.crashinvaders.vfx.GdxVfxCore' />
+	<inherits name='com.crashinvaders.vfx.GdxVfxGwt' />
+	<inherits name='com.crashinvaders.vfx.GdxVfxEffects' />
 	<inherits name='Core' />
 	<entry-point class='com.ray3k.template.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>

@@ -3,10 +3,12 @@ package com.ray3k.template;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.crashinvaders.vfx.VfxManager;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
@@ -20,6 +22,7 @@ public class Core extends JamGame {
     public SkeletonRenderer skeletonRenderer;
     public Sound sndClick;
     public ChangeListener sndChangeListener;
+    public VfxManager vfxManager;
     
     @Override
     public void create() {
@@ -27,6 +30,8 @@ public class Core extends JamGame {
         core = this;
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
+        
+        vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         
         batch = new TwoColorPolygonBatch(MAX_VERTEX_SIZE);
         sndChangeListener = new ChangeListener() {
@@ -41,10 +46,9 @@ public class Core extends JamGame {
     
     @Override
     public void dispose() {
-        if (batch != null) {
-            batch.dispose();
-            batch = null;
-        }
+        batch.dispose();
+        
+        vfxManager.dispose();
         
         super.dispose();
     }
