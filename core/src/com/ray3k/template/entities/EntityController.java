@@ -67,6 +67,11 @@ public class EntityController {
         for (Entity entity : sortedEntities) {
             if (entity.visible) {
                 if (entity.skeleton != null) {
+                    //interpolate position
+                    entity.skeleton.setPosition(entity.x + entity.deltaX * delta, entity.y + entity.deltaY * delta);
+                    entity.skeleton.updateWorldTransform();
+                    entity.animationState.apply(entity.skeleton);
+                    
                     entity.skeletonRenderer.draw(entity.batch, entity.skeleton);
                 }
                 
