@@ -31,6 +31,7 @@ public abstract class JamGame extends Game {
     
             while (lag >= MS_PER_UPDATE) {
                 float delta = MS_PER_UPDATE / 1000.0f;
+                jamScreen.updateMouse();
                 jamScreen.act(delta);
                 lag -= MS_PER_UPDATE;
             }
