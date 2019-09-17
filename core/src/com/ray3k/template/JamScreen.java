@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.ray3k.template.entities.EntityController;
 
 public abstract class JamScreen extends ScreenAdapter implements InputProcessor {
-    public Viewport gameViewport;
-    public OrthographicCamera gameCamera;
+    public Viewport viewport;
+    public OrthographicCamera camera;
     public float mouseX;
     public float mouseY;
     public IntArray keysJustPressed = new IntArray();
@@ -26,10 +25,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     }
     
     public void updateMouse() {
-        if (gameViewport != null) {
+        if (viewport != null) {
             tempVector3.x = Gdx.input.getX();
             tempVector3.y = Gdx.input.getY();
-            gameViewport.unproject(tempVector3);
+            viewport.unproject(tempVector3);
             mouseX = tempVector3.x;
             mouseY = tempVector3.y;
         } else {
