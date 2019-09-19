@@ -68,8 +68,6 @@ project(":html") {
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.1:sources'
         implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1'
         implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1:sources'
-
-        // Optional, in case you use "gdx-vfx-effects" module.
         implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1:sources'
     }
 }
@@ -84,6 +82,6 @@ project(":core") {
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.1'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1'    // Optional, if you need standard filter/effects.
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1'
     }
 }
