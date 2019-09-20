@@ -69,6 +69,7 @@ project(":html") {
         implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1'
         implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1:sources'
         implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1:sources'
+        implementation 'org.wisepersist:gwt-gradle-plugin:1.0.9:sources'
     }
 }
 
