@@ -1,0 +1,1 @@
+spine-libgdx/libgdx.json

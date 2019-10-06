@@ -42,7 +42,7 @@ public class LibgdxScreen extends JamScreen {
         assetManager = core.assetManager;
         skeletonDrawables = new Array<>();
     
-        SkeletonData skeletonData = assetManager.get("libgdx-logo/libgdx.json");
+        SkeletonData skeletonData = assetManager.get("spine-libgdx/libgdx.json");
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(core.skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
         skeletonDrawable.setMinWidth(350);
         skeletonDrawable.setMinHeight(250);
@@ -82,7 +82,7 @@ public class LibgdxScreen extends JamScreen {
             @Override
             public void event(AnimationState.TrackEntry entry, Event event) {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
-                    Sound sound = core.assetManager.get("libgdx-logo/" + event.getData().getAudioPath());
+                    Sound sound = core.assetManager.get("sfx/" + event.getData().getAudioPath());
                     sound.play();
                 }
             }

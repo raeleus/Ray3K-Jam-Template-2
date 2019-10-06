@@ -14,8 +14,9 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.ray3k.template.Core;
+import com.ray3k.template.CrossPlatformWorker;
 
-public class HtmlLauncher extends GwtApplication {
+public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker {
     
     // USE THIS CODE FOR A FIXED SIZE APPLICATION
 //        @Override
@@ -66,7 +67,9 @@ public class HtmlLauncher extends GwtApplication {
     @Override
     public ApplicationListener createApplicationListener () {
         GwtVfxGlExtension.initialize();
-        return new Core();
+        Core core = new Core();
+        core.crossPlatformWorker = this;
+        return core;
     }
     
     @Override
@@ -80,5 +83,10 @@ public class HtmlLauncher extends GwtApplication {
         meterPanel.addStyleName("nostripes");
         meterStyle.setProperty("backgroundColor", "#ffffff");
         meterStyle.setProperty("backgroundImage", "none");
+    }
+    
+    @Override
+    public void create() {
+    
     }
 }

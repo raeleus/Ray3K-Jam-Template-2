@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 import com.esotericsoftware.spine.SkeletonBounds;
+import regexodus.Matcher;
+import regexodus.Pattern;
 
 public class Utils {
     public static Array<Actor> getActorsRecursive(Actor actor) {
@@ -94,5 +96,12 @@ public class Utils {
     
     public static Cursor textureRegionToCursor(TextureRegion textureRegion, int xHotspot, int yHotspot) {
         return Gdx.graphics.newCursor(textureRegionToPixmap(textureRegion), xHotspot, yHotspot);
+    }
+    
+    private static Pattern fileNamePattern = new Pattern("([^/.]+)(?:\\.?[^/.])*$");
+    public static String fileName(String path) {
+        Matcher matcher = fileNamePattern.matcher(path);
+        matcher.find();
+        return matcher.group(1);
     }
 }
