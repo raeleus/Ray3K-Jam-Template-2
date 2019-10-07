@@ -1,7 +1,6 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.Core;
@@ -88,7 +86,7 @@ public class OptionsScreen extends JamScreen {
         label = new Label("SFX", skin);
         table.add(label).right();
     
-        final Music sfx = core.assetManager.get("sfx/audio-test.mp3");
+        final Music sfx = core.assetManager.get("bgm/audio-test.mp3");
         sfx.setLooping(true);
         
         slider = new Slider(0, 1, .01f, false, skin);
@@ -114,9 +112,21 @@ public class OptionsScreen extends JamScreen {
                 sfx.pause();
             }
         });
+        
+        root.row();
+        TextButton textButton = new TextButton("Edit Key Bindings", skin);
+        root.add(textButton);
+        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DialogEditKeyBindings dialog = new DialogEditKeyBindings();
+                dialog.show(stage);
+            }
+        });
 
         root.row();
-        TextButton textButton = new TextButton("OK", skin);
+        textButton = new TextButton("OK", skin);
         root.add(textButton);
         textButton.addListener(core.sndChangeListener);
         textButton.addListener(new ChangeListener() {

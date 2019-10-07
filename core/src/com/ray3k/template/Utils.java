@@ -1,6 +1,7 @@
 package com.ray3k.template;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -103,5 +104,28 @@ public class Utils {
         Matcher matcher = fileNamePattern.matcher(path);
         matcher.find();
         return matcher.group(1);
+    }
+    
+    public static String MouseButtonToString(int button) {
+        String returnValue = "Unknown";
+        switch (button) {
+            case Input.Buttons.LEFT:
+                returnValue = "Left Click";
+                break;
+            case Input.Buttons.RIGHT:
+                returnValue = "Right Click";
+                break;
+            case Input.Buttons.MIDDLE:
+                returnValue = "Middle Click";
+                break;
+            case Input.Buttons.BACK:
+                returnValue = "Back Button";
+                break;
+            case Input.Buttons.FORWARD:
+                returnValue = "Forward Button";
+                break;
+        }
+        
+        return returnValue;
     }
 }

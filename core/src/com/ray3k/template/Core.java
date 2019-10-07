@@ -1,6 +1,7 @@
 package com.ray3k.template;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -26,10 +27,16 @@ public class Core extends JamGame {
     public ChangeListener sndChangeListener;
     public VfxManager vfxManager;
     public CrossPlatformWorker crossPlatformWorker;
+    public static enum Binding {
+        LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
+    }
     
     @Override
     public void create() {
         super.create();
+        
+        setDefaultBindings();
+        
         crossPlatformWorker.create();
         core = this;
         skeletonRenderer = new SkeletonRenderer();
@@ -105,6 +112,16 @@ public class Core extends JamGame {
             }
             break;
         }
+    }
+    
+    public void setDefaultBindings() {
+        JamScreen.addKeyBinding(Binding.LEFT, Input.Keys.LEFT);
+        JamScreen.addKeyBinding(Binding.RIGHT, Input.Keys.RIGHT);
+        JamScreen.addKeyBinding(Binding.UP, Input.Keys.UP);
+        JamScreen.addKeyBinding(Binding.DOWN, Input.Keys.DOWN);
+        JamScreen.addKeyBinding(Binding.SHOOT, Input.Keys.Z);
+        JamScreen.addKeyBinding(Binding.SHIELD, Input.Keys.X);
+        JamScreen.addKeyBinding(Binding.SPECIAL, Input.Keys.C);
     }
     
     private Screen createLoadScreen() {
