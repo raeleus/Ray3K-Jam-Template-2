@@ -65,10 +65,10 @@ project(":html") {
         api 'space.earlygrey:shapedrawer:1.2.0:sources'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0:sources'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1:sources'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.1:sources'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.1:sources'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3'
+        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3:sources'
         implementation 'org.wisepersist:gwt-gradle-plugin:1.0.9:sources'
     }
 }
@@ -82,7 +82,7 @@ project(":core") {
         api 'space.earlygrey:shapedrawer:1.2.0'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.1'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.1'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
     }
 }

@@ -66,7 +66,6 @@ public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker 
     
     @Override
     public ApplicationListener createApplicationListener () {
-        GwtVfxGlExtension.initialize();
         Core core = new Core();
         core.crossPlatformWorker = this;
         return core;
