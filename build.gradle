@@ -79,7 +79,7 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api 'com.rafaskoberg.gdx:typing-label:1.1.0'
-        api 'space.earlygrey:shapedrawer:1.2.0'
+        api 'space.earlygrey:shapedrawer:2.0.1'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
