@@ -134,7 +134,7 @@ public class Utils {
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {
         temp1.set(x1, y1);
-        return temp1.dst(x2, y1);
+        return temp1.dst(x2, y2);
     }
     
     public static float pointDirection(float x1, float y1, float x2, float y2) {
