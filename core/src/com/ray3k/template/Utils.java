@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
@@ -127,5 +128,18 @@ public class Utils {
         }
         
         return returnValue;
+    }
+    
+    private static final Vector2 temp1 = new Vector2();
+    
+    public static float pointDistance(float x1, float y1, float x2, float y2) {
+        temp1.set(x1, y1);
+        return temp1.dst(x2, y1);
+    }
+    
+    public static float pointDirection(float x1, float y1, float x2, float y2) {
+        temp1.set(x2, y2);
+        temp1.sub(x1, y1);
+        return temp1.angle();
     }
 }
