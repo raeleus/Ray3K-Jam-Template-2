@@ -13,11 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.crashinvaders.vfx.VfxEffect;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.EarthquakeEffect;
-import com.crashinvaders.vfx.effects.UnderwaterEffect;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 import com.ray3k.template.entities.BallTestEntity;
@@ -47,7 +44,7 @@ public class GameScreen extends JamScreen {
         vfxManager = core.vfxManager;
         vfxEffect = new EarthquakeEffect();
         
-        BG_COLOR.set(Color.BLACK);
+        BG_COLOR.set(Color.PINK);
         
         stage = new Stage(new ScreenViewport(), core.batch);
         skin = assetManager.get("skin/shimmer-ui.json");
@@ -98,10 +95,10 @@ public class GameScreen extends JamScreen {
         shapeDrawer.rectangle(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         entityController.draw(delta);
         batch.end();
-        stage.draw();
         vfxManager.endCapture();
         vfxManager.applyEffects();
         vfxManager.renderToScreen();
+        stage.draw();
     }
     
     @Override
