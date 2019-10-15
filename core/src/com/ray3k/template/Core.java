@@ -60,6 +60,7 @@ public class Core extends JamGame {
         batch.dispose();
         
         vfxManager.dispose();
+        assetManager.dispose();
         
         super.dispose();
     }

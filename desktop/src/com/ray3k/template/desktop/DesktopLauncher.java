@@ -21,6 +21,7 @@ public class DesktopLauncher implements CrossPlatformWorker {
 		
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1024, 576);
+		config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 3);
 		Core core = new Core();
 		core.crossPlatformWorker = new DesktopLauncher();
 		new Lwjgl3Application(core, config);
