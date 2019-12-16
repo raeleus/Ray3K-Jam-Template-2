@@ -121,4 +121,8 @@ public abstract class Entity {
         animationState.apply(skeleton);
         skeletonBounds.update(skeleton, true);
     }
+    
+    public boolean isOutside(float left, float bottom, float width, float height, float border) {
+        return x < left - border || x > left + width + border || y < bottom - border || y > bottom + height + border;
+    }
 }

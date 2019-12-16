@@ -33,6 +33,7 @@ public abstract class JamGame extends Game {
                 float delta = MS_PER_UPDATE / 1000.0f;
                 jamScreen.updateMouse();
                 jamScreen.act(delta);
+                jamScreen.clearStates();
                 lag -= MS_PER_UPDATE;
             }
     

@@ -30,11 +30,16 @@ public class Core extends JamGame {
     public static enum Binding {
         LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
     }
+    public float bgm;
+    public float sfx;
     
     @Override
     public void create() {
         super.create();
-        
+    
+        bgm = 1;
+        sfx = 1;
+        //todo: write code to load and write to preferences. Options will call method savePref() to update all settings.
         setDefaultBindings();
         
         crossPlatformWorker.create();

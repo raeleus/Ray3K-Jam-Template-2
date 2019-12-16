@@ -44,6 +44,11 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
         }
     }
     
+    public void clearStates() {
+        keysJustPressed.clear();
+        buttonsJustPressed.clear();
+    }
+    
     public abstract void act(float delta);
     
     public abstract void draw(float delta);
