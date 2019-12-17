@@ -10,6 +10,7 @@
 	<inherits name='com.crashinvaders.vfx.GdxVfxCore' />
 	<inherits name='com.crashinvaders.vfx.GdxVfxGwt' />
 	<inherits name='com.crashinvaders.vfx.GdxVfxEffects' />
+	<inherits name='com.talosvfx.talos-vfx' />
 	<inherits name='Core' />
 	<entry-point class='com.ray3k.template.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
