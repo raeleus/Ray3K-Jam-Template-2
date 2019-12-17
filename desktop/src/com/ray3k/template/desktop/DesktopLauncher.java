@@ -17,7 +17,7 @@ public class DesktopLauncher implements CrossPlatformWorker {
 	public static boolean createLists;
 	
 	public static void main (String[] args) {
-		createLists = args[0].equals("create-lists");
+		if (args.length > 0) createLists = args[0].equals("create-lists");
 		
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1024, 576);
