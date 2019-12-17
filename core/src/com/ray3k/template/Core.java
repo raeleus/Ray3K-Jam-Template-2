@@ -17,18 +17,13 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import com.ray3k.template.screens.*;
-import com.talosvfx.talos.runtime.ParticleEffectInstance;
-import com.talosvfx.talos.runtime.render.ParticleRenderer;
-import com.talosvfx.talos.runtime.render.SpriteBatchParticleRenderer;
 
 public class Core extends JamGame {
     private static final int MAX_VERTEX_SIZE = 32767;
     public static Core core;
     public TwoColorPolygonBatch batch;
     public Skin skin;
-    public TextureAtlas textureAtlas;
     public SkeletonRenderer skeletonRenderer;
-    public SpriteBatchParticleRenderer particleRenderer;
     public ChangeListener sndChangeListener;
     public VfxManager vfxManager;
     public CrossPlatformWorker crossPlatformWorker;
@@ -55,7 +50,6 @@ public class Core extends JamGame {
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         
         batch = new TwoColorPolygonBatch(MAX_VERTEX_SIZE);
-        particleRenderer = new SpriteBatchParticleRenderer(batch);
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -139,7 +133,6 @@ public class Core extends JamGame {
     private Screen createLoadScreen() {
         return new LoadScreen(Actions.run(() -> {
             skin = assetManager.get("skin/shimmer-ui.json");
-            textureAtlas = assetManager.get("spine/texture.atlas");
             setScreen(createSplashScreen());
         }));
     }
