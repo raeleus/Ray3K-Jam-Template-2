@@ -80,7 +80,7 @@ public class DesktopLauncher implements CrossPlatformWorker {
 	private Array<FileHandle> createList(File folder, String extension) {
 		Array<FileHandle> files = new Array<>();
 		
-		for (File file : folder.listFiles()) {
+		if (folder.listFiles() != null) for (File file : folder.listFiles()) {
 			if (file.isFile()) {
 				if (file.getPath().toLowerCase().endsWith(extension.toLowerCase())) {
 					files.add(new FileHandle(file));
