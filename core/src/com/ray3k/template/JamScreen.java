@@ -1,15 +1,14 @@
 package com.ray3k.template;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.ObjectIntMap.Entry;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.ray3k.template.Core.Binding;
 
 public abstract class JamScreen extends ScreenAdapter implements InputProcessor {
     public Viewport viewport;
@@ -278,5 +277,35 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     
     public static int getBinding(Core.Binding binding) {
         return keyBindings.containsKey(binding) ? getKeyBinding(binding) : getButtonBinding(binding);
+    }
+    
+    public static void saveBindings() {
+        Preferences pref = Core.core.preferences;
+        for (Entry<Binding> keyBinding : keyBindings) {
+            pref.putInteger("key:" + keyBinding.key.toString(), keyBinding.value);
+            pref.remove("button:" + keyBinding.key.toString());
+        }
+        for (Entry<Binding> keyBinding : buttonBindings) {
+            pref.putInteger("button:" + keyBinding.key.toString(), keyBinding.value);
+            pref.remove("key:" + keyBinding.key.toString());
+        }
+        pref.flush();
+    }
+    
+    public static void loadBindings() {
+        Preferences pref = Core.core.preferences;
+        for (Entry<Binding> keyBinding : JamScreen.keyBindings) {
+            String key = "key:" + keyBinding.key.toString();
+            if (pref.contains(key)) {
+                JamScreen.addKeyBinding(keyBinding.key, pref.getInteger(key));
+            }
+        }
+    
+        for (Entry<Binding> buttonBindings : JamScreen.buttonBindings) {
+            String key = "key:" + buttonBindings.key.toString();
+            if (pref.contains(key)) {
+                JamScreen.addKeyBinding(buttonBindings.key, pref.getInteger(key));
+            }
+        }
     }
 }

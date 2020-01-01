@@ -2,6 +2,7 @@ package com.ray3k.template;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -19,6 +20,7 @@ import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import com.ray3k.template.screens.*;
 
 public class Core extends JamGame {
+    public static final String PROJECT_NAME = "Template Game";
     private static final int MAX_VERTEX_SIZE = 32767;
     public static Core core;
     public TwoColorPolygonBatch batch;
@@ -32,18 +34,22 @@ public class Core extends JamGame {
     }
     public float bgm;
     public float sfx;
+    public Preferences preferences;
     
     @Override
     public void create() {
         super.create();
-    
-        bgm = 1;
-        sfx = 1;
-        //todo: write code to load and write to preferences. Options will call method savePref() to update all settings.
+        core = this;
+        
+        preferences = Gdx.app.getPreferences(PROJECT_NAME);
+        
+        bgm = preferences.getFloat("bgm", 1.0f);
+        sfx = preferences.getFloat("sfx", 1.0f);
+        
         setDefaultBindings();
+        JamScreen.loadBindings();
         
         crossPlatformWorker.create();
-        core = this;
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
         

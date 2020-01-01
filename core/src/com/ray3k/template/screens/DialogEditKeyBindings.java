@@ -38,6 +38,7 @@ public class DialogEditKeyBindings extends Dialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 core.setDefaultBindings();
+                JamScreen.saveBindings();
                 refreshTable(table);
             }
         });
@@ -60,12 +61,14 @@ public class DialogEditKeyBindings extends Dialog {
                         @Override
                         public void keySelected(int key) {
                             JamScreen.addKeyBinding(binding, key);
+                            JamScreen.saveBindings();
                             refreshTable(table);
                         }
                     
                         @Override
                         public void buttonSelected(int button) {
                             JamScreen.addButtonBinding(binding, button);
+                            JamScreen.saveBindings();
                             refreshTable(table);
                         }
                     });

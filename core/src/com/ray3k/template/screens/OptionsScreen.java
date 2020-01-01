@@ -63,7 +63,10 @@ public class OptionsScreen extends JamScreen {
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                bgm.setVolume(((Slider) actor).getValue());
+                core.bgm = ((Slider) actor).getValue();
+                core.preferences.putFloat("bgm", core.bgm);
+                core.preferences.flush();
+                bgm.setVolume(core.bgm);
             }
         });
 
@@ -80,7 +83,10 @@ public class OptionsScreen extends JamScreen {
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                sfx.setVolume(((Slider) actor).getValue());
+                core.sfx = ((Slider) actor).getValue();
+                core.preferences.putFloat("sfx", core.sfx);
+                core.preferences.flush();
+                sfx.setVolume(core.sfx);
             }
         });
         slider.addListener(new DragListener() {
