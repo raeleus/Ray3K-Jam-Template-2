@@ -1,6 +1,7 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -34,6 +35,13 @@ public class MenuScreen extends JamScreen {
     public void show() {
         core = Core.core;
         skin = core.skin;
+    
+        final Music bgm = core.assetManager.get("bgm/music-test.mp3");
+        if (!bgm.isPlaying()) {
+            bgm.play();
+            bgm.setVolume(core.bgm);
+            bgm.setLooping(true);
+        }
         
         stage = new Stage(new ScreenViewport(), core.batch);
         Gdx.input.setInputProcessor(stage);

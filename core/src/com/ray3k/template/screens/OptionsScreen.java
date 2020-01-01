@@ -56,29 +56,14 @@ public class OptionsScreen extends JamScreen {
         table.add(label).right();
 
         final Music bgm = core.assetManager.get("bgm/music-test.mp3");
-        bgm.setLooping(true);
         
         Slider slider = new Slider(0, 1, .01f, false, skin);
+        slider.setValue(core.bgm);
         table.add(slider);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 bgm.setVolume(((Slider) actor).getValue());
-            }
-        });
-        slider.addListener(new DragListener() {
-            {
-                setTapSquareSize(0);
-            }
-    
-            @Override
-            public void dragStart(InputEvent event, float x, float y, int pointer) {
-                bgm.play();
-            }
-    
-            @Override
-            public void dragStop(InputEvent event, float x, float y, int pointer) {
-                bgm.pause();
             }
         });
 
@@ -90,6 +75,7 @@ public class OptionsScreen extends JamScreen {
         sfx.setLooping(true);
         
         slider = new Slider(0, 1, .01f, false, skin);
+        slider.setValue(core.sfx);
         table.add(slider);
         slider.addListener(new ChangeListener() {
             @Override
