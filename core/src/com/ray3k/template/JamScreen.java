@@ -350,24 +350,20 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     
     public static void loadBindings() {
         Preferences pref = Core.core.preferences;
-        for (Entry<Binding> keyBinding : keyBindings) {
-            String key = "key:" + keyBinding.key.toString();
+        for (Binding binding : bindings) {
+            String key = "key:" + binding.toString();
             if (pref.contains(key)) {
-                JamScreen.addKeyBinding(keyBinding.key, pref.getInteger(key));
+                JamScreen.addKeyBinding(binding, pref.getInteger(key));
             }
-        }
     
-        for (Entry<Binding> buttonBinding : buttonBindings) {
-            String key = "button:" + buttonBinding.key.toString();
+            key = "button:" + binding.toString();
             if (pref.contains(key)) {
-                JamScreen.addButtonBinding(buttonBinding.key, pref.getInteger(key));
+                JamScreen.addButtonBinding(binding, pref.getInteger(key));
             }
-        }
     
-        for (Entry<Binding> scrollBinding : scrollBindings) {
-            String key = "scroll:" + scrollBinding.key.toString();
+            key = "scroll:" + binding.toString();
             if (pref.contains(key)) {
-                JamScreen.addScrollBinding(scrollBinding.key, pref.getInteger(key));
+                JamScreen.addScrollBinding(binding, pref.getInteger(key));
             }
         }
     }
