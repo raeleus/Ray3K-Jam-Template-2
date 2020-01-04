@@ -1,6 +1,7 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -88,6 +89,11 @@ public class DialogEditKeyBindings extends Dialog {
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
+    
+                        @Override
+                        public void cancelled() {
+        
+                        }
                     });
                     dialog.show(getStage());
                 }
@@ -119,7 +125,11 @@ public class DialogEditKeyBindings extends Dialog {
             addListener(new InputListener() {
                 @Override
                 public boolean keyDown(InputEvent event, int keycode) {
-                    fire(new KeyBindingEvent(keycode));
+                    if (keycode != Keys.ESCAPE) {
+                        fire(new KeyBindingEvent(keycode));
+                    } else {
+                        fire(new CancelEvent());
+                    }
                     hide();
                     return true;
                 }
@@ -170,6 +180,10 @@ public class DialogEditKeyBindings extends Dialog {
         }
     }
     
+    private static class CancelEvent extends Event {
+    
+    }
+    
     private static abstract class BindingListener implements EventListener {
         @Override
         public boolean handle(Event event) {
@@ -190,5 +204,6 @@ public class DialogEditKeyBindings extends Dialog {
         public abstract void keySelected(int key);
         public abstract void buttonSelected(int button);
         public abstract void scrollSelected(int scroll);
+        public abstract void cancelled();
     }
 }
