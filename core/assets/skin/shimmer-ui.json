@@ -2085,7 +2085,8 @@
 	"default": {
 		"up": "button-normal",
 		"down": "button-normal-pressed-red-ten",
-		"over": "button-over"
+		"over": "button-over",
+		"focused": "button-over"
 	},
 	"play": {
 		"up": "play-play-over_00",

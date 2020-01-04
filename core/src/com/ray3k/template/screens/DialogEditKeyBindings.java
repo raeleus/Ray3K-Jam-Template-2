@@ -1,10 +1,12 @@
 package com.ray3k.template.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
 import com.ray3k.template.Core;
@@ -15,12 +17,90 @@ import com.ray3k.template.Utils;
 public class DialogEditKeyBindings extends Dialog {
     private Core core;
     private Skin skin;
+    private Array<Actor> focusables;
+    private InputListener keysListener;
+    private InputListener mouseEnterListener;
     
-    public DialogEditKeyBindings() {
+    public DialogEditKeyBindings(Stage stage) {
         super("", Core.core.skin);
+        setStage(stage);
         
         core = Core.core;
         skin = core.skin;
+    
+        focusables = new Array<>();
+    
+        keysListener = new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                boolean shifting = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT);
+                switch (keycode) {
+                    case Keys.TAB:
+                        if (shifting) {
+                            previous();
+                        } else {
+                            next();
+                        }
+                        break;
+                    case Keys.RIGHT:
+                    case Keys.D:
+                    case Keys.DOWN:
+                    case Keys.S:
+                        next();
+                        break;
+                    case Keys.LEFT:
+                    case Keys.A:
+                    case Keys.UP:
+                    case Keys.W:
+                        previous();
+                        break;
+                    case Keys.SPACE:
+                    case Keys.ENTER:
+                        activate();
+                }
+                return super.keyDown(event, keycode);
+            }
+        
+            public void next() {
+                Actor focussed = getStage().getKeyboardFocus();
+                if (focussed == null) {
+                    getStage().setKeyboardFocus(focusables.first());
+                } else {
+                    int index = focusables.indexOf(focussed, true) + 1;
+                    if (index >= focusables.size) index = 0;
+                    getStage().setKeyboardFocus(focusables.get(index));
+                }
+            }
+        
+            public void previous() {
+                Actor focussed = getStage().getKeyboardFocus();
+                if (focussed == null) {
+                    getStage().setKeyboardFocus(focusables.first());
+                } else {
+                    int index = focusables.indexOf(focussed, true) - 1;
+                    if (index < 0) index = focusables.size - 1;
+                    getStage().setKeyboardFocus(focusables.get(index));
+                }
+            }
+        
+            public void activate() {
+                Actor focussed = getStage().getKeyboardFocus();
+                if (focussed != null) {
+                    focussed.fire(new ChangeEvent());
+                } else {
+                    getStage().setKeyboardFocus(focusables.first());
+                }
+            }
+        };
+    
+        getStage().addListener(keysListener);
+    
+        mouseEnterListener = new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                getStage().setKeyboardFocus(null);
+            }
+        };
         
         setFillParent(true);
         Table root = getContentTable();
@@ -35,9 +115,13 @@ public class DialogEditKeyBindings extends Dialog {
         getButtonTable().defaults().uniform().fill().space(10);
         TextButton textButton = new TextButton("OK", skin);
         button(textButton);
+        focusables.add(textButton);
+        textButton.addListener(mouseEnterListener);
         
         textButton = new TextButton("Defaults", skin);
         getButtonTable().add(textButton);
+        focusables.add(textButton);
+        textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -46,10 +130,13 @@ public class DialogEditKeyBindings extends Dialog {
                 refreshTable(table);
             }
         });
+    
     }
     
     private void refreshTable(Table table) {
         table.clear();
+        focusables.clear();
+        getStage().setKeyboardFocus(null);
         
         table.defaults().space(10).uniform().fill();
         for (Core.Binding binding : JamScreen.getBindings()) {
@@ -67,6 +154,8 @@ public class DialogEditKeyBindings extends Dialog {
             TextButton textButton = new TextButton(binding.toString() + " : " + codeName, skin);
             table.add(textButton);
             table.row();
+            focusables.add(textButton);
+            textButton.addListener(mouseEnterListener);
             textButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -132,11 +221,15 @@ public class DialogEditKeyBindings extends Dialog {
                 }
             });
         }
+        
+        for (Actor actor : getButtonTable().getChildren()) {
+            focusables.add(actor);
+        }
     }
     
     @Override
     protected void result(Object object) {
-    
+        getStage().removeListener(keysListener);
     }
     
     private static class DialogKeyBinding extends Dialog {
