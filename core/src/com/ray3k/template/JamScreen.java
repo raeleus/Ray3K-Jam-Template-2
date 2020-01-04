@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ray3k.template.Core.Binding;
 
@@ -23,6 +24,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public final static ObjectIntMap<Core.Binding> keyBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> buttonBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> scrollBindings = new ObjectIntMap<>();
+    public final static ObjectSet<Core.Binding> unboundBindings = new ObjectSet<>();
     public final static Array<Core.Binding> bindings = new Array<>();
     public final static int ANY_BUTTON = -1;
     public final static int SCROLL_UP = -1;
@@ -249,12 +251,14 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
         keyBindings.clear();
         buttonBindings.clear();
         scrollBindings.clear();
+        unboundBindings.clear();
         bindings.clear();
     }
     
     public static void addKeyBinding(Core.Binding binding, int key) {
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
+        unboundBindings.remove(binding);
         keyBindings.put(binding, key);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
@@ -264,6 +268,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public static void addButtonBinding(Core.Binding binding, int button) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         scrollBindings.remove(binding, ANY_SCROLL);
+        unboundBindings.remove(binding);
         buttonBindings.put(binding, button);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
@@ -273,7 +278,18 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public static void addScrollBinding(Core.Binding binding, int scroll) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
+        unboundBindings.remove(binding);
         scrollBindings.put(binding, scroll);
+        if (!bindings.contains(binding, true)) {
+            bindings.add(binding);
+        }
+    }
+    
+    public static void addUnboundBinding(Core.Binding binding) {
+        keyBindings.remove(binding, Input.Keys.ANY_KEY);
+        buttonBindings.remove(binding, ANY_BUTTON);
+        scrollBindings.remove(binding, ANY_SCROLL);
+        unboundBindings.add(binding);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
@@ -300,6 +316,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     
     public static boolean hasScrollBinding(Core.Binding binding) {
         return scrollBindings.containsKey(binding);
+    }
+    
+    public static boolean hasUnboundBinding(Core.Binding binding) {
+        return unboundBindings.contains(binding);
     }
     
     public static Array<Core.Binding> getBindings() {
@@ -334,16 +354,25 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
             pref.putInteger("key:" + keyBinding.key.toString(), keyBinding.value);
             pref.remove("button:" + keyBinding.key.toString());
             pref.remove("scroll:" + keyBinding.key.toString());
+            pref.remove("unbound:" + keyBinding.key.toString());
         }
         for (Entry<Binding> buttonBinding : buttonBindings) {
             pref.putInteger("button:" + buttonBinding.key.toString(), buttonBinding.value);
             pref.remove("key:" + buttonBinding.key.toString());
             pref.remove("scroll:" + buttonBinding.key.toString());
+            pref.remove("unbound:" + buttonBinding.key.toString());
         }
         for (Entry<Binding> scrollBinding : scrollBindings) {
             pref.putInteger("scroll:" + scrollBinding.key.toString(), scrollBinding.value);
             pref.remove("key:" + scrollBinding.key.toString());
             pref.remove("button:" + scrollBinding.key.toString());
+            pref.remove("unbound:" + scrollBinding.key.toString());
+        }
+        for (Binding binding : unboundBindings) {
+            pref.putBoolean("unbound:" + binding.toString(), true);
+            pref.remove("key:" + binding.toString());
+            pref.remove("button:" + binding.toString());
+            pref.remove("scroll:" + binding.toString());
         }
         pref.flush();
     }
@@ -364,6 +393,11 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
             key = "scroll:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addScrollBinding(binding, pref.getInteger(key));
+            }
+    
+            key = "unbound:" + binding.toString();
+            if (pref.contains(key)) {
+                JamScreen.addUnboundBinding(binding);
             }
         }
     }

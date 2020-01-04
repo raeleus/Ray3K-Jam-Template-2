@@ -5,7 +5,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectIntMap.Entry;
 import com.ray3k.template.Core;
+import com.ray3k.template.Core.Binding;
 import com.ray3k.template.JamScreen;
 import com.ray3k.template.Utils;
 
@@ -58,7 +61,7 @@ public class DialogEditKeyBindings extends Dialog {
             } else if (JamScreen.hasScrollBinding(binding)) {
                 codeName = Utils.ScrollAmountToString(JamScreen.getBinding(binding));
             } else {
-                codeName = Integer.toString(JamScreen.getBinding(binding));
+                codeName = "Unbound";
             }
             
             TextButton textButton = new TextButton(binding.toString() + " : " + codeName, skin);
@@ -71,13 +74,33 @@ public class DialogEditKeyBindings extends Dialog {
                     dialog.addListener(new BindingListener() {
                         @Override
                         public void keySelected(int key) {
+                            Array<Binding> unbinds = new Array<>();
+                            for (Entry<Binding> binding : JamScreen.keyBindings) {
+                                if (binding.value == key) {
+                                    unbinds.add(binding.key);
+                                }
+                            }
+                            for (Binding binding : unbinds) {
+                                JamScreen.addUnboundBinding(binding);
+                            }
+                            
                             JamScreen.addKeyBinding(binding, key);
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
-                    
+    
                         @Override
                         public void buttonSelected(int button) {
+                            Array<Binding> unbinds = new Array<>();
+                            for (Entry<Binding> binding : JamScreen.buttonBindings) {
+                                if (binding.value == button) {
+                                    unbinds.add(binding.key);
+                                }
+                            }
+                            for (Binding binding : unbinds) {
+                                JamScreen.addUnboundBinding(binding);
+                            }
+                            
                             JamScreen.addButtonBinding(binding, button);
                             JamScreen.saveBindings();
                             refreshTable(table);
@@ -85,6 +108,16 @@ public class DialogEditKeyBindings extends Dialog {
     
                         @Override
                         public void scrollSelected(int scroll) {
+                            Array<Binding> unbinds = new Array<>();
+                            for (Entry<Binding> binding : JamScreen.scrollBindings) {
+                                if (binding.value == scroll) {
+                                    unbinds.add(binding.key);
+                                }
+                            }
+                            for (Binding binding : unbinds) {
+                                JamScreen.addUnboundBinding(binding);
+                            }
+                            
                             JamScreen.addScrollBinding(binding, scroll);
                             JamScreen.saveBindings();
                             refreshTable(table);
@@ -92,7 +125,7 @@ public class DialogEditKeyBindings extends Dialog {
     
                         @Override
                         public void cancelled() {
-        
+                        
                         }
                     });
                     dialog.show(getStage());
@@ -195,6 +228,9 @@ public class DialogEditKeyBindings extends Dialog {
                 return true;
             } else if (event instanceof  ScrollBindingEvent) {
                 scrollSelected(((ScrollBindingEvent) event).scroll);
+                return true;
+            } else if (event instanceof CancelEvent) {
+                cancelled();
                 return true;
             } else {
                 return false;
