@@ -1,7 +1,6 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -30,6 +29,7 @@ public class LibgdxScreen extends JamScreen {
     private AssetManager assetManager;
     private Array<SkeletonDrawable> skeletonDrawables;
     private final static Color BG_COLOR = new Color(Color.WHITE);
+    private Array<Sound> sounds;
     
     public LibgdxScreen(Action action) {
         this.action = action;
@@ -41,6 +41,7 @@ public class LibgdxScreen extends JamScreen {
         skin = core.skin;
         assetManager = core.assetManager;
         skeletonDrawables = new Array<>();
+        sounds = new Array<>();
     
         SkeletonData skeletonData = assetManager.get("spine-libgdx/libgdx.json");
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(core.skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
@@ -84,6 +85,9 @@ public class LibgdxScreen extends JamScreen {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
                     Sound sound = core.assetManager.get("sfx/" + event.getData().getAudioPath());
                     sound.play();
+                    if (!sounds.contains(sound, true)) {
+                        sounds.add(sound);
+                    }
                 }
             }
         });
@@ -123,5 +127,12 @@ public class LibgdxScreen extends JamScreen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+    }
+    
+    @Override
+    public void hide() {
+        for (Sound sound : sounds) {
+            sound.stop();
+        }
     }
 }

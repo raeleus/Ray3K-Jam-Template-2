@@ -29,6 +29,7 @@ public class LogoScreen extends JamScreen {
     private AssetManager assetManager;
     private Array<SkeletonDrawable> skeletonDrawables;
     private final static Color BG_COLOR = new Color(Color.BLACK);
+    private Array<Sound> sounds;
     
     public LogoScreen(Action action) {
         this.action = action;
@@ -40,6 +41,7 @@ public class LogoScreen extends JamScreen {
         skin = core.skin;
         assetManager = core.assetManager;
         skeletonDrawables = new Array<>();
+        sounds = new Array<>();
         
         SkeletonData skeletonData = assetManager.get("spine-ray3k/ray3k.json");
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(core.skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
@@ -83,6 +85,9 @@ public class LogoScreen extends JamScreen {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
                     Sound sound = core.assetManager.get("sfx/" + event.getData().getAudioPath());
                     sound.play();
+                    if (!sounds.contains(sound, true)) {
+                        sounds.add(sound);
+                    }
                 }
             }
         });
