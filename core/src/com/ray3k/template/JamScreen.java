@@ -18,11 +18,16 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public IntArray keysJustPressed = new IntArray();
     public IntArray buttonsJustPressed = new IntArray();
     public IntArray buttonsPressed = new IntArray();
+    public IntArray scrollJustPressed = new IntArray();
     private static final Vector3 tempVector3 = new Vector3();
     public final static ObjectIntMap<Core.Binding> keyBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> buttonBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Core.Binding> scrollBindings = new ObjectIntMap<>();
     public final static Array<Core.Binding> bindings = new Array<>();
     public final static int ANY_BUTTON = -1;
+    public final static int SCROLL_UP = -1;
+    public final static int SCROLL_DOWN = 1;
+    public final static int ANY_SCROLL = 0;
     
     @Override @Deprecated
     public void render(float delta) {
@@ -45,6 +50,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public void clearStates() {
         keysJustPressed.clear();
         buttonsJustPressed.clear();
+        scrollJustPressed.clear();
     }
     
     public abstract void act(float delta);
@@ -92,6 +98,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     
     @Override
     public boolean scrolled(int amount) {
+        scrollJustPressed.add(amount);
         return false;
     }
     
@@ -120,6 +127,19 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public boolean isButtonJustPressed(int... buttons) {
         for (int button : buttons) {
             if (isButtonJustPressed(button)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isScrollJustPressed(int scroll) {
+        return scroll == ANY_SCROLL ? scrollJustPressed.size > 0 : scrollJustPressed.contains(scroll);
+    }
+    
+    public boolean isScrollJustPressed(int... scrolls) {
+        for (int scroll : scrolls) {
+            if (isScrollJustPressed(scroll)) {
                 return true;
             }
         }
@@ -209,6 +229,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
             return isKeyJustPressed(keyBindings.get(binding, Input.Keys.ANY_KEY));
         } else if (buttonBindings.containsKey(binding)) {
             return isButtonJustPressed(keyBindings.get(binding, ANY_BUTTON));
+        } else if (scrollBindings.containsKey(binding)) {
+            return isScrollJustPressed(scrollBindings.get(binding, ANY_SCROLL));
         } else {
             return false;
         }
@@ -226,11 +248,13 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public static void clearBindings() {
         keyBindings.clear();
         buttonBindings.clear();
+        scrollBindings.clear();
         bindings.clear();
     }
     
     public static void addKeyBinding(Core.Binding binding, int key) {
         buttonBindings.remove(binding, ANY_BUTTON);
+        scrollBindings.remove(binding, ANY_SCROLL);
         keyBindings.put(binding, key);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
@@ -239,7 +263,17 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     
     public static void addButtonBinding(Core.Binding binding, int button) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
+        scrollBindings.remove(binding, ANY_SCROLL);
         buttonBindings.put(binding, button);
+        if (!bindings.contains(binding, true)) {
+            bindings.add(binding);
+        }
+    }
+    
+    public static void addScrollBinding(Core.Binding binding, int scroll) {
+        keyBindings.remove(binding, Input.Keys.ANY_KEY);
+        buttonBindings.remove(binding, ANY_BUTTON);
+        scrollBindings.put(binding, scroll);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
@@ -248,6 +282,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
     public static void removeBinding(Core.Binding binding) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
+        scrollBindings.remove(binding, ANY_SCROLL);
         bindings.removeValue(binding, true);
     }
     
@@ -263,6 +298,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
         return buttonBindings.containsKey(binding);
     }
     
+    public static boolean hasScrollBinding(Core.Binding binding) {
+        return scrollBindings.containsKey(binding);
+    }
+    
     public static Array<Core.Binding> getBindings() {
         return bindings;
     }
@@ -275,8 +314,18 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
         return buttonBindings.get(binding, ANY_BUTTON);
     }
     
+    public static int getScrollBinding(Core.Binding binding) {
+        return scrollBindings.get(binding, ANY_SCROLL);
+    }
+    
     public static int getBinding(Core.Binding binding) {
-        return keyBindings.containsKey(binding) ? getKeyBinding(binding) : getButtonBinding(binding);
+        if (keyBindings.containsKey(binding)) {
+            return getKeyBinding(binding);
+        } else if (buttonBindings.containsKey(binding)) {
+            return getButtonBinding(binding);
+        } else {
+            return getScrollBinding(binding);
+        }
     }
     
     public static void saveBindings() {
@@ -284,27 +333,41 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor 
         for (Entry<Binding> keyBinding : keyBindings) {
             pref.putInteger("key:" + keyBinding.key.toString(), keyBinding.value);
             pref.remove("button:" + keyBinding.key.toString());
+            pref.remove("scroll:" + keyBinding.key.toString());
         }
-        for (Entry<Binding> keyBinding : buttonBindings) {
-            pref.putInteger("button:" + keyBinding.key.toString(), keyBinding.value);
-            pref.remove("key:" + keyBinding.key.toString());
+        for (Entry<Binding> buttonBinding : buttonBindings) {
+            pref.putInteger("button:" + buttonBinding.key.toString(), buttonBinding.value);
+            pref.remove("key:" + buttonBinding.key.toString());
+            pref.remove("scroll:" + buttonBinding.key.toString());
+        }
+        for (Entry<Binding> scrollBinding : scrollBindings) {
+            pref.putInteger("scroll:" + scrollBinding.key.toString(), scrollBinding.value);
+            pref.remove("key:" + scrollBinding.key.toString());
+            pref.remove("button:" + scrollBinding.key.toString());
         }
         pref.flush();
     }
     
     public static void loadBindings() {
         Preferences pref = Core.core.preferences;
-        for (Entry<Binding> keyBinding : JamScreen.keyBindings) {
+        for (Entry<Binding> keyBinding : keyBindings) {
             String key = "key:" + keyBinding.key.toString();
             if (pref.contains(key)) {
                 JamScreen.addKeyBinding(keyBinding.key, pref.getInteger(key));
             }
         }
     
-        for (Entry<Binding> buttonBindings : JamScreen.buttonBindings) {
-            String key = "key:" + buttonBindings.key.toString();
+        for (Entry<Binding> buttonBinding : buttonBindings) {
+            String key = "button:" + buttonBinding.key.toString();
             if (pref.contains(key)) {
-                JamScreen.addKeyBinding(buttonBindings.key, pref.getInteger(key));
+                JamScreen.addButtonBinding(buttonBinding.key, pref.getInteger(key));
+            }
+        }
+    
+        for (Entry<Binding> scrollBinding : scrollBindings) {
+            String key = "scroll:" + scrollBinding.key.toString();
+            if (pref.contains(key)) {
+                JamScreen.addScrollBinding(scrollBinding.key, pref.getInteger(key));
             }
         }
     }

@@ -49,7 +49,17 @@ public class DialogEditKeyBindings extends Dialog {
         
         table.defaults().space(10).uniform().fill();
         for (Core.Binding binding : JamScreen.getBindings()) {
-            String codeName = JamScreen.hasKeyBinding(binding) ? Input.Keys.toString(JamScreen.getBinding(binding)) : Utils.MouseButtonToString(JamScreen.getBinding(binding));
+            String codeName;
+            if (JamScreen.hasKeyBinding(binding)) {
+                codeName = Input.Keys.toString(JamScreen.getBinding(binding));
+            } else if (JamScreen.hasButtonBinding(binding)) {
+                codeName = Utils.MouseButtonToString(JamScreen.getBinding(binding));
+            } else if (JamScreen.hasScrollBinding(binding)) {
+                codeName = Utils.ScrollAmountToString(JamScreen.getBinding(binding));
+            } else {
+                codeName = Integer.toString(JamScreen.getBinding(binding));
+            }
+            
             TextButton textButton = new TextButton(binding.toString() + " : " + codeName, skin);
             table.add(textButton);
             table.row();
@@ -68,6 +78,13 @@ public class DialogEditKeyBindings extends Dialog {
                         @Override
                         public void buttonSelected(int button) {
                             JamScreen.addButtonBinding(binding, button);
+                            JamScreen.saveBindings();
+                            refreshTable(table);
+                        }
+    
+                        @Override
+                        public void scrollSelected(int scroll) {
+                            JamScreen.addScrollBinding(binding, scroll);
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
@@ -91,7 +108,7 @@ public class DialogEditKeyBindings extends Dialog {
             setFillParent(true);
             Table root = getContentTable();
             
-            text("Press any key or mouse button to set");
+            text("Input any key, mouse button, or scroll wheel to set");
             root.row();
             text(binding.toString());
             root.row();
@@ -110,6 +127,13 @@ public class DialogEditKeyBindings extends Dialog {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     fire(new ButtonBindingEvent(button));
+                    hide();
+                    return true;
+                }
+                
+                @Override
+                public boolean scrolled(InputEvent event, float x, float y, int amount) {
+                    fire(new ScrollBindingEvent(amount));
                     hide();
                     return true;
                 }
@@ -138,6 +162,14 @@ public class DialogEditKeyBindings extends Dialog {
         }
     }
     
+    private static class ScrollBindingEvent extends Event {
+        private int scroll;
+        
+        public ScrollBindingEvent(int scroll) {
+            this.scroll = scroll;
+        }
+    }
+    
     private static abstract class BindingListener implements EventListener {
         @Override
         public boolean handle(Event event) {
@@ -147,6 +179,9 @@ public class DialogEditKeyBindings extends Dialog {
             } else if (event instanceof ButtonBindingEvent) {
                 buttonSelected(((ButtonBindingEvent) event).button);
                 return true;
+            } else if (event instanceof  ScrollBindingEvent) {
+                scrollSelected(((ScrollBindingEvent) event).scroll);
+                return true;
             } else {
                 return false;
             }
@@ -154,5 +189,6 @@ public class DialogEditKeyBindings extends Dialog {
         
         public abstract void keySelected(int key);
         public abstract void buttonSelected(int button);
+        public abstract void scrollSelected(int scroll);
     }
 }

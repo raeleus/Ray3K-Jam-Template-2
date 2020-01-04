@@ -131,6 +131,16 @@ public class Utils {
         return returnValue;
     }
     
+    public static String ScrollAmountToString(int amount) {
+        if (amount < 0) {
+            return "Scroll Up";
+        } else if (amount > 0) {
+            return "Scroll Down";
+        } else {
+            return "No Scroll";
+        }
+    }
+    
     private static final Vector2 temp1 = new Vector2();
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {
