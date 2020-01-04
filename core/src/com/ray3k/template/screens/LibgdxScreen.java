@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.spine.*;
@@ -29,7 +30,7 @@ public class LibgdxScreen extends JamScreen {
     private AssetManager assetManager;
     private Array<SkeletonDrawable> skeletonDrawables;
     private final static Color BG_COLOR = new Color(Color.WHITE);
-    private Array<Sound> sounds;
+    private ObjectSet<Sound> sounds;
     
     public LibgdxScreen(Action action) {
         this.action = action;
@@ -41,7 +42,7 @@ public class LibgdxScreen extends JamScreen {
         skin = core.skin;
         assetManager = core.assetManager;
         skeletonDrawables = new Array<>();
-        sounds = new Array<>();
+        sounds = new ObjectSet<>();
     
         SkeletonData skeletonData = assetManager.get("spine-libgdx/libgdx.json");
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(core.skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
@@ -85,9 +86,7 @@ public class LibgdxScreen extends JamScreen {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
                     Sound sound = core.assetManager.get("sfx/" + event.getData().getAudioPath());
                     sound.play();
-                    if (!sounds.contains(sound, true)) {
-                        sounds.add(sound);
-                    }
+                    sounds.add(sound);
                 }
             }
         });
