@@ -20,7 +20,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "ray3k-jam-template"
-        gdxVersion = '1.9.10'
+        gdxVersion = '1.9.11-SNAPSHOT'
         roboVMVersion = '2.3.7'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -57,8 +57,8 @@ project(":html") {
 
     dependencies {
         implementation project(":core")
-        implementation 'com.github.MrStahlfelge.gdx-backends:gdx-backend-gwt:master-SNAPSHOT'
-        implementation 'com.github.MrStahlfelge.gdx-backends:gdx-backend-gwt:master-SNAPSHOT:sources'
+        implementation 'com.badlogicgames.gdx:gdx-backend-gwt:1.910.1'
+        implementation 'com.badlogicgames.gdx:gdx-backend-gwt:1.910.1:sources'
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api 'com.github.tommyettinger:regexodus:0.1.10:sources'
         api 'com.rafaskoberg.gdx:typing-label:1.1.0:sources'
