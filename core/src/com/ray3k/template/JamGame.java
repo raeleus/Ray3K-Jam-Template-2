@@ -23,6 +23,7 @@ public abstract class JamGame extends Game {
     @Override
     public void render() {
         if (screen != null && screen instanceof JamScreen) {
+        if (screen != null) {
             JamScreen jamScreen = (JamScreen) screen;
             long current = TimeUtils.millis();
             long elapsed = current - previous;
