@@ -6,7 +6,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
-import com.ray3k.template.TransitionEngine.Transition;
+import com.ray3k.template.transitions.Transition;
+import com.ray3k.template.transitions.TransitionEngine;
+
+import static com.ray3k.template.transitions.Transitions.crossFade;
 
 public abstract class JamGame extends Game {
     private final static long MS_PER_UPDATE = 10;
@@ -29,7 +32,7 @@ public abstract class JamGame extends Game {
         assetManager = new AssetManager(new InternalFileHandleResolver());
         
         transitionEngine = new TransitionEngine(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        defaultTransition = Transition.CROSS_FADE;
+        defaultTransition = crossFade();
         defaultTransitionDuration = .5f;
         
         loadAssets();
