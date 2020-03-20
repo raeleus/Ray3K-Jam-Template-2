@@ -168,7 +168,7 @@ public class MenuScreen extends JamScreen {
         });
         
         root.row();
-        Label label = new Label("Copyright Raymond \"Raeleus\" Buckley © 2019", skin);
+        Label label = new Label("Copyright Raymond \"Raeleus\" Buckley © 2020", skin);
         root.add(label);
     }
     
