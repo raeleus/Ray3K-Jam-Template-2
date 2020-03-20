@@ -43,6 +43,7 @@ public class LogoScreen extends JamScreen {
         skeletonDrawable.setMinWidth(525);
         skeletonDrawable.setMinHeight(150);
         skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
+        skeletonDrawable.getAnimationState().apply(skeletonDrawable.getSkeleton());
         skeletonDrawables.add(skeletonDrawable);
         
         stage = new Stage(new ScreenViewport(), core.batch);

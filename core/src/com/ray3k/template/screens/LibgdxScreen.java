@@ -42,6 +42,7 @@ public class LibgdxScreen extends JamScreen {
         skeletonDrawable.setMinWidth(350);
         skeletonDrawable.setMinHeight(250);
         skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
+        skeletonDrawable.getAnimationState().apply(skeletonDrawable.getSkeleton());
         skeletonDrawables.add(skeletonDrawable);
         
         stage = new Stage(new ScreenViewport(), core.batch);
