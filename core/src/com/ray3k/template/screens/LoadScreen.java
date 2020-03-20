@@ -22,13 +22,13 @@ import com.ray3k.template.JamScreen;
 public class LoadScreen extends JamScreen {
     private ProgressBar progressBar;
     private boolean finishedLoading;
-    private Action action;
+    private Runnable runnable;
     private Skin skin;
     private Stage stage;
     private Core core;
     
-    public LoadScreen(Action action) {
-        this.action = action;
+    public LoadScreen(Runnable runnable) {
+        this.runnable = runnable;
         core = Core.core;
     
         stage = new Stage(new ScreenViewport(), core.batch);
@@ -47,14 +47,15 @@ public class LoadScreen extends JamScreen {
         if (!finishedLoading && core.assetManager.update()) {
             finishedLoading = true;
             
-            if (action != null) {
-                action.setActor(stage.getRoot());
+            if (runnable != null) {
                 progressBar.addAction(Actions.sequence(new Action() {
                     @Override
                     public boolean act(float delta) {
                         return MathUtils.isEqual(progressBar.getVisualPercent(), 1f);
                     }
-                }, Actions.fadeOut(1f), action));
+                }, Actions.fadeOut(1f), Actions.run(runnable), Actions.run(() -> {
+                    core.transition(new SplashScreen());
+                })));
             }
         }
     }

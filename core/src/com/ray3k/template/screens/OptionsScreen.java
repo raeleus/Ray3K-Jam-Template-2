@@ -1,13 +1,14 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
@@ -18,7 +19,6 @@ import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
 public class OptionsScreen extends JamScreen {
-    private Action action;
     private Stage stage;
     private Skin skin;
     private Core core;
@@ -26,8 +26,7 @@ public class OptionsScreen extends JamScreen {
     private Array<Actor> focusables;
     private InputListener keysListener;
     
-    public OptionsScreen(Action action) {
-        this.action = action;
+    public OptionsScreen() {
         focusables = new Array<>();
     }
     
@@ -113,13 +112,6 @@ public class OptionsScreen extends JamScreen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-
-        final Image fg = new Image(skin, "white");
-        fg.setColor(Color.BLACK);
-        fg.setFillParent(true);
-        fg.setTouchable(Touchable.disabled);
-        stage.addActor(fg);
-        fg.addAction(Actions.sequence(Actions.fadeOut(.3f)));
 
         root.defaults().space(30);
         Label label = new Label("Options", skin);
@@ -218,7 +210,7 @@ public class OptionsScreen extends JamScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.input.setInputProcessor(null);
-                fg.addAction(Actions.sequence(Actions.fadeIn(.3f), action));
+                core.transition(new MenuScreen());
             }
         });
     }

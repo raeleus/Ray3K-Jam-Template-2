@@ -1,6 +1,7 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -8,7 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -24,7 +26,6 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class GameScreen extends JamScreen {
     public static GameScreen gameScreen;
     public static final Color BG_COLOR = new Color();
-    private Action action;
     private Core core;
     public AssetManager assetManager;
     private Batch batch;
@@ -35,9 +36,8 @@ public class GameScreen extends JamScreen {
     private VfxManager vfxManager;
     private EarthquakeEffect vfxEffect;
     
-    public GameScreen(Action action) {
+    public GameScreen() {
         gameScreen = this;
-        this.action = action;
         core = Core.core;
         assetManager = core.assetManager;
         batch = core.batch;
@@ -47,6 +47,16 @@ public class GameScreen extends JamScreen {
         BG_COLOR.set(Color.PINK);
         
         stage = new Stage(new ScreenViewport(), core.batch);
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Keys.ESCAPE) {
+                    core.transition(new MenuScreen());
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
+        
         skin = assetManager.get("skin/shimmer-ui.json");
         shapeDrawer = new ShapeDrawer(core.batch, skin.getRegion("white"));
         shapeDrawer.setPixelSize(.5f);

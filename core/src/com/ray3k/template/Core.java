@@ -21,9 +21,7 @@ import com.ray3k.template.screens.*;
 
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
-    private static final int MAX_VERTEX_SIZE = 32767;
     public static Core core;
-    public TwoColorPolygonBatch batch;
     public Skin skin;
     public SkeletonRenderer skeletonRenderer;
     public ChangeListener sndChangeListener;
@@ -55,21 +53,18 @@ public class Core extends JamGame {
         
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         
-        batch = new TwoColorPolygonBatch(MAX_VERTEX_SIZE);
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 assetManager.get("sfx/click.mp3", Sound.class).play();
             }
         };
-    
-        setScreen(createLoadScreen());
+        
+        setScreen(new LoadScreen(() -> core.skin = core.assetManager.get("skin/shimmer-ui.json")));
     }
     
     @Override
     public void dispose() {
-        batch.dispose();
-        
         vfxManager.dispose();
         assetManager.dispose();
         
@@ -134,42 +129,5 @@ public class Core extends JamGame {
         JamScreen.addKeyBinding(Binding.SHOOT, Input.Keys.Z);
         JamScreen.addKeyBinding(Binding.SHIELD, Input.Keys.X);
         JamScreen.addKeyBinding(Binding.SPECIAL, Input.Keys.C);
-    }
-    
-    private Screen createLoadScreen() {
-        return new LoadScreen(Actions.run(() -> {
-            skin = assetManager.get("skin/shimmer-ui.json");
-            setScreen(createSplashScreen());
-        }));
-    }
-    
-    private Screen createSplashScreen() {
-        return new SplashScreen(Actions.run(() -> setScreen(createLibgdxScreen())));
-    }
-    
-    private Screen createLibgdxScreen() {
-        return new LibgdxScreen(Actions.run(() -> setScreen(createLogoScreen())));
-    }
-    
-    private Screen createLogoScreen() {
-        return new LogoScreen(Actions.run(() -> setScreen(createMenuScreen())));
-    }
-    
-    private Screen createMenuScreen() {
-        return new MenuScreen(Actions.run(() -> setScreen(createGameScreen())),
-                Actions.run(() -> setScreen(createOptionsScreen())),
-                Actions.run(() -> setScreen(createCreditsScreen())));
-    }
-    
-    private Screen createGameScreen() {
-        return new GameScreen(Actions.run(() -> setScreen(createCreditsScreen())));
-    }
-    
-    private Screen createOptionsScreen() {
-        return new OptionsScreen(Actions.run(() -> setScreen(createMenuScreen())));
-    }
-    
-    private Screen createCreditsScreen() {
-        return new CreditsScreen(Actions.run(() -> setScreen(createMenuScreen())));
     }
 }

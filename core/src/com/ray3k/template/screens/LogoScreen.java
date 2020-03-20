@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,7 +22,6 @@ import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
 public class LogoScreen extends JamScreen {
-    private Action action;
     private Stage stage;
     private Skin skin;
     private Core core;
@@ -31,10 +29,6 @@ public class LogoScreen extends JamScreen {
     private Array<SkeletonDrawable> skeletonDrawables;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private ObjectSet<Sound> sounds;
-    
-    public LogoScreen(Action action) {
-        this.action = action;
-    }
     
     @Override
     public void show() {
@@ -51,11 +45,6 @@ public class LogoScreen extends JamScreen {
         skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
         skeletonDrawables.add(skeletonDrawable);
         
-        final Action completeAction = Actions.sequence(Actions.run(() -> {
-            skeletonDrawable.getAnimationState().setTimeScale(0f);
-            Gdx.input.setInputProcessor(null);
-        }), Actions.color(new Color(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 0)), Actions.fadeIn(.3f), action);
-        
         stage = new Stage(new ScreenViewport(), core.batch);
         Gdx.input.setInputProcessor(stage);
         
@@ -66,18 +55,14 @@ public class LogoScreen extends JamScreen {
         Image image = new Image(skeletonDrawable);
         image.setScaling(Scaling.none);
         root.add(image);
-        
-        final Image fg = new Image(skin, "white");
-        fg.setColor(Color.WHITE);
-        fg.setFillParent(true);
-        stage.addActor(fg);
-        fg.addAction(Actions.sequence(Actions.fadeOut(.3f), Actions.run(() -> skeletonDrawable.getAnimationState().setAnimation(0, "animation", false))));
+    
+        skeletonDrawable.getAnimationState().setAnimation(0, "animation", false);
         
         skeletonDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
                 if (entry.getAnimation().getName().equals("animation")) {
-                    fg.addAction(completeAction);
+                    core.transition(new MenuScreen());
                 }
             }
             
@@ -94,13 +79,13 @@ public class LogoScreen extends JamScreen {
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                fg.addAction(completeAction);
+                core.transition(new MenuScreen());
                 return true;
             }
             
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                fg.addAction(completeAction);
+                core.transition(new MenuScreen());
                 return true;
             }
         });

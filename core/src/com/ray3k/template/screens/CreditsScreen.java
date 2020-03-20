@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
@@ -18,15 +22,13 @@ import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
 public class CreditsScreen extends JamScreen {
-    private Action action;
     private Stage stage;
     private Skin skin;
     private Core core;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private Array<Actor> focusables;
     
-    public CreditsScreen(Action action) {
-        this.action = action;
+    public CreditsScreen() {
         focusables = new Array<>();
     }
     
@@ -112,13 +114,6 @@ public class CreditsScreen extends JamScreen {
         root.setFillParent(true);
         stage.addActor(root);
         
-        final Image fg = new Image(skin, "white");
-        fg.setColor(Color.BLACK);
-        fg.setFillParent(true);
-        fg.setTouchable(Touchable.disabled);
-        stage.addActor(fg);
-        fg.addAction(Actions.sequence(Actions.fadeOut(.3f)));
-        
         root.defaults().space(30);
         TypingConfig.INTERVAL_MULTIPLIERS_BY_CHAR.put('\n', .5f);
         TypingLabel typingLabel = new TypingLabel("This game was made by Raeleus.\n" +
@@ -138,7 +133,7 @@ public class CreditsScreen extends JamScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.input.setInputProcessor(null);
-                fg.addAction(Actions.sequence(Actions.fadeIn(.3f), action));
+                core.transition(new MenuScreen());
             }
         });
     }
