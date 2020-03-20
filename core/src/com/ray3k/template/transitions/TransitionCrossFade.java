@@ -4,13 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.ray3k.template.JamGame;
 
 public class TransitionCrossFade implements Transition {
     private TransitionEngine te;
     
+    public TransitionCrossFade() {
+        te = JamGame.transitionEngine;
+    }
+    
     @Override
-    public void create(TransitionEngine transitionEngine) {
-        te = transitionEngine;
+    public void create() {
         te.frameBuffer.begin();
         te.screen.draw(0);
         te.frameBuffer.end();

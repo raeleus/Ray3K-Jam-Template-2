@@ -17,7 +17,7 @@ public abstract class JamGame extends Game {
     private long previous;
     private long lag;
     public AssetManager assetManager;
-    public TransitionEngine transitionEngine;
+    public static TransitionEngine transitionEngine;
     public TwoColorPolygonBatch batch;
     public Transition defaultTransition;
     public float defaultTransitionDuration;

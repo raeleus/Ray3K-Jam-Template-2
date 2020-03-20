@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,6 +19,7 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import com.ray3k.template.screens.*;
+import com.ray3k.template.transitions.Transitions;
 
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
@@ -61,6 +63,8 @@ public class Core extends JamGame {
         };
         
         setScreen(new LoadScreen(() -> core.skin = core.assetManager.get("skin/shimmer-ui.json")));
+        defaultTransition = Transitions.colorFade(Color.RED);
+        defaultTransitionDuration = 2.0f;
     }
     
     @Override

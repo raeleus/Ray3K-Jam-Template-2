@@ -42,7 +42,7 @@ public class TransitionEngine implements Disposable {
         this.transition = transition;
         this.duration = duration;
         
-        transition.create(this);
+        transition.create();
     }
     
     public void update(float delta) {
