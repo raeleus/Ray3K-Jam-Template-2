@@ -51,4 +51,12 @@ public class Transitions {
     public static TransitionZoomIn zoomIn() {
         return zoomIn(Interpolation.linear);
     }
+    
+    public static TransitionZoomOut zoomOut(Interpolation interpolation) {
+        return new TransitionZoomOut(interpolation);
+    }
+    
+    public static TransitionZoomOut zoomOut() {
+        return zoomOut(Interpolation.linear);
+    }
 }
