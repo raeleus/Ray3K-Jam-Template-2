@@ -20,6 +20,15 @@ import regexodus.Matcher;
 import regexodus.Pattern;
 
 public class Utils {
+    private static EarClippingTriangulator earClippingTriangulator = new EarClippingTriangulator();
+    private static FloatArray floatArray = new FloatArray();
+    private static final Vector3 v3Temp1 = new Vector3();
+    private static final Vector3 v3Temp2 = new Vector3();
+    private static final BoundingBox bboxTemp = new BoundingBox();
+    private static final Ray rayTemp = new Ray();
+    private static final Vector2 temp1 = new Vector2();
+    private static Pattern fileNamePattern = new Pattern("([^/.]+)(?:\\.?[^/.])*$");
+    
     public static Array<Actor> getActorsRecursive(Actor actor) {
         Array<Actor> actors = new Array<>();
         if (actor instanceof Group) {
@@ -34,9 +43,6 @@ public class Utils {
         
         return actors;
     }
-    
-    private static EarClippingTriangulator earClippingTriangulator = new EarClippingTriangulator();
-    private static FloatArray floatArray = new FloatArray();
     
     public static float[] skeletonBoundsToTriangles(SkeletonBounds skeletonBounds) {
         floatArray.clear();
@@ -101,7 +107,6 @@ public class Utils {
         return Gdx.graphics.newCursor(textureRegionToPixmap(textureRegion), xHotspot, yHotspot);
     }
     
-    private static Pattern fileNamePattern = new Pattern("([^/.]+)(?:\\.?[^/.])*$");
     public static String fileName(String path) {
         Matcher matcher = fileNamePattern.matcher(path);
         matcher.find();
@@ -140,8 +145,6 @@ public class Utils {
             return "No Scroll";
         }
     }
-    
-    private static final Vector2 temp1 = new Vector2();
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {
         temp1.set(x1, y1);
@@ -185,7 +188,7 @@ public class Utils {
         return isEqual360(a, b, MathUtils.FLOAT_ROUNDING_ERROR);
     }
     
-    public static boolean rayIntersectRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
+    public static boolean rayOverlapRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
         rectToBoundingBox(rectangle, bboxTemp);
         
         temp1.set(1,0);
@@ -193,6 +196,26 @@ public class Utils {
         
         rayTemp.set(x, y, 0, temp1.x, temp1.y, 0);
         return Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection);
+    }
+    
+    public static boolean rayIntersectRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
+        temp1.set(1,0);
+        temp1.rotate(direction);
+        rayTemp.set(x, y, 0, temp1.x, temp1.y, 0);
+        
+        rectToBoundingBox(rectangle.x, rectangle.y, 0, rectangle.height, bboxTemp);
+        if (Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection)) return true;
+    
+        rectToBoundingBox(rectangle.x, rectangle.y + rectangle.height, rectangle.width, 0, bboxTemp);
+        if (Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection)) return true;
+    
+        rectToBoundingBox(rectangle.x + rectangle.width, rectangle.y, 0, rectangle.height, bboxTemp);
+        if (Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection)) return true;
+    
+        rectToBoundingBox(rectangle.x, rectangle.y, rectangle.width, 0, bboxTemp);
+        if (Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection)) return true;
+        
+        return false;
     }
     
     public static Rectangle setRectToSkeletonBounds(Rectangle rectangle, SkeletonBounds skeletonBounds) {
@@ -203,15 +226,14 @@ public class Utils {
         return rectangle;
     }
     
-    private static final Vector3 v3Temp1 = new Vector3();
-    private static final Vector3 v3Temp2 = new Vector3();
     public static BoundingBox rectToBoundingBox(Rectangle rectangle, BoundingBox boundingBox) {
-        v3Temp1.set(rectangle.x, rectangle.y, 0);
-        v3Temp2.set(rectangle.x + rectangle.width, rectangle.y + rectangle.height, 0);
+        return rectToBoundingBox(rectangle.x, rectangle.y, rectangle.width, rectangle.height, boundingBox);
+    }
+    
+    public static BoundingBox rectToBoundingBox(float x, float y, float width, float height, BoundingBox boundingBox) {
+        v3Temp1.set(x, y, 0);
+        v3Temp2.set(x + width, y + height, 0);
         boundingBox.set(v3Temp1, v3Temp2);
         return boundingBox;
     }
-    
-    private static final BoundingBox bboxTemp = new BoundingBox();
-    private static final Ray rayTemp = new Ray();
 }

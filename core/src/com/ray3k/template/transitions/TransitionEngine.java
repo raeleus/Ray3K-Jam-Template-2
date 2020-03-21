@@ -60,7 +60,7 @@ public class TransitionEngine implements Disposable {
     public void draw(Batch batch, float delta) {
         batch.begin();
     
-        transition.draw(batch);
+        transition.draw(batch, delta);
     
         batch.end();
     }

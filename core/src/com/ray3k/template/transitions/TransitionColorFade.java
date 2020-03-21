@@ -34,7 +34,7 @@ public class TransitionColorFade implements Transition {
     }
     
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch, float delta) {
         Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
