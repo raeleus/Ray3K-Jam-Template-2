@@ -22,8 +22,8 @@ public class TransitionEngine implements Disposable {
     
     public TransitionEngine(JamGame jamGame, int width, int height) {
         this.jamGame = jamGame;
-        frameBuffer = new VfxFrameBuffer(Format.RGBA8888);
-        nextFrameBuffer = new VfxFrameBuffer(Format.RGBA8888);
+        frameBuffer = new VfxFrameBuffer(Format.RGB888);
+        nextFrameBuffer = new VfxFrameBuffer(Format.RGB888);
         textureRegion = new TextureRegion();
         resize(width, height);
     }
