@@ -167,11 +167,13 @@ public class OptionsScreen extends JamScreen {
             @Override
             public void dragStart(InputEvent event, float x, float y, int pointer) {
                 sfx.play();
+                bgm.pause();
             }
         
             @Override
             public void dragStop(InputEvent event, float x, float y, int pointer) {
                 sfx.pause();
+                bgm.play();
             }
         });
         
