@@ -51,6 +51,7 @@ public class TransitionEngine implements Disposable {
     
             if (time >= duration) {
                 inTransition = false;
+                transition.end();
             } else {
                 transition.act();
             }

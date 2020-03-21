@@ -6,4 +6,5 @@ public interface Transition {
     public void create();
     public void act();
     public void draw(Batch batch, float delta);
+    public void end();
 }

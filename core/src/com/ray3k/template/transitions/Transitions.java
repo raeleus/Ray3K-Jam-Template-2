@@ -27,4 +27,12 @@ public class Transitions {
     public static TransitionSlide slide(float toDirection) {
         return slide(toDirection, Interpolation.linear);
     }
+    
+    public static TransitionWipe wipe(float toDirection, Interpolation interpolation) {
+        return new TransitionWipe(toDirection, interpolation);
+    }
+    
+    public static TransitionWipe wipe(float toDirection) {
+        return wipe(toDirection, Interpolation.linear);
+    }
 }

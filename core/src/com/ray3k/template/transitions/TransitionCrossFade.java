@@ -47,4 +47,9 @@ public class TransitionCrossFade implements Transition {
         batch.setColor(1, 1, 1, (te.duration - te.time) / te.duration);
         batch.draw(te.textureRegion, 0, 0);
     }
+    
+    @Override
+    public void end() {
+    
+    }
 }

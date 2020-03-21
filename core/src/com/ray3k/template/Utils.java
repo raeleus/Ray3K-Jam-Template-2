@@ -26,7 +26,7 @@ public class Utils {
     private static final Vector3 v3Temp2 = new Vector3();
     private static final BoundingBox bboxTemp = new BoundingBox();
     private static final Ray rayTemp = new Ray();
-    private static final Vector2 temp1 = new Vector2();
+    private static final Vector2 vector2 = new Vector2();
     private static Pattern fileNamePattern = new Pattern("([^/.]+)(?:\\.?[^/.])*$");
     
     public static Array<Actor> getActorsRecursive(Actor actor) {
@@ -147,14 +147,14 @@ public class Utils {
     }
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {
-        temp1.set(x1, y1);
-        return temp1.dst(x2, y2);
+        vector2.set(x1, y1);
+        return vector2.dst(x2, y2);
     }
     
     public static float pointDirection(float x1, float y1, float x2, float y2) {
-        temp1.set(x2, y2);
-        temp1.sub(x1, y1);
-        return temp1.angle();
+        vector2.set(x2, y2);
+        vector2.sub(x1, y1);
+        return vector2.angle();
     }
     
     public static float approach(float start, float target, float increment) {
@@ -191,17 +191,17 @@ public class Utils {
     public static boolean rayOverlapRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
         rectToBoundingBox(rectangle, bboxTemp);
         
-        temp1.set(1,0);
-        temp1.rotate(direction);
+        vector2.set(1,0);
+        vector2.rotate(direction);
         
-        rayTemp.set(x, y, 0, temp1.x, temp1.y, 0);
+        rayTemp.set(x, y, 0, vector2.x, vector2.y, 0);
         return Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection);
     }
     
     public static boolean rayIntersectRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
-        temp1.set(1,0);
-        temp1.rotate(direction);
-        rayTemp.set(x, y, 0, temp1.x, temp1.y, 0);
+        vector2.set(1,0);
+        vector2.rotate(direction);
+        rayTemp.set(x, y, 0, vector2.x, vector2.y, 0);
         
         rectToBoundingBox(rectangle.x, rectangle.y, 0, rectangle.height, bboxTemp);
         if (Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection)) return true;
@@ -235,5 +235,18 @@ public class Utils {
         v3Temp2.set(x + width, y + height, 0);
         boundingBox.set(v3Temp1, v3Temp2);
         return boundingBox;
+    }
+    
+    public static float rectLongestDiagonal(float width, float height) {
+        vector2.set(width, height);
+        return vector2.len();
+    }
+    
+    public static Polygon rotatedRectangle(float x, float y, float width, float height, float angle, float originX, float originY, Polygon polygon) {
+        polygon.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+        polygon.setOrigin(originX, originY);
+        polygon.setRotation(angle);
+        polygon.setPosition(x, y);
+        return polygon;
     }
 }

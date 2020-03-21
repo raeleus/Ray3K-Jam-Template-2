@@ -70,4 +70,9 @@ public class TransitionPush implements Transition {
 
         batch.draw(te.textureRegion, nextScreenPosition.x, nextScreenPosition.y);
     }
+    
+    @Override
+    public void end() {
+    
+    }
 }

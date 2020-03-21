@@ -4,10 +4,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import com.ray3k.template.transitions.Transition;
 import com.ray3k.template.transitions.TransitionEngine;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static com.ray3k.template.transitions.Transitions.crossFade;
 
@@ -21,6 +28,7 @@ public abstract class JamGame extends Game {
     public TwoColorPolygonBatch batch;
     public Transition defaultTransition;
     public float defaultTransitionDuration;
+    public static ShapeRenderer shapeRenderer;
     
     @Override
     public void create() {
@@ -30,6 +38,8 @@ public abstract class JamGame extends Game {
         lag = 0;
     
         assetManager = new AssetManager(new InternalFileHandleResolver());
+    
+        shapeRenderer = new ShapeRenderer();
         
         transitionEngine = new TransitionEngine(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         defaultTransition = crossFade();
@@ -80,6 +90,7 @@ public abstract class JamGame extends Game {
         }
         
         transitionEngine.dispose();
+        shapeRenderer.dispose();
     }
     
     @Override

@@ -51,4 +51,9 @@ public class TransitionColorFade implements Transition {
         }
         batch.draw(te.textureRegion, 0, 0);
     }
+    
+    @Override
+    public void end() {
+    
+    }
 }
