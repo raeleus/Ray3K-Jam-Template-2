@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.ray3k.template.JamGame;
 
 public class TransitionCrossFade implements Transition {
+    private Interpolation interpolation;
     private TransitionEngine te;
     
-    public TransitionCrossFade() {
+    public TransitionCrossFade(Interpolation interpolation) {
+        this.interpolation = interpolation;
         te = JamGame.transitionEngine;
     }
     
@@ -49,7 +52,7 @@ public class TransitionCrossFade implements Transition {
         te.textureRegion.setRegion(new TextureRegion(te.frameBuffer.getFbo().getColorBufferTexture()));
         te.textureRegion.flip(false, true);
     
-        batch.setColor(1, 1, 1, (te.duration - te.time) / te.duration);
+        batch.setColor(1, 1, 1, 1 - interpolation.apply(te.time / te.duration));
         batch.draw(te.textureRegion, 0, 0);
     }
     

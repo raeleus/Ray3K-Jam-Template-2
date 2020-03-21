@@ -5,15 +5,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.ray3k.template.JamGame;
 
 public class TransitionColorFade implements Transition {
     private TransitionEngine te;
     public Color backgroundColor;
+    public Interpolation interpolation;
     
-    public TransitionColorFade(Color backgroundColor) {
+    public TransitionColorFade(Color backgroundColor, Interpolation interpolation) {
         te = JamGame.transitionEngine;
         this.backgroundColor = backgroundColor;
+        this.interpolation = interpolation;
     }
     
     @Override
@@ -46,13 +49,13 @@ public class TransitionColorFade implements Transition {
         if (te.time < te.duration / 2) {
             te.textureRegion.setRegion(new TextureRegion(te.frameBuffer.getFbo().getColorBufferTexture()));
             te.textureRegion.flip(false, true);
-
-            batch.setColor(1, 1, 1, (te.duration - te.time * 2) / te.duration);
+    
+            batch.setColor(1, 1, 1, 1 - interpolation.apply(te.time * 2 / te.duration));
         } else {
             te.textureRegion.setRegion(new TextureRegion(te.nextFrameBuffer.getFbo().getColorBufferTexture()));
             te.textureRegion.flip(false, true);
-
-            batch.setColor(1, 1, 1, (te.time - te.duration / 2) / te.duration * 2);
+            
+            batch.setColor(1, 1, 1, interpolation.apply((te.time - te.duration / 2) / te.duration * 2));
         }
         batch.draw(te.textureRegion, 0, 0);
     }

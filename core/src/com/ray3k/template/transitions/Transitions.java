@@ -4,12 +4,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 
 public class Transitions {
+    public static TransitionCrossFade crossFade(Interpolation interpolation) {
+        return new TransitionCrossFade(interpolation);
+    }
+    
     public static TransitionCrossFade crossFade() {
-        return new TransitionCrossFade();
+        return crossFade(Interpolation.linear);
+    }
+    
+    public static TransitionColorFade colorFade(Color backgroundColor, Interpolation interpolation) {
+        return new TransitionColorFade(backgroundColor, interpolation);
     }
     
     public static TransitionColorFade colorFade(Color backgroundColor) {
-        return new TransitionColorFade(backgroundColor);
+        return colorFade(backgroundColor, Interpolation.linear);
     }
     
     public static TransitionPush push(float toDirection, Color backgroundColor, Interpolation interpolation) {
