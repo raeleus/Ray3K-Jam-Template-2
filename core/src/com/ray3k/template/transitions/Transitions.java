@@ -35,4 +35,12 @@ public class Transitions {
     public static TransitionWipe wipe(float toDirection) {
         return wipe(toDirection, Interpolation.linear);
     }
+    
+    public static TransitionBlinds blinds(float toDirection, int blindsNumber, Interpolation interpolation) {
+        return new TransitionBlinds(toDirection, blindsNumber, interpolation);
+    }
+    
+    public static TransitionBlinds blinds(float toDirection, int blindsNumber) {
+        return blinds(toDirection, blindsNumber, Interpolation.linear);
+    }
 }

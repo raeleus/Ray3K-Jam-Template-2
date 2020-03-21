@@ -64,7 +64,7 @@ public class Core extends JamGame {
         };
         
         setScreen(new LoadScreen(() -> core.skin = core.assetManager.get("skin/shimmer-ui.json")));
-        defaultTransition = Transitions.wipe(135, Interpolation.exp10Out);
+        defaultTransition = Transitions.blinds(135, 5, Interpolation.linear);
         defaultTransitionDuration = 2.0f;
     }
     

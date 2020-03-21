@@ -8,21 +8,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.JamGame;
 import com.ray3k.template.Utils;
 
 import static com.ray3k.template.JamGame.shapeRenderer;
 
-public class TransitionWipe implements Transition {
+public class TransitionBlinds implements Transition {
     private TransitionEngine te;
     private float toDirection;
+    private int blindsNumber;
     private Interpolation interpolation;
     private Polygon polygon;
     private static final Vector2 vector2 = new Vector2();
     
-    public TransitionWipe(float toDirection, Interpolation interpolation) {
+    public TransitionBlinds(float toDirection, int blindsNumber, Interpolation interpolation) {
         this.toDirection = toDirection;
+        this.blindsNumber = blindsNumber;
         this.interpolation = interpolation;
         te = JamGame.transitionEngine;
         polygon = new Polygon();
@@ -55,7 +56,8 @@ public class TransitionWipe implements Transition {
         float distance = Utils.rectLongestDiagonal(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         vector2.set(distance / 2, 0);
         vector2.rotate(toDirection + 180);
-        Utils.rotatedRectangle(Gdx.graphics.getWidth() / 2 + vector2.x, Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2, distance * interpolation.apply((te.time + delta) / te.duration), distance, toDirection, 0, distance / 2, polygon);
+        float startX = Gdx.graphics.getWidth() / 2 + vector2.x;
+        float startY = Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2;
 
         te.textureRegion.setRegion(new TextureRegion(te.frameBuffer.getFbo().getColorBufferTexture()));
         te.textureRegion.flip(false, true);
@@ -74,9 +76,17 @@ public class TransitionWipe implements Transition {
         
         shapeRenderer.begin(ShapeType.Filled);
         shapeRenderer.setProjectionMatrix(te.viewport.getCamera().combined);
-        float[] points = polygon.getTransformedVertices();
-        shapeRenderer.triangle(points[0], points[1], points[2], points[3], points[4], points[5]);
-        shapeRenderer.triangle(points[4], points[5], points[6], points[7], points[0], points[1]);
+        vector2.set(distance / blindsNumber, 0);
+        vector2.rotate(toDirection);
+        for (int i = 0; i < blindsNumber; i++) {
+            Utils.rotatedRectangle(startX + vector2.x * i,
+                    startY + vector2.y * i,
+                    distance * interpolation.apply((te.time + delta) / te.duration) / blindsNumber, distance,
+                    toDirection, 0, distance / 2, polygon);
+            float[] points = polygon.getTransformedVertices();
+            shapeRenderer.triangle(points[0], points[1], points[2], points[3], points[4], points[5]);
+            shapeRenderer.triangle(points[4], points[5], points[6], points[7], points[0], points[1]);
+        }
         shapeRenderer.end();
         
         batch.begin();
