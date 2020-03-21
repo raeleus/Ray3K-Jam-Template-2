@@ -43,4 +43,12 @@ public class Transitions {
     public static TransitionBlinds blinds(float toDirection, int blindsNumber) {
         return blinds(toDirection, blindsNumber, Interpolation.linear);
     }
+    
+    public static TransitionZoomIn zoomIn(Interpolation interpolation) {
+        return new TransitionZoomIn(interpolation);
+    }
+    
+    public static TransitionZoomIn zoomIn() {
+        return zoomIn(Interpolation.linear);
+    }
 }
