@@ -39,6 +39,11 @@ public class TransitionPush implements Transition {
     }
     
     @Override
+    public void resize(int width, int height) {
+        create();
+    }
+    
+    @Override
     public void act() {
     
     }

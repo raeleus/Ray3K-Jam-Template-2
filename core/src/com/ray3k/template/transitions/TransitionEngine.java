@@ -1,9 +1,12 @@
 package com.ray3k.template.transitions;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
 import com.ray3k.template.JamGame;
 import com.ray3k.template.JamScreen;
@@ -19,18 +22,26 @@ public class TransitionEngine implements Disposable {
     public Transition transition;
     public float duration;
     public TextureRegion textureRegion;
+    public Viewport viewport;
     
     public TransitionEngine(JamGame jamGame, int width, int height) {
         this.jamGame = jamGame;
         frameBuffer = new VfxFrameBuffer(Format.RGB888);
         nextFrameBuffer = new VfxFrameBuffer(Format.RGB888);
         textureRegion = new TextureRegion();
+        viewport = new ScreenViewport();
         resize(width, height);
     }
     
     public void resize(int width, int height) {
         frameBuffer.initialize(width, height);
         nextFrameBuffer.initialize(width, height);
+        
+        viewport.update(width, height, true);
+        
+        if (inTransition && transition != null) {
+            transition.resize(width, height);
+        }
     }
     
     public void transition(JamScreen screen, JamScreen nextScreen, Transition transition, float duration) {
@@ -60,6 +71,7 @@ public class TransitionEngine implements Disposable {
     
     public void draw(Batch batch, float delta) {
         batch.begin();
+        batch.setProjectionMatrix(viewport.getCamera().combined);
     
         transition.draw(batch, delta);
     

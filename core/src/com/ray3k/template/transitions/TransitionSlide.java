@@ -1,8 +1,6 @@
 package com.ray3k.template.transitions;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
@@ -36,6 +34,11 @@ public class TransitionSlide implements Transition {
         te.nextFrameBuffer.begin();
         te.nextScreen.draw(0);
         te.nextFrameBuffer.end();
+    }
+    
+    @Override
+    public void resize(int width, int height) {
+        create();
     }
     
     @Override

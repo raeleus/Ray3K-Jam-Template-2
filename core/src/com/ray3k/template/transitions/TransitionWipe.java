@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.JamGame;
 import com.ray3k.template.Utils;
 
@@ -40,6 +41,11 @@ public class TransitionWipe implements Transition {
     }
     
     @Override
+    public void resize(int width, int height) {
+        create();
+    }
+    
+    @Override
     public void act() {
     
     }
@@ -49,9 +55,10 @@ public class TransitionWipe implements Transition {
         float distance = Utils.rectLongestDiagonal(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         vector2.set(distance / 2, 0);
         vector2.rotate(toDirection + 180);
-        Utils.rotatedRectangle(Gdx.graphics.getWidth() / 2 + vector2.x, Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2, distance * interpolation.apply(te.time / te.duration), distance, toDirection, 0, distance / 2, polygon);
+        Utils.rotatedRectangle(Gdx.graphics.getWidth() / 2 + vector2.x, Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2, distance * interpolation.apply((te.time + delta) / te.duration), distance, toDirection, 0, distance / 2, polygon);
 
         te.textureRegion.setRegion(new TextureRegion(te.frameBuffer.getFbo().getColorBufferTexture()));
+        System.out.println(te.textureRegion.getRegionWidth() + " " + te.textureRegion.getRegionHeight());
         te.textureRegion.flip(false, true);
         
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -67,6 +74,7 @@ public class TransitionWipe implements Transition {
         Gdx.gl.glColorMask(false, false, false, false);
         
         shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(te.viewport.getCamera().combined);
         float[] points = polygon.getTransformedVertices();
         shapeRenderer.triangle(points[0], points[1], points[2], points[3], points[4], points[5]);
         shapeRenderer.triangle(points[4], points[5], points[6], points[7], points[0], points[1]);
