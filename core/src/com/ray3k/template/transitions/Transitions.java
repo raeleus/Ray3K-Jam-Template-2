@@ -19,4 +19,12 @@ public class Transitions {
     public static TransitionPush push(float toDirection, Color backgroundColor) {
         return push(toDirection, backgroundColor, Interpolation.linear);
     }
+    
+    public static TransitionSlide slide(float toDirection, Interpolation interpolation) {
+        return new TransitionSlide(toDirection, interpolation);
+    }
+    
+    public static TransitionSlide slide(float toDirection) {
+        return slide(toDirection, Interpolation.linear);
+    }
 }
