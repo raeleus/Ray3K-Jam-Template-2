@@ -59,4 +59,12 @@ public class Transitions {
     public static TransitionZoomOut zoomOut() {
         return zoomOut(Interpolation.linear);
     }
+    
+    public static TransitionFlyThrough flyThrough(float scale, Interpolation interpolation) {
+        return new TransitionFlyThrough(scale, interpolation);
+    }
+    
+    public static TransitionFlyThrough flyThrough(float scale) {
+        return flyThrough(scale, Interpolation.linear);
+    }
 }
