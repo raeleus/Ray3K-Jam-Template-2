@@ -45,7 +45,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-
+        api "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
     }
 }
 
@@ -70,6 +70,9 @@ project(":html") {
         api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3:sources'
         api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3:sources'
         implementation 'org.wisepersist:gwt-gradle-plugin:1.0.9:sources'
+        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion:sources"
+        api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
     }
 }
 
@@ -84,5 +87,6 @@ project(":core") {
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
         implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
+        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
     }
 }

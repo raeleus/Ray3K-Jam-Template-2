@@ -113,7 +113,7 @@ public class Utils {
         return matcher.group(1);
     }
     
-    public static String MouseButtonToString(int button) {
+    public static String mouseButtonToString(int button) {
         String returnValue = "Unknown";
         switch (button) {
             case Input.Buttons.LEFT:
@@ -136,7 +136,7 @@ public class Utils {
         return returnValue;
     }
     
-    public static String ScrollAmountToString(int amount) {
+    public static String scrollAmountToString(int amount) {
         if (amount < 0) {
             return "Scroll Up";
         } else if (amount > 0) {
@@ -144,6 +144,10 @@ public class Utils {
         } else {
             return "No Scroll";
         }
+    }
+    
+    public static String controllerButtonToString(int buttonCode) {
+        return buttonCode == JamScreen.ANY_CONTROLLER_BUTTON ? "ANY CONTROLLER BUTTON" : "Button " + Integer.toString(buttonCode);
     }
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.EarthquakeEffect;
 import com.ray3k.template.Core;
+import com.ray3k.template.Core.Binding;
 import com.ray3k.template.JamScreen;
 import com.ray3k.template.entities.BallTestEntity;
 import com.ray3k.template.entities.EntityController;
@@ -98,7 +100,7 @@ public class GameScreen extends JamScreen {
         batch.begin();
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
-        shapeDrawer.setColor(Color.GREEN);
+        shapeDrawer.setColor(isBindingPressed(Binding.LEFT) ? Color.ORANGE : Color.GREEN);
         shapeDrawer.filledRectangle(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         shapeDrawer.setColor(Color.BLUE);
         shapeDrawer.setDefaultLineWidth(10);
@@ -126,6 +128,7 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void hide() {
+        super.hide();
         vfxEffect.dispose();
     }
 }

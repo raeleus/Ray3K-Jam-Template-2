@@ -32,6 +32,7 @@ public class OptionsScreen extends JamScreen {
     
     @Override
     public void show() {
+        super.show();
         core = Core.core;
         skin = core.skin;
     

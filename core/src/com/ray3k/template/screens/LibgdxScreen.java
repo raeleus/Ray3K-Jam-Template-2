@@ -31,6 +31,8 @@ public class LibgdxScreen extends JamScreen {
     
     @Override
     public void show() {
+        super.show();
+        
         core = Core.core;
         skin = core.skin;
         assetManager = core.assetManager;
@@ -114,6 +116,7 @@ public class LibgdxScreen extends JamScreen {
     
     @Override
     public void hide() {
+        super.hide();
         for (Sound sound : sounds) {
             sound.stop();
         }
