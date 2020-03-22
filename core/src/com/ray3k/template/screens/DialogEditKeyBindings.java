@@ -157,6 +157,8 @@ public class DialogEditKeyBindings extends Dialog {
                 codeName = Utils.controllerButtonToString(JamScreen.getBinding(binding));
             } else if (JamScreen.hasControllerAxisBinding(binding)) {
                 codeName = Utils.controllerAxisToString(JamScreen.getBinding(binding));
+            } else if (JamScreen.hasControllerPovBinding(binding)) {
+                codeName = Utils.controllerPovToString(JamScreen.getBinding(binding));
             } else {
                 codeName = "Unbound";
             }
@@ -252,6 +254,23 @@ public class DialogEditKeyBindings extends Dialog {
                             }
         
                             JamScreen.addControllerAxisBinding(binding, axisCode);
+                            JamScreen.saveBindings();
+                            refreshTable(table);
+                        }
+    
+                        @Override
+                        public void controllerPovSelected(int povCode) {
+                            Array<Binding> unbinds = new Array<>();
+                            for (Entry<Binding> binding : JamScreen.controllerPovBindings) {
+                                if (binding.value == povCode) {
+                                    unbinds.add(binding.key);
+                                }
+                            }
+                            for (Binding binding : unbinds) {
+                                JamScreen.addUnboundBinding(binding);
+                            }
+        
+                            JamScreen.addControllerPovBinding(binding, povCode);
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
@@ -355,6 +374,11 @@ public class DialogEditKeyBindings extends Dialog {
         
                 @Override
                 public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+                    if (value != PovDirection.center) {
+                        int code = Integer.parseInt("" + value.ordinal() + povCode);
+                        fire(new ControllerPovBindingEvent(code));
+                        hide();
+                    }
                     return false;
                 }
         
@@ -423,6 +447,14 @@ public class DialogEditKeyBindings extends Dialog {
         }
     }
     
+    private static class ControllerPovBindingEvent extends Event {
+        private int povCode;
+        
+        public ControllerPovBindingEvent(int povCode) {
+            this.povCode = povCode;
+        }
+    }
+    
     private static class CancelEvent extends Event {
     
     }
@@ -445,6 +477,9 @@ public class DialogEditKeyBindings extends Dialog {
             } else if (event instanceof ControllerAxisBindingEvent) {
                 controllerAxisSelected(((ControllerAxisBindingEvent) event).axisCode);
                 return true;
+            } else if (event instanceof ControllerPovBindingEvent) {
+                controllerPovSelected(((ControllerPovBindingEvent) event).povCode);
+                return true;
             } else if (event instanceof CancelEvent) {
                 cancelled();
                 return true;
@@ -458,6 +493,7 @@ public class DialogEditKeyBindings extends Dialog {
         public abstract void scrollSelected(int scroll);
         public abstract void controllerButtonSelected(int buttonCode);
         public abstract void controllerAxisSelected(int axisCode);
+        public abstract void controllerPovSelected(int povCode);
         public abstract void cancelled();
     }
 }

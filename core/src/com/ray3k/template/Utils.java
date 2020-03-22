@@ -154,6 +154,10 @@ public class Utils {
         return axisCode == JamScreen.ANY_CONTROLLER_AXIS ? "ANY CONTROLLER AXIS" : "Axis " + Integer.toString(axisCode);
     }
     
+    public static String controllerPovToString(int povCode) {
+        return povCode == JamScreen.ANY_CONTROLLER_POV ? "ANY CONTROLLER POV" : "POV " + Integer.toString(povCode);
+    }
+    
     public static float pointDistance(float x1, float y1, float x2, float y2) {
         vector2.set(x1, y1);
         return vector2.dst(x2, y2);
