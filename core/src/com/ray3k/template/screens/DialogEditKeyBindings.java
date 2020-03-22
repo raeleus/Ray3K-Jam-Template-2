@@ -345,9 +345,11 @@ public class DialogEditKeyBindings extends Dialog {
         
                 @Override
                 public boolean axisMoved(Controller controller, int axisCode, float value) {
-                    int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
-                    fire(new ControllerAxisBindingEvent(code));
-                    hide();
+                    if (value > .5 || value < -.5) {
+                        int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
+                        fire(new ControllerAxisBindingEvent(code));
+                        hide();
+                    }
                     return false;
                 }
         
