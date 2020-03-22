@@ -6,6 +6,7 @@ import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
@@ -26,11 +27,14 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public IntArray scrollJustPressed = new IntArray();
     public IntArray controllerButtonsJustPressed = new IntArray();
     public IntArray controllerButtonsPressed = new IntArray();
+    public IntArray controllerAxisJustPressed = new IntArray();
+    public IntArray controllerAxisPressed = new IntArray();
     private static final Vector3 tempVector3 = new Vector3();
     public final static ObjectIntMap<Core.Binding> keyBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> buttonBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> scrollBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Core.Binding> controllerButtonBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Core.Binding> controllerAxisBindings = new ObjectIntMap<>();
     public final static ObjectSet<Core.Binding> unboundBindings = new ObjectSet<>();
     public final static Array<Core.Binding> bindings = new Array<>();
     public final static int ANY_BUTTON = -1;
@@ -38,6 +42,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public final static int SCROLL_DOWN = 1;
     public final static int ANY_SCROLL = 0;
     public final static int ANY_CONTROLLER_BUTTON = -1;
+    public final static int ANY_CONTROLLER_AXIS = -1;
     
     @Override
     public void show() {
@@ -74,6 +79,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         buttonsJustPressed.clear();
         scrollJustPressed.clear();
         controllerButtonsJustPressed.clear();
+        controllerAxisJustPressed.clear();
     }
     
     public abstract void act(float delta);
@@ -133,6 +139,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsJustPressed.size > 0 : controllerButtonsJustPressed.contains(buttonCode);
     }
     
+    public boolean isControllerAxisJustPressed(int axisCode) {
+        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisJustPressed.size > 0 : controllerAxisJustPressed.contains(axisCode);
+    }
+    
     public boolean isKeyJustPressed(int... keys) {
         for (int key : keys) {
             if (isKeyJustPressed(key)) {
@@ -145,6 +155,15 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public boolean isControllerButtonJustPressed(int... controllerButtons) {
         for (int controllerButton : controllerButtons) {
             if (isControllerButtonJustPressed(controllerButton)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isControllerAxisJustPressed(int... controllerAxisCodes) {
+        for (int controllerAxisCode : controllerAxisCodes) {
+            if (isControllerButtonJustPressed(controllerAxisCode)) {
                 return true;
             }
         }
@@ -187,7 +206,11 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public boolean isControllerButtonPressed(int buttonCode) {
-        return buttonCode == ANY_CONTROLLER_BUTTON ? buttonsPressed.size > 0 : controllerButtonsPressed.contains(buttonCode);
+        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsPressed.size > 0 : controllerButtonsPressed.contains(buttonCode);
+    }
+    
+    public boolean isControllerAxisPressed(int axisCode) {
+        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisPressed.size > 0 : controllerAxisPressed.contains(axisCode);
     }
     
     public boolean isAnyKeyPressed(int... keys) {
@@ -208,6 +231,15 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
+    public boolean isAnyControllerAxisPressed(int... axisCodes) {
+        for (int axisCode : axisCodes) {
+            if (isControllerAxisPressed(axisCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean areAllKeysPressed(int... keys) {
         for (int key : keys) {
             if (!isKeyPressed(key)) {
@@ -220,6 +252,15 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public boolean areAllControllerButtonsPressed(int... controllerButtons) {
         for (int controllerButton : controllerButtons) {
             if (!isControllerButtonPressed(controllerButton)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean areAllControllerAxisPressed(int... axisCodes) {
+        for (int axisCode : axisCodes) {
+            if (!isControllerAxisPressed(axisCode)) {
                 return false;
             }
         }
@@ -261,9 +302,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             return isButtonPressed(keyBindings.get(binding, ANY_BUTTON));
         } else if (controllerButtonBindings.containsKey(binding)) {
             return isControllerButtonPressed(controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON));
-        }
-        
-        else {
+        } else if (controllerAxisBindings.containsKey(binding)) {
+            return isControllerAxisPressed(controllerAxisBindings.get(binding, ANY_CONTROLLER_AXIS));
+        } else {
             return false;
         }
     }
@@ -294,7 +335,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         } else if (scrollBindings.containsKey(binding)) {
             return isScrollJustPressed(scrollBindings.get(binding, ANY_SCROLL));
         } else if (controllerButtonBindings.containsKey(binding)) {
-            return isButtonJustPressed(controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON));
+            return isControllerButtonJustPressed(controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON));
+        } else if (controllerAxisBindings.containsKey(binding)) {
+            return isControllerAxisJustPressed(controllerButtonBindings.get(binding, ANY_CONTROLLER_AXIS));
         } else {
             return false;
         }
@@ -314,6 +357,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         buttonBindings.clear();
         scrollBindings.clear();
         controllerButtonBindings.clear();
+        controllerAxisBindings.clear();
         unboundBindings.clear();
         bindings.clear();
     }
@@ -322,6 +366,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         unboundBindings.remove(binding);
         keyBindings.put(binding, key);
         if (!bindings.contains(binding, true)) {
@@ -333,6 +378,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         scrollBindings.remove(binding, ANY_SCROLL);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         unboundBindings.remove(binding);
         buttonBindings.put(binding, button);
         if (!bindings.contains(binding, true)) {
@@ -344,6 +390,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         unboundBindings.remove(binding);
         scrollBindings.put(binding, scroll);
         if (!bindings.contains(binding, true)) {
@@ -356,7 +403,20 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         unboundBindings.remove(binding);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         controllerButtonBindings.put(binding, buttonCode);
+        if (!bindings.contains(binding, true)) {
+            bindings.add(binding);
+        }
+    }
+    
+    public static void addControllerAxisBinding(Core.Binding binding, int axisCode) {
+        keyBindings.remove(binding, Input.Keys.ANY_KEY);
+        buttonBindings.remove(binding, ANY_BUTTON);
+        scrollBindings.remove(binding, ANY_SCROLL);
+        unboundBindings.remove(binding);
+        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.put(binding, axisCode);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
@@ -366,6 +426,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
+        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         unboundBindings.add(binding);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
@@ -377,6 +439,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
+        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
         bindings.removeValue(binding, true);
     }
     
@@ -398,6 +461,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     
     public static boolean hasControllerButtonBinding(Core.Binding binding) {
         return controllerButtonBindings.containsKey(binding);
+    }
+    
+    public static boolean hasControllerAxisBinding(Core.Binding binding) {
+        return controllerAxisBindings.containsKey(binding);
     }
     
     public static boolean hasUnboundBinding(Core.Binding binding) {
@@ -424,6 +491,10 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON);
     }
     
+    public static int getControllerAxisBinding(Core.Binding binding) {
+        return controllerAxisBindings.get(binding, ANY_CONTROLLER_AXIS);
+    }
+    
     public static int getBinding(Core.Binding binding) {
         if (keyBindings.containsKey(binding)) {
             return getKeyBinding(binding);
@@ -431,6 +502,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             return getButtonBinding(binding);
         } else if (controllerButtonBindings.containsKey(binding)) {
             return getControllerButtonBinding(binding);
+        } else if (controllerAxisBindings.containsKey(binding)) {
+            return getControllerAxisBinding(binding);
         } else {
             return getScrollBinding(binding);
         }
@@ -443,35 +516,53 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             pref.remove("button:" + binding.key.toString());
             pref.remove("scroll:" + binding.key.toString());
             pref.remove("controllerbutton:" + binding.key.toString());
+            pref.remove("controlleraxis:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
+        
         for (Entry<Binding> binding : buttonBindings) {
             pref.putInteger("button:" + binding.key.toString(), binding.value);
             pref.remove("key:" + binding.key.toString());
             pref.remove("scroll:" + binding.key.toString());
             pref.remove("controllerbutton:" + binding.key.toString());
+            pref.remove("controlleraxis:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
+        
         for (Entry<Binding> binding : scrollBindings) {
             pref.putInteger("scroll:" + binding.key.toString(), binding.value);
             pref.remove("key:" + binding.key.toString());
             pref.remove("button:" + binding.key.toString());
             pref.remove("controllerbutton:" + binding.key.toString());
+            pref.remove("controlleraxis:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
+        
         for (Entry<Binding> binding : controllerButtonBindings) {
             pref.putInteger("controllerbutton:" + binding.key.toString(), binding.value);
             pref.remove("key:" + binding.key.toString());
             pref.remove("button:" + binding.key.toString());
             pref.remove("scroll:" + binding.key.toString());
+            pref.remove("controlleraxis:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
+    
+        for (Entry<Binding> binding : controllerAxisBindings) {
+            pref.putInteger("controlleraxis:" + binding.key.toString(), binding.value);
+            pref.remove("key:" + binding.key.toString());
+            pref.remove("button:" + binding.key.toString());
+            pref.remove("scroll:" + binding.key.toString());
+            pref.remove("controllerbutton:" + binding.key.toString());
+            pref.remove("unbound:" + binding.key.toString());
+        }
+        
         for (Binding binding : unboundBindings) {
             pref.putBoolean("unbound:" + binding.toString(), true);
             pref.remove("key:" + binding.toString());
             pref.remove("button:" + binding.toString());
             pref.remove("scroll:" + binding.toString());
             pref.remove("controllerbutton:" + binding.toString());
+            pref.remove("controlleraxis:" + binding.toString());
         }
         pref.flush();
     }
@@ -497,6 +588,11 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             key = "controllerbutton:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addControllerButtonBinding(binding, pref.getInteger(key));
+            }
+    
+            key = "controlleraxis:" + binding.toString();
+            if (pref.contains(key)) {
+                JamScreen.addControllerAxisBinding(binding, pref.getInteger(key));
             }
     
             key = "unbound:" + binding.toString();
@@ -531,6 +627,16 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
+        if (MathUtils.isEqual(value, 1) || MathUtils.isEqual(value, -1)) {
+            int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
+            controllerAxisJustPressed.add(code);
+            controllerAxisPressed.add(code);
+        } else {
+            int code = (Integer.parseInt("" + -1 + axisCode));
+            controllerAxisPressed.removeValue(code);
+            code = (Integer.parseInt("" + 1 + axisCode));
+            controllerAxisPressed.removeValue(code);
+        }
         return false;
     }
     

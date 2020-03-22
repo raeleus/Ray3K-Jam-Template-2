@@ -150,6 +150,10 @@ public class Utils {
         return buttonCode == JamScreen.ANY_CONTROLLER_BUTTON ? "ANY CONTROLLER BUTTON" : "Button " + Integer.toString(buttonCode);
     }
     
+    public static String controllerAxisToString(int axisCode) {
+        return axisCode == JamScreen.ANY_CONTROLLER_AXIS ? "ANY CONTROLLER AXIS" : "Axis " + Integer.toString(axisCode);
+    }
+    
     public static float pointDistance(float x1, float y1, float x2, float y2) {
         vector2.set(x1, y1);
         return vector2.dst(x2, y2);

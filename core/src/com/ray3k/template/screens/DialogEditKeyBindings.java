@@ -7,6 +7,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -67,31 +68,31 @@ public class DialogEditKeyBindings extends Dialog {
             }
         
             public void next() {
-                Actor focussed = getStage().getKeyboardFocus();
-                if (focussed == null) {
+                Actor focused = getStage().getKeyboardFocus();
+                if (focused == null) {
                     getStage().setKeyboardFocus(focusables.first());
                 } else {
-                    int index = focusables.indexOf(focussed, true) + 1;
+                    int index = focusables.indexOf(focused, true) + 1;
                     if (index >= focusables.size) index = 0;
                     getStage().setKeyboardFocus(focusables.get(index));
                 }
             }
         
             public void previous() {
-                Actor focussed = getStage().getKeyboardFocus();
-                if (focussed == null) {
+                Actor focused = getStage().getKeyboardFocus();
+                if (focused == null) {
                     getStage().setKeyboardFocus(focusables.first());
                 } else {
-                    int index = focusables.indexOf(focussed, true) - 1;
+                    int index = focusables.indexOf(focused, true) - 1;
                     if (index < 0) index = focusables.size - 1;
                     getStage().setKeyboardFocus(focusables.get(index));
                 }
             }
         
             public void activate() {
-                Actor focussed = getStage().getKeyboardFocus();
-                if (focussed != null) {
-                    focussed.fire(new ChangeEvent());
+                Actor focused = getStage().getKeyboardFocus();
+                if (focused != null) {
+                    focused.fire(new ChangeEvent());
                 } else {
                     getStage().setKeyboardFocus(focusables.first());
                 }
@@ -154,9 +155,9 @@ public class DialogEditKeyBindings extends Dialog {
                 codeName = Utils.scrollAmountToString(JamScreen.getBinding(binding));
             } else if (JamScreen.hasControllerButtonBinding(binding)) {
                 codeName = Utils.controllerButtonToString(JamScreen.getBinding(binding));
-            }
-            
-            else {
+            } else if (JamScreen.hasControllerAxisBinding(binding)) {
+                codeName = Utils.controllerAxisToString(JamScreen.getBinding(binding));
+            } else {
                 codeName = "Unbound";
             }
             
@@ -223,7 +224,6 @@ public class DialogEditKeyBindings extends Dialog {
     
                         @Override
                         public void controllerButtonSelected(int buttonCode) {
-                            System.out.println(buttonCode);
                             Array<Binding> unbinds = new Array<>();
                             for (Entry<Binding> binding : JamScreen.controllerButtonBindings) {
                                 if (binding.value == buttonCode) {
@@ -235,6 +235,23 @@ public class DialogEditKeyBindings extends Dialog {
                             }
     
                             JamScreen.addControllerButtonBinding(binding, buttonCode);
+                            JamScreen.saveBindings();
+                            refreshTable(table);
+                        }
+    
+                        @Override
+                        public void controllerAxisSelected(int axisCode) {
+                            Array<Binding> unbinds = new Array<>();
+                            for (Entry<Binding> binding : JamScreen.controllerAxisBindings) {
+                                if (binding.value == axisCode) {
+                                    unbinds.add(binding.key);
+                                }
+                            }
+                            for (Binding binding : unbinds) {
+                                JamScreen.addUnboundBinding(binding);
+                            }
+        
+                            JamScreen.addControllerAxisBinding(binding, axisCode);
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
@@ -328,6 +345,9 @@ public class DialogEditKeyBindings extends Dialog {
         
                 @Override
                 public boolean axisMoved(Controller controller, int axisCode, float value) {
+                    int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
+                    fire(new ControllerAxisBindingEvent(code));
+                    hide();
                     return false;
                 }
         
@@ -357,7 +377,6 @@ public class DialogEditKeyBindings extends Dialog {
         @Override
         public void hide(Action action) {
             super.hide(action);
-            System.out.println("removed");
             Controllers.removeListener(controllerListener);
         }
     }
@@ -394,6 +413,14 @@ public class DialogEditKeyBindings extends Dialog {
         }
     }
     
+    private static class ControllerAxisBindingEvent extends Event {
+        private int axisCode;
+        
+        public ControllerAxisBindingEvent(int axisCode) {
+            this.axisCode = axisCode;
+        }
+    }
+    
     private static class CancelEvent extends Event {
     
     }
@@ -413,6 +440,9 @@ public class DialogEditKeyBindings extends Dialog {
             } else if (event instanceof ControllerButtonBindingEvent) {
                 controllerButtonSelected(((ControllerButtonBindingEvent) event).buttonCode);
                 return true;
+            } else if (event instanceof ControllerAxisBindingEvent) {
+                controllerAxisSelected(((ControllerAxisBindingEvent) event).axisCode);
+                return true;
             } else if (event instanceof CancelEvent) {
                 cancelled();
                 return true;
@@ -425,6 +455,7 @@ public class DialogEditKeyBindings extends Dialog {
         public abstract void buttonSelected(int button);
         public abstract void scrollSelected(int scroll);
         public abstract void controllerButtonSelected(int buttonCode);
+        public abstract void controllerAxisSelected(int axisCode);
         public abstract void cancelled();
     }
 }
