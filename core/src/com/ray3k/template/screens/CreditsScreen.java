@@ -74,31 +74,31 @@ public class CreditsScreen extends JamScreen {
             }
         
             public void next() {
-                Actor focussed = stage.getKeyboardFocus();
-                if (focussed == null) {
+                Actor focused = stage.getKeyboardFocus();
+                if (focused == null) {
                     stage.setKeyboardFocus(focusables.first());
                 } else {
-                    int index = focusables.indexOf(focussed, true) + 1;
+                    int index = focusables.indexOf(focused, true) + 1;
                     if (index >= focusables.size) index = 0;
                     stage.setKeyboardFocus(focusables.get(index));
                 }
             }
         
             public void previous() {
-                Actor focussed = stage.getKeyboardFocus();
-                if (focussed == null) {
+                Actor focused = stage.getKeyboardFocus();
+                if (focused == null) {
                     stage.setKeyboardFocus(focusables.first());
                 } else {
-                    int index = focusables.indexOf(focussed, true) - 1;
+                    int index = focusables.indexOf(focused, true) - 1;
                     if (index < 0) index = focusables.size - 1;
                     stage.setKeyboardFocus(focusables.get(index));
                 }
             }
         
             public void activate() {
-                Actor focussed = stage.getKeyboardFocus();
-                if (focussed != null) {
-                    focussed.fire(new ChangeEvent());
+                Actor focused = stage.getKeyboardFocus();
+                if (focused != null) {
+                    focused.fire(new ChangeEvent());
                 } else {
                     stage.setKeyboardFocus(focusables.first());
                 }
