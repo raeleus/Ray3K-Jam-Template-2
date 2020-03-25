@@ -46,6 +46,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -73,6 +74,8 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
+        api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10"
+        api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10:sources"
     }
 }
 
@@ -88,5 +91,6 @@ project(":core") {
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
         implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }
