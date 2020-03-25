@@ -350,6 +350,24 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
+    public boolean isAnyBindingJustPressed() {
+        for (Core.Binding binding : bindings) {
+            if (isBindingJustPressed(binding)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyBindingJustPressed(Core.Binding... bindings) {
+        for (Core.Binding binding : bindings) {
+            if (isBindingJustPressed(binding)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean isAnyBindingPressed() {
         for (Core.Binding binding : bindings) {
             if (isBindingPressed(binding)) {
