@@ -122,11 +122,13 @@ public class DialogEditKeyBindings extends Dialog {
         TextButton textButton = new TextButton("OK", skin);
         button(textButton);
         focusables.add(textButton);
+        textButton.addListener(core.sndChangeListener);
         textButton.addListener(mouseEnterListener);
         
         textButton = new TextButton("Defaults", skin);
         getButtonTable().add(textButton);
         focusables.add(textButton);
+        textButton.addListener(core.sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
