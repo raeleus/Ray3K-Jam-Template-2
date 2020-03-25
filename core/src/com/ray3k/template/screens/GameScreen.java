@@ -56,7 +56,7 @@ public class GameScreen extends JamScreen {
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Keys.ESCAPE) {
+                if (!paused && keycode == Keys.ESCAPE) {
                     paused = true;
                     
                     DialogPause dialogPause = new DialogPause(GameScreen.this);

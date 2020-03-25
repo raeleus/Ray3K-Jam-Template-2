@@ -1,9 +1,7 @@
 package com.ray3k.template.screens;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -62,6 +60,21 @@ public class DialogPause extends Dialog {
                 fire(new QuitEvent());
                 hide();
                 detectInput = false;
+            }
+        });
+        
+        addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Keys.ESCAPE) {
+                    fire(new ResumeEvent());
+                    hide();
+                    detectInput = false;
+                    event.cancel();
+                    return true;
+                } else {
+                    return super.keyDown(event, keycode);
+                }
             }
         });
     }
