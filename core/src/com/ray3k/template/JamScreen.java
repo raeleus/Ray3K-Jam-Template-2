@@ -16,8 +16,6 @@ import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ray3k.template.Core.Binding;
 
-import java.util.Arrays;
-
 public abstract class JamScreen extends ScreenAdapter implements InputProcessor, ControllerListener {
     public Viewport viewport;
     public OrthographicCamera camera;
@@ -350,6 +348,15 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         } else {
             return false;
         }
+    }
+    
+    public boolean isAnyBindingPressed() {
+        for (Core.Binding binding : bindings) {
+            if (isBindingPressed(binding)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public boolean isAnyBindingPressed(Core.Binding... bindings) {
