@@ -129,6 +129,7 @@ public class GameScreen extends JamScreen {
     @Override
     public void hide() {
         super.hide();
+        vfxManager.removeAllEffects();
         vfxEffect.dispose();
     }
 }
