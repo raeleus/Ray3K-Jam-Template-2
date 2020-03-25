@@ -23,6 +23,7 @@ import com.ray3k.template.Core.Binding;
 import com.ray3k.template.JamScreen;
 import com.ray3k.template.entities.BallTestEntity;
 import com.ray3k.template.entities.EntityController;
+import com.ray3k.template.screens.DialogPause.PauseListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class GameScreen extends JamScreen {
@@ -37,6 +38,7 @@ public class GameScreen extends JamScreen {
     public EntityController entityController;
     private VfxManager vfxManager;
     private EarthquakeEffect vfxEffect;
+    public boolean paused;
     
     public GameScreen() {
         gameScreen = this;
@@ -47,13 +49,29 @@ public class GameScreen extends JamScreen {
         vfxEffect = new EarthquakeEffect();
         
         BG_COLOR.set(Color.PINK);
+    
+        paused = false;
         
         stage = new Stage(new ScreenViewport(), core.batch);
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Keys.ESCAPE) {
-                    core.transition(new MenuScreen());
+                    paused = true;
+                    
+                    DialogPause dialogPause = new DialogPause(GameScreen.this);
+                    dialogPause.show(stage);
+                    dialogPause.addListener(new PauseListener() {
+                        @Override
+                        public void resume() {
+                            paused = false;
+                        }
+    
+                        @Override
+                        public void quit() {
+                            core.transition(new MenuScreen());
+                        }
+                    });
                 }
                 return super.keyDown(event, keycode);
             }
@@ -85,9 +103,11 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void act(float delta) {
-        entityController.act(delta);
+        if (!paused) {
+            entityController.act(delta);
+            vfxEffect.update(delta);
+        }
         stage.act(delta);
-        vfxEffect.update(delta);
     }
     
     @Override
@@ -105,7 +125,7 @@ public class GameScreen extends JamScreen {
         shapeDrawer.setColor(Color.BLUE);
         shapeDrawer.setDefaultLineWidth(10);
         shapeDrawer.rectangle(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        entityController.draw(delta);
+        entityController.draw(paused ? 0 : delta);
         batch.end();
         vfxManager.endCapture();
         vfxManager.applyEffects();
