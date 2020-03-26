@@ -112,11 +112,12 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void draw(float delta) {
-        Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
         
         vfxManager.cleanUpBuffers();
         vfxManager.beginCapture();
+        Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
@@ -130,6 +131,8 @@ public class GameScreen extends JamScreen {
         vfxManager.endCapture();
         vfxManager.applyEffects();
         vfxManager.renderToScreen();
+    
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     
