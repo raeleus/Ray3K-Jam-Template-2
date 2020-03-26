@@ -36,6 +36,7 @@ public class TransitionWipe implements Transition {
     
         te.jamGame.setScreen(te.nextScreen);
         te.nextFrameBuffer.begin();
+        te.nextScreen.act(0);
         te.nextScreen.draw(0);
         te.nextFrameBuffer.end();
     }
