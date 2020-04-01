@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -76,8 +74,8 @@ public class Core extends JamGame {
     
     @Override
     public void loadAssets() {
-        assetManager.setLoader(SkeletonData.class, new SkeletonDataLoader(assetManager.getFileHandleResolver()));
         assetManager.setLoader(Skin.class, new SkinFreeTypeLoader(assetManager.getFileHandleResolver()));
+        assetManager.setLoader(SkeletonData.class, new SkeletonDataLoader(assetManager.getFileHandleResolver()));
         
         FileHandle fileHandle = Gdx.files.internal("skin.txt");
         if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
