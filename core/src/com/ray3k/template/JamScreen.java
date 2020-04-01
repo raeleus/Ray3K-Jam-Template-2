@@ -60,7 +60,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         Controllers.removeListener(this);
     }
     
-    @Override @Deprecated
+    @Override
+    @Deprecated
     public void render(float delta) {
     
     }
@@ -140,15 +141,18 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public boolean isControllerButtonJustPressed(int buttonCode) {
-        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsJustPressed.size > 0 : controllerButtonsJustPressed.contains(buttonCode);
+        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsJustPressed.size > 0 : controllerButtonsJustPressed.contains(
+                buttonCode);
     }
     
     public boolean isControllerAxisJustPressed(int axisCode) {
-        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisJustPressed.size > 0 : controllerAxisJustPressed.contains(axisCode);
+        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisJustPressed.size > 0 : controllerAxisJustPressed.contains(
+                axisCode);
     }
     
     public boolean isControllerPovJustPressed(int povCode) {
-        return povCode == ANY_CONTROLLER_POV ? controllerPovJustPressed.size > 0 : controllerPovJustPressed.contains(povCode);
+        return povCode == ANY_CONTROLLER_POV ? controllerPovJustPressed.size > 0 : controllerPovJustPressed.contains(
+                povCode);
     }
     
     public boolean isKeyJustPressed(int... keys) {
@@ -189,6 +193,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     
     /**
      * Returns true if the associated mouse button has been pressed since the last step.
+     *
      * @param button The button value or -1 for any button
      * @return
      */
@@ -223,11 +228,13 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public boolean isControllerButtonPressed(int buttonCode) {
-        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsPressed.size > 0 : controllerButtonsPressed.contains(buttonCode);
+        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsPressed.size > 0 : controllerButtonsPressed.contains(
+                buttonCode);
     }
     
     public boolean isControllerAxisPressed(int axisCode) {
-        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisPressed.size > 0 : controllerAxisPressed.contains(axisCode);
+        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisPressed.size > 0 : controllerAxisPressed.contains(
+                axisCode);
     }
     
     public boolean isControllerPovPressed(int povCode) {
@@ -651,7 +658,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             pref.remove("controllerpov:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
-    
+        
         for (Entry<Binding> binding : controllerAxisBindings) {
             pref.putInteger("controlleraxis:" + binding.key.toString(), binding.value);
             pref.remove("key:" + binding.key.toString());
@@ -661,7 +668,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             pref.remove("controllerpov:" + binding.key.toString());
             pref.remove("unbound:" + binding.key.toString());
         }
-    
+        
         for (Entry<Binding> binding : controllerPovBindings) {
             pref.putInteger("controllerpov:" + binding.key.toString(), binding.value);
             pref.remove("key:" + binding.key.toString());
@@ -691,12 +698,12 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             if (pref.contains(key)) {
                 JamScreen.addKeyBinding(binding, pref.getInteger(key));
             }
-    
+            
             key = "button:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addButtonBinding(binding, pref.getInteger(key));
             }
-    
+            
             key = "scroll:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addScrollBinding(binding, pref.getInteger(key));
@@ -706,17 +713,17 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             if (pref.contains(key)) {
                 JamScreen.addControllerButtonBinding(binding, pref.getInteger(key));
             }
-    
+            
             key = "controlleraxis:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addControllerAxisBinding(binding, pref.getInteger(key));
             }
-    
+            
             key = "controllerpov:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addControllerPovBinding(binding, pref.getInteger(key));
             }
-    
+            
             key = "unbound:" + binding.toString();
             if (pref.contains(key)) {
                 JamScreen.addUnboundBinding(binding);
