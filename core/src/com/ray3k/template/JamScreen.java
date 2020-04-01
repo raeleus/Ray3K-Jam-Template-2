@@ -1,6 +1,7 @@
 package com.ray3k.template;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -250,6 +251,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
+    public boolean isAnyKeyPressed() {
+        return isKeyPressed(Keys.ANY_KEY);
+    }
+    
+    public boolean isAnyKeyJustPressed(int... keys) {
+        for (int key : keys) {
+            if (isKeyJustPressed(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyKeyJustPressed() {
+        return keysJustPressed.size > 0;
+    }
+    
     public boolean isAnyControllerButtonPressed(int... buttonCodes) {
         for (int buttonCode : buttonCodes) {
             if (isControllerButtonPressed(buttonCode)) {
@@ -257,6 +275,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             }
         }
         return false;
+    }
+    
+    public boolean isAnyControllerButtonPressed() {
+        return controllerButtonsPressed.size > 0;
+    }
+    
+    public boolean isAnyControllerButtonJustPressed(int... buttonCodes) {
+        for (int buttonCode : buttonCodes) {
+            if (isControllerButtonJustPressed(buttonCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerButtonJustPressed() {
+        return controllerButtonsJustPressed.size > 0;
     }
     
     public boolean isAnyControllerAxisPressed(int... axisCodes) {
@@ -268,6 +303,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
+    public boolean isAnyControllerAxisPressed() {
+        return controllerAxisPressed.size > 0;
+    }
+    
+    public boolean isAnyControllerAxisJustPressed(int... axisCodes) {
+        for (int axisCode : axisCodes) {
+            if (isControllerAxisJustPressed(axisCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerAxisJustPressed() {
+        return controllerButtonsJustPressed.size > 0;
+    }
+    
     public boolean isAnyControllerPovPressed(int... povCodes) {
         for (int povCode : povCodes) {
             if (isControllerPovPressed(povCode)) {
@@ -275,6 +327,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             }
         }
         return false;
+    }
+    
+    public boolean isAnyControllerPovPressed() {
+        return controllerPovPressed.size > 0;
+    }
+    
+    public boolean isAnyControllerPovJustPressed(int... povCodes) {
+        for (int povCode : povCodes) {
+            if (isControllerPovJustPressed(povCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerPovJustPressed() {
+        return controllerPovJustPressed.size > 0;
     }
     
     public boolean areAllKeysPressed(int... keys) {
@@ -330,6 +399,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             }
         }
         return false;
+    }
+    
+    public boolean isAnyButtonPressed() {
+        return buttonsPressed.size > 0;
+    }
+    
+    public boolean isAnyButtonJustPressed(int... buttons) {
+        for (int button : buttons) {
+            if (isButtonJustPressed(button)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyButtonJustPressed() {
+        return buttonsJustPressed.size > 0;
     }
     
     public boolean areAllButtonsPressed(int... buttons) {
