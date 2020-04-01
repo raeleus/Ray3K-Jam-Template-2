@@ -1,9 +1,7 @@
 package com.ray3k.template.entities;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.spine.*;
-import com.ray3k.template.Core;
 
 public abstract class Entity {
     private static final Vector2 temp1 = new Vector2();
@@ -19,9 +17,6 @@ public abstract class Entity {
     public float gravityX;
     public float gravityY;
     public boolean collidable;
-    public Core core;
-    public Batch batch;
-    public SkeletonRenderer skeletonRenderer;
     public boolean visible;
     public int depth;
     
@@ -32,9 +27,6 @@ public abstract class Entity {
     public abstract void destroy();
     
     public Entity() {
-        core = Core.core;
-        batch = core.batch;
-        skeletonRenderer = core.skeletonRenderer;
         visible = true;
     }
     

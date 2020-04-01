@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.ray3k.template.Core;
 import com.ray3k.template.CrossPlatformWorker;
 
+import static com.ray3k.template.Core.*;
+
 public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker {
     
     // USE THIS CODE FOR A FIXED SIZE APPLICATION
@@ -67,7 +69,7 @@ public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker 
     @Override
     public ApplicationListener createApplicationListener () {
         Core core = new Core();
-        core.crossPlatformWorker = this;
+        crossPlatformWorker = this;
         return core;
     }
     

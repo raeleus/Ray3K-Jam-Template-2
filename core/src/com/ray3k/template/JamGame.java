@@ -17,9 +17,9 @@ public abstract class JamGame extends Game {
     private static final int MAX_VERTEX_SIZE = 32767;
     private long previous;
     private long lag;
-    public AssetManager assetManager;
+    public static AssetManager assetManager;
     public static TransitionEngine transitionEngine;
-    public TwoColorPolygonBatch batch;
+    public static TwoColorPolygonBatch batch;
     public Transition defaultTransition;
     public float defaultTransitionDuration;
     public static ShapeRenderer shapeRenderer;

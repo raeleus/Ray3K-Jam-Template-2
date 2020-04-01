@@ -19,19 +19,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class LoadScreen extends JamScreen {
     private ProgressBar progressBar;
     private boolean finishedLoading;
     private Runnable runnable;
     private Skin skin;
     private Stage stage;
-    private Core core;
     
     public LoadScreen(Runnable runnable) {
         this.runnable = runnable;
-        core = Core.core;
     
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         skin = createSkin();
         finishedLoading = false;
     
@@ -42,9 +43,9 @@ public class LoadScreen extends JamScreen {
     public void act(float delta) {
         stage.act(delta);
     
-        progressBar.setValue(core.assetManager.getProgress());
+        progressBar.setValue(assetManager.getProgress());
 
-        if (!finishedLoading && core.assetManager.update()) {
+        if (!finishedLoading && assetManager.update()) {
             finishedLoading = true;
             
             if (runnable != null) {
@@ -65,7 +66,7 @@ public class LoadScreen extends JamScreen {
         Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     

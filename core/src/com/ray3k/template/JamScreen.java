@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.ray3k.template.Core.Binding;
+import com.ray3k.template.Core.*;
+
+import static com.ray3k.template.Core.*;
 
 public abstract class JamScreen extends ScreenAdapter implements InputProcessor, ControllerListener {
     public Viewport viewport;
@@ -33,14 +35,14 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public IntArray controllerPovJustPressed = new IntArray();
     public IntArray controllerPovPressed = new IntArray();
     private static final Vector3 tempVector3 = new Vector3();
-    public final static ObjectIntMap<Core.Binding> keyBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Core.Binding> buttonBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Core.Binding> scrollBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Core.Binding> controllerButtonBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Core.Binding> controllerAxisBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Core.Binding> controllerPovBindings = new ObjectIntMap<>();
-    public final static ObjectSet<Core.Binding> unboundBindings = new ObjectSet<>();
-    public final static Array<Core.Binding> bindings = new Array<>();
+    public final static ObjectIntMap<Binding> keyBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Binding> buttonBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Binding> scrollBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Binding> controllerButtonBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Binding> controllerAxisBindings = new ObjectIntMap<>();
+    public final static ObjectIntMap<Binding> controllerPovBindings = new ObjectIntMap<>();
+    public final static ObjectSet<Binding> unboundBindings = new ObjectSet<>();
+    public final static Array<Binding> bindings = new Array<>();
     public final static int ANY_BUTTON = -1;
     public final static int SCROLL_UP = -1;
     public final static int SCROLL_DOWN = 1;
@@ -427,7 +429,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return true;
     }
     
-    public boolean isBindingPressed(Core.Binding binding) {
+    public boolean isBindingPressed(Binding binding) {
         if (keyBindings.containsKey(binding)) {
             return isKeyPressed(keyBindings.get(binding, Input.Keys.ANY_KEY));
         } else if (buttonBindings.containsKey(binding)) {
@@ -444,7 +446,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public boolean isAnyBindingJustPressed() {
-        for (Core.Binding binding : bindings) {
+        for (Binding binding : bindings) {
             if (isBindingJustPressed(binding)) {
                 return true;
             }
@@ -452,8 +454,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
-    public boolean isAnyBindingJustPressed(Core.Binding... bindings) {
-        for (Core.Binding binding : bindings) {
+    public boolean isAnyBindingJustPressed(Binding... bindings) {
+        for (Binding binding : bindings) {
             if (isBindingJustPressed(binding)) {
                 return true;
             }
@@ -462,7 +464,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public boolean isAnyBindingPressed() {
-        for (Core.Binding binding : bindings) {
+        for (Binding binding : bindings) {
             if (isBindingPressed(binding)) {
                 return true;
             }
@@ -470,8 +472,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
-    public boolean isAnyBindingPressed(Core.Binding... bindings) {
-        for (Core.Binding binding : bindings) {
+    public boolean isAnyBindingPressed(Binding... bindings) {
+        for (Binding binding : bindings) {
             if (isBindingPressed(binding)) {
                 return true;
             }
@@ -479,8 +481,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return false;
     }
     
-    public boolean areAllBindingsPressed(Core.Binding... bindings) {
-        for (Core.Binding binding : bindings) {
+    public boolean areAllBindingsPressed(Binding... bindings) {
+        for (Binding binding : bindings) {
             if (!isBindingPressed(binding)) {
                 return false;
             }
@@ -488,7 +490,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return true;
     }
     
-    public boolean isBindingJustPressed(Core.Binding binding) {
+    public boolean isBindingJustPressed(Binding binding) {
         if (keyBindings.containsKey(binding)) {
             return isKeyJustPressed(keyBindings.get(binding, Input.Keys.ANY_KEY));
         } else if (buttonBindings.containsKey(binding)) {
@@ -506,8 +508,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public boolean isBindingJustPressed(Core.Binding... bindings) {
-        for (Core.Binding binding : bindings) {
+    public boolean isBindingJustPressed(Binding... bindings) {
+        for (Binding binding : bindings) {
             if (isBindingJustPressed(binding)) {
                 return true;
             }
@@ -526,7 +528,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         bindings.clear();
     }
     
-    public static void addKeyBinding(Core.Binding binding, int key) {
+    public static void addKeyBinding(Binding binding, int key) {
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
@@ -539,7 +541,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addButtonBinding(Core.Binding binding, int button) {
+    public static void addButtonBinding(Binding binding, int button) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         scrollBindings.remove(binding, ANY_SCROLL);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
@@ -552,7 +554,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addScrollBinding(Core.Binding binding, int scroll) {
+    public static void addScrollBinding(Binding binding, int scroll) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
@@ -565,7 +567,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addControllerButtonBinding(Core.Binding binding, int buttonCode) {
+    public static void addControllerButtonBinding(Binding binding, int buttonCode) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
@@ -578,7 +580,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addControllerAxisBinding(Core.Binding binding, int axisCode) {
+    public static void addControllerAxisBinding(Binding binding, int axisCode) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
@@ -591,7 +593,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addControllerPovBinding(Core.Binding binding, int povCode) {
+    public static void addControllerPovBinding(Binding binding, int povCode) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
@@ -604,7 +606,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addUnboundBinding(Core.Binding binding) {
+    public static void addUnboundBinding(Binding binding) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
@@ -617,7 +619,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void removeBinding(Core.Binding binding) {
+    public static void removeBinding(Binding binding) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
@@ -627,67 +629,67 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         bindings.removeValue(binding, true);
     }
     
-    public static boolean hasBinding(Core.Binding binding) {
+    public static boolean hasBinding(Binding binding) {
         return bindings.contains(binding, true);
     }
     
-    public static boolean hasKeyBinding(Core.Binding binding) {
+    public static boolean hasKeyBinding(Binding binding) {
         return keyBindings.containsKey(binding);
     }
     
-    public static boolean hasButtonBinding(Core.Binding binding) {
+    public static boolean hasButtonBinding(Binding binding) {
         return buttonBindings.containsKey(binding);
     }
     
-    public static boolean hasScrollBinding(Core.Binding binding) {
+    public static boolean hasScrollBinding(Binding binding) {
         return scrollBindings.containsKey(binding);
     }
     
-    public static boolean hasControllerButtonBinding(Core.Binding binding) {
+    public static boolean hasControllerButtonBinding(Binding binding) {
         return controllerButtonBindings.containsKey(binding);
     }
     
-    public static boolean hasControllerAxisBinding(Core.Binding binding) {
+    public static boolean hasControllerAxisBinding(Binding binding) {
         return controllerAxisBindings.containsKey(binding);
     }
     
-    public static boolean hasControllerPovBinding(Core.Binding binding) {
+    public static boolean hasControllerPovBinding(Binding binding) {
         return controllerPovBindings.containsKey(binding);
     }
     
-    public static boolean hasUnboundBinding(Core.Binding binding) {
+    public static boolean hasUnboundBinding(Binding binding) {
         return unboundBindings.contains(binding);
     }
     
-    public static Array<Core.Binding> getBindings() {
+    public static Array<Binding> getBindings() {
         return bindings;
     }
     
-    public static int getKeyBinding(Core.Binding binding) {
+    public static int getKeyBinding(Binding binding) {
         return keyBindings.get(binding, Input.Keys.ANY_KEY);
     }
     
-    public static int getButtonBinding(Core.Binding binding) {
+    public static int getButtonBinding(Binding binding) {
         return buttonBindings.get(binding, ANY_BUTTON);
     }
     
-    public static int getScrollBinding(Core.Binding binding) {
+    public static int getScrollBinding(Binding binding) {
         return scrollBindings.get(binding, ANY_SCROLL);
     }
     
-    public static int getControllerButtonBinding(Core.Binding binding) {
+    public static int getControllerButtonBinding(Binding binding) {
         return controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON);
     }
     
-    public static int getControllerAxisBinding(Core.Binding binding) {
+    public static int getControllerAxisBinding(Binding binding) {
         return controllerAxisBindings.get(binding, ANY_CONTROLLER_AXIS);
     }
     
-    public static int getControllerPovBinding(Core.Binding binding) {
+    public static int getControllerPovBinding(Binding binding) {
         return controllerPovBindings.get(binding, ANY_CONTROLLER_POV);
     }
     
-    public static int getBinding(Core.Binding binding) {
+    public static int getBinding(Binding binding) {
         if (keyBindings.containsKey(binding)) {
             return getKeyBinding(binding);
         } else if (buttonBindings.containsKey(binding)) {
@@ -704,114 +706,112 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     public static void saveBindings() {
-        Preferences pref = Core.core.preferences;
         for (Entry<Binding> binding : keyBindings) {
-            pref.putInteger("key:" + binding.key.toString(), binding.value);
-            pref.remove("button:" + binding.key.toString());
-            pref.remove("scroll:" + binding.key.toString());
-            pref.remove("controllerbutton:" + binding.key.toString());
-            pref.remove("controlleraxis:" + binding.key.toString());
-            pref.remove("controllerpov:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("key:" + binding.key.toString(), binding.value);
+            preferences.remove("button:" + binding.key.toString());
+            preferences.remove("scroll:" + binding.key.toString());
+            preferences.remove("controllerbutton:" + binding.key.toString());
+            preferences.remove("controlleraxis:" + binding.key.toString());
+            preferences.remove("controllerpov:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Entry<Binding> binding : buttonBindings) {
-            pref.putInteger("button:" + binding.key.toString(), binding.value);
-            pref.remove("key:" + binding.key.toString());
-            pref.remove("scroll:" + binding.key.toString());
-            pref.remove("controllerbutton:" + binding.key.toString());
-            pref.remove("controlleraxis:" + binding.key.toString());
-            pref.remove("controllerpov:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("button:" + binding.key.toString(), binding.value);
+            preferences.remove("key:" + binding.key.toString());
+            preferences.remove("scroll:" + binding.key.toString());
+            preferences.remove("controllerbutton:" + binding.key.toString());
+            preferences.remove("controlleraxis:" + binding.key.toString());
+            preferences.remove("controllerpov:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Entry<Binding> binding : scrollBindings) {
-            pref.putInteger("scroll:" + binding.key.toString(), binding.value);
-            pref.remove("key:" + binding.key.toString());
-            pref.remove("button:" + binding.key.toString());
-            pref.remove("controllerbutton:" + binding.key.toString());
-            pref.remove("controlleraxis:" + binding.key.toString());
-            pref.remove("controllerpov:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("scroll:" + binding.key.toString(), binding.value);
+            preferences.remove("key:" + binding.key.toString());
+            preferences.remove("button:" + binding.key.toString());
+            preferences.remove("controllerbutton:" + binding.key.toString());
+            preferences.remove("controlleraxis:" + binding.key.toString());
+            preferences.remove("controllerpov:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Entry<Binding> binding : controllerButtonBindings) {
-            pref.putInteger("controllerbutton:" + binding.key.toString(), binding.value);
-            pref.remove("key:" + binding.key.toString());
-            pref.remove("button:" + binding.key.toString());
-            pref.remove("scroll:" + binding.key.toString());
-            pref.remove("controlleraxis:" + binding.key.toString());
-            pref.remove("controllerpov:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("controllerbutton:" + binding.key.toString(), binding.value);
+            preferences.remove("key:" + binding.key.toString());
+            preferences.remove("button:" + binding.key.toString());
+            preferences.remove("scroll:" + binding.key.toString());
+            preferences.remove("controlleraxis:" + binding.key.toString());
+            preferences.remove("controllerpov:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Entry<Binding> binding : controllerAxisBindings) {
-            pref.putInteger("controlleraxis:" + binding.key.toString(), binding.value);
-            pref.remove("key:" + binding.key.toString());
-            pref.remove("button:" + binding.key.toString());
-            pref.remove("scroll:" + binding.key.toString());
-            pref.remove("controllerbutton:" + binding.key.toString());
-            pref.remove("controllerpov:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("controlleraxis:" + binding.key.toString(), binding.value);
+            preferences.remove("key:" + binding.key.toString());
+            preferences.remove("button:" + binding.key.toString());
+            preferences.remove("scroll:" + binding.key.toString());
+            preferences.remove("controllerbutton:" + binding.key.toString());
+            preferences.remove("controllerpov:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Entry<Binding> binding : controllerPovBindings) {
-            pref.putInteger("controllerpov:" + binding.key.toString(), binding.value);
-            pref.remove("key:" + binding.key.toString());
-            pref.remove("button:" + binding.key.toString());
-            pref.remove("scroll:" + binding.key.toString());
-            pref.remove("controllerbutton:" + binding.key.toString());
-            pref.remove("controlleraxis:" + binding.key.toString());
-            pref.remove("unbound:" + binding.key.toString());
+            preferences.putInteger("controllerpov:" + binding.key.toString(), binding.value);
+            preferences.remove("key:" + binding.key.toString());
+            preferences.remove("button:" + binding.key.toString());
+            preferences.remove("scroll:" + binding.key.toString());
+            preferences.remove("controllerbutton:" + binding.key.toString());
+            preferences.remove("controlleraxis:" + binding.key.toString());
+            preferences.remove("unbound:" + binding.key.toString());
         }
         
         for (Binding binding : unboundBindings) {
-            pref.putBoolean("unbound:" + binding.toString(), true);
-            pref.remove("key:" + binding.toString());
-            pref.remove("button:" + binding.toString());
-            pref.remove("scroll:" + binding.toString());
-            pref.remove("controllerbutton:" + binding.toString());
-            pref.remove("controlleraxis:" + binding.toString());
-            pref.remove("controllerpov:" + binding.toString());
+            preferences.putBoolean("unbound:" + binding.toString(), true);
+            preferences.remove("key:" + binding.toString());
+            preferences.remove("button:" + binding.toString());
+            preferences.remove("scroll:" + binding.toString());
+            preferences.remove("controllerbutton:" + binding.toString());
+            preferences.remove("controlleraxis:" + binding.toString());
+            preferences.remove("controllerpov:" + binding.toString());
         }
-        pref.flush();
+        preferences.flush();
     }
     
     public static void loadBindings() {
-        Preferences pref = Core.core.preferences;
         for (Binding binding : bindings) {
             String key = "key:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addKeyBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addKeyBinding(binding, preferences.getInteger(key));
             }
             
             key = "button:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addButtonBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addButtonBinding(binding, preferences.getInteger(key));
             }
             
             key = "scroll:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addScrollBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addScrollBinding(binding, preferences.getInteger(key));
             }
             
             key = "controllerbutton:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addControllerButtonBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addControllerButtonBinding(binding, preferences.getInteger(key));
             }
             
             key = "controlleraxis:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addControllerAxisBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addControllerAxisBinding(binding, preferences.getInteger(key));
             }
             
             key = "controllerpov:" + binding.toString();
-            if (pref.contains(key)) {
-                JamScreen.addControllerPovBinding(binding, pref.getInteger(key));
+            if (preferences.contains(key)) {
+                JamScreen.addControllerPovBinding(binding, preferences.getInteger(key));
             }
             
             key = "unbound:" + binding.toString();
-            if (pref.contains(key)) {
+            if (preferences.contains(key)) {
                 JamScreen.addUnboundBinding(binding);
             }
         }

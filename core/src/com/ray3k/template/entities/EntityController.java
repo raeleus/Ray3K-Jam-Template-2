@@ -4,6 +4,9 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Comparator;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.batch;
+
 public class EntityController {
     public Array<Entity> entities;
     public Comparator<Entity> depthComparator;
@@ -72,7 +75,7 @@ public class EntityController {
                     entity.skeleton.updateWorldTransform();
                     entity.animationState.apply(entity.skeleton);
                     
-                    entity.skeletonRenderer.draw(entity.batch, entity.skeleton);
+                    skeletonRenderer.draw(batch, entity.skeleton);
                 }
                 
                 entity.draw(delta);

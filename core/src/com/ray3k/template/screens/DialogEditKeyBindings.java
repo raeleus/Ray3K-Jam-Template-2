@@ -20,19 +20,16 @@ import com.ray3k.template.Core.Binding;
 import com.ray3k.template.JamScreen;
 import com.ray3k.template.Utils;
 
+import static com.ray3k.template.Core.*;
+
 public class DialogEditKeyBindings extends Dialog {
-    private Core core;
-    private Skin skin;
     private Array<Actor> focusables;
     private InputListener keysListener;
     private InputListener mouseEnterListener;
     
     public DialogEditKeyBindings(Stage stage) {
-        super("", Core.core.skin);
+        super("", skin);
         setStage(stage);
-        
-        core = Core.core;
-        skin = core.skin;
     
         focusables = new Array<>();
     
@@ -122,13 +119,13 @@ public class DialogEditKeyBindings extends Dialog {
         TextButton textButton = new TextButton("OK", skin);
         button(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         
         textButton = new TextButton("Defaults", skin);
         getButtonTable().add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -147,7 +144,7 @@ public class DialogEditKeyBindings extends Dialog {
         if (getStage() != null) getStage().setKeyboardFocus(null);
         
         table.defaults().space(10).uniform().fill();
-        for (Core.Binding binding : JamScreen.getBindings()) {
+        for (Binding binding : JamScreen.getBindings()) {
             String codeName;
             if (JamScreen.hasKeyBinding(binding)) {
                 codeName = Input.Keys.toString(JamScreen.getBinding(binding));
@@ -169,7 +166,7 @@ public class DialogEditKeyBindings extends Dialog {
             table.add(textButton);
             table.row();
             focusables.add(textButton);
-            textButton.addListener(core.sndChangeListener);
+            textButton.addListener(sndChangeListener);
             textButton.addListener(mouseEnterListener);
             textButton.addListener(new ChangeListener() {
                 @Override
@@ -301,8 +298,8 @@ public class DialogEditKeyBindings extends Dialog {
     private static class DialogKeyBinding extends Dialog {
         private ControllerListener controllerListener;
         
-        public DialogKeyBinding(Core.Binding binding) {
-            super("", Core.core.skin);
+        public DialogKeyBinding(Binding binding) {
+            super("", skin);
             
             setFillParent(true);
             Table root = getContentTable();

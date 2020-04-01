@@ -18,10 +18,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+
 public class MenuScreen extends JamScreen {
     private Stage stage;
-    private Skin skin;
-    private Core core;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private Array<Actor> focusables;
     
@@ -32,18 +32,15 @@ public class MenuScreen extends JamScreen {
     @Override
     public void show() {
         super.show();
-        
-        core = Core.core;
-        skin = core.skin;
     
-        final Music bgm = core.assetManager.get("bgm/music-test.mp3");
+        final Music bgm = assetManager.get("bgm/music-test.mp3");
         if (!bgm.isPlaying()) {
             bgm.play();
             bgm.setVolume(core.bgm);
             bgm.setLooping(true);
         }
         
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
         
         stage.addListener(new InputListener() {
@@ -133,7 +130,7 @@ public class MenuScreen extends JamScreen {
         TextButton textButton = new TextButton("Play", skin);
         table.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -146,7 +143,7 @@ public class MenuScreen extends JamScreen {
         textButton = new TextButton("Options", skin);
         table.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -159,7 +156,7 @@ public class MenuScreen extends JamScreen {
         textButton = new TextButton("Credits", skin);
         table.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -184,7 +181,7 @@ public class MenuScreen extends JamScreen {
         Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     

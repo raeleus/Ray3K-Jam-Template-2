@@ -2,6 +2,8 @@ package com.ray3k.template.entities;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
+import static com.ray3k.template.JamGame.*;
+
 public class ParticleEntity extends Entity {
     public ParticleEffect particleEffect;
     
@@ -29,7 +31,7 @@ public class ParticleEntity extends Entity {
     @Override
     public void draw(float delta) {
         particleEffect.setPosition(x + deltaX * delta, y + deltaY * delta);
-        particleEffect.draw(core.batch);
+        particleEffect.draw(batch);
     }
     
     @Override

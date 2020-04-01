@@ -18,10 +18,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class OptionsScreen extends JamScreen {
     private Stage stage;
-    private Skin skin;
-    private Core core;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private Array<Actor> focusables;
     private InputListener keysListener;
@@ -33,10 +34,8 @@ public class OptionsScreen extends JamScreen {
     @Override
     public void show() {
         super.show();
-        core = Core.core;
-        skin = core.skin;
     
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
     
         keysListener = new InputListener() {
@@ -126,7 +125,7 @@ public class OptionsScreen extends JamScreen {
         label = new Label("BGM", skin);
         table.add(label).right();
 
-        final Music bgm = core.assetManager.get("bgm/music-test.mp3");
+        final Music bgm = assetManager.get("bgm/music-test.mp3");
         
         Slider slider = new Slider(0, 1, .01f, false, skin);
         slider.setValue(core.bgm);
@@ -135,8 +134,8 @@ public class OptionsScreen extends JamScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 core.bgm = ((Slider) actor).getValue();
-                core.preferences.putFloat("bgm", core.bgm);
-                core.preferences.flush();
+                preferences.putFloat("bgm", core.bgm);
+                preferences.flush();
                 bgm.setVolume(core.bgm);
             }
         });
@@ -145,7 +144,7 @@ public class OptionsScreen extends JamScreen {
         label = new Label("SFX", skin);
         table.add(label).right();
     
-        final Music sfx = core.assetManager.get("bgm/audio-test.mp3");
+        final Music sfx = assetManager.get("bgm/audio-test.mp3");
         sfx.setLooping(true);
         
         slider = new Slider(0, 1, .01f, false, skin);
@@ -155,8 +154,8 @@ public class OptionsScreen extends JamScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 core.sfx = ((Slider) actor).getValue();
-                core.preferences.putFloat("sfx", core.sfx);
-                core.preferences.flush();
+                preferences.putFloat("sfx", core.sfx);
+                preferences.flush();
                 sfx.setVolume(core.sfx);
             }
         });
@@ -182,7 +181,7 @@ public class OptionsScreen extends JamScreen {
         TextButton textButton = new TextButton("Edit Key Bindings", skin);
         root.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -207,7 +206,7 @@ public class OptionsScreen extends JamScreen {
         textButton = new TextButton("OK", skin);
         root.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -228,7 +227,7 @@ public class OptionsScreen extends JamScreen {
         Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     

@@ -26,33 +26,28 @@ import com.ray3k.template.entities.EntityController;
 import com.ray3k.template.screens.DialogPause.PauseListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class GameScreen extends JamScreen {
     public static GameScreen gameScreen;
     public static final Color BG_COLOR = new Color();
-    private Core core;
-    public AssetManager assetManager;
-    private Batch batch;
     public Stage stage;
     public Skin skin;
     public ShapeDrawer shapeDrawer;
     public EntityController entityController;
-    private VfxManager vfxManager;
     private EarthquakeEffect vfxEffect;
     public boolean paused;
     
     public GameScreen() {
         gameScreen = this;
-        core = Core.core;
-        assetManager = core.assetManager;
-        batch = core.batch;
-        vfxManager = core.vfxManager;
         vfxEffect = new EarthquakeEffect();
         
         BG_COLOR.set(Color.PINK);
     
         paused = false;
         
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -78,7 +73,7 @@ public class GameScreen extends JamScreen {
         });
         
         skin = assetManager.get("skin/shimmer-ui.json");
-        shapeDrawer = new ShapeDrawer(core.batch, skin.getRegion("white"));
+        shapeDrawer = new ShapeDrawer(batch, skin.getRegion("white"));
         shapeDrawer.setPixelSize(.5f);
         
         InputMultiplexer inputMultiplexer = new InputMultiplexer(stage, this);

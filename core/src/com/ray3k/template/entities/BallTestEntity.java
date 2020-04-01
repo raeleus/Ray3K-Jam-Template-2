@@ -13,7 +13,6 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import space.earlygrey.shapedrawer.ShapeUtils;
 
 public class BallTestEntity extends Entity {
-    private Core core;
     private GameScreen gameScreen;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -23,7 +22,6 @@ public class BallTestEntity extends Entity {
     
     @Override
     public void create() {
-        core = Core.core;
         gameScreen = GameScreen.gameScreen;
         viewport = gameScreen.viewport;
         camera = gameScreen.camera;

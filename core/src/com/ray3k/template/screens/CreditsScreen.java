@@ -21,10 +21,11 @@ import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class CreditsScreen extends JamScreen {
     private Stage stage;
-    private Skin skin;
-    private Core core;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private Array<Actor> focusables;
     
@@ -36,10 +37,7 @@ public class CreditsScreen extends JamScreen {
     public void show() {
         super.show();
         
-        core = Core.core;
-        skin = core.skin;
-        
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
     
         stage.addListener(new InputListener() {
@@ -129,7 +127,7 @@ public class CreditsScreen extends JamScreen {
         TextButton textButton = new TextButton("OK", skin);
         root.add(textButton);
         focusables.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
@@ -150,7 +148,7 @@ public class CreditsScreen extends JamScreen {
         Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     

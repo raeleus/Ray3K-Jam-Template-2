@@ -14,20 +14,18 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class SplashScreen extends JamScreen {
     private Stage stage;
-    private Core core;
-    private Skin skin;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     
     @Override
     public void show() {
         super.show();
         
-        core = Core.core;
-        skin = core.skin;
-        
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
     
         Table root = new Table();
@@ -56,7 +54,7 @@ public class SplashScreen extends JamScreen {
         Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     

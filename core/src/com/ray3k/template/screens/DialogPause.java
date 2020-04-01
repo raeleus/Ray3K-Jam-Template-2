@@ -8,16 +8,14 @@ import com.badlogic.gdx.utils.Align;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+
 public class DialogPause extends Dialog {
-    private Core core;
-    private Skin skin;
     private JamScreen jamScreen;
     private boolean detectInput;
     
     public DialogPause(JamScreen jamScreen) {
-        super("", Core.core.skin);
-        core = Core.core;
-        skin = getSkin();
+        super("", skin);
         this.jamScreen = jamScreen;
         
         detectInput = true;
@@ -41,7 +39,7 @@ public class DialogPause extends Dialog {
         table.defaults().space(10);
         TextButton textButton = new TextButton("Resume", skin);
         table.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -53,7 +51,7 @@ public class DialogPause extends Dialog {
         
         textButton = new TextButton("Quit", skin);
         table.add(textButton);
-        textButton.addListener(core.sndChangeListener);
+        textButton.addListener(sndChangeListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

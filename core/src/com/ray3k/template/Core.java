@@ -23,17 +23,17 @@ import com.ray3k.template.transitions.Transitions;
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
     public static Core core;
-    public Skin skin;
-    public SkeletonRenderer skeletonRenderer;
-    public ChangeListener sndChangeListener;
-    public VfxManager vfxManager;
-    public CrossPlatformWorker crossPlatformWorker;
+    public static Skin skin;
+    public static SkeletonRenderer skeletonRenderer;
+    public static ChangeListener sndChangeListener;
+    public static VfxManager vfxManager;
+    public static CrossPlatformWorker crossPlatformWorker;
     public enum Binding {
         LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
     }
-    public float bgm;
-    public float sfx;
-    public Preferences preferences;
+    public static float bgm;
+    public static float sfx;
+    public static Preferences preferences;
     
     @Override
     public void create() {
@@ -62,7 +62,7 @@ public class Core extends JamGame {
         };
         
         setScreen(new LoadScreen(() -> {
-            core.skin = core.assetManager.get("skin/shimmer-ui.json");
+            skin = assetManager.get("skin/shimmer-ui.json");
         }));
         defaultTransition = Transitions.colorFade(Color.BLACK);
         defaultTransitionDuration = .5f;

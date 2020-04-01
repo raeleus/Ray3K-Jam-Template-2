@@ -1,12 +1,10 @@
 package com.ray3k.template.entities;
 
 import com.badlogic.gdx.graphics.Color;
-import com.crashinvaders.vfx.VfxManager;
-import com.ray3k.template.Core;
+
+import static com.ray3k.template.Core.*;
 
 public class VfxStartEntity extends Entity {
-    private Core core;
-    private VfxManager vfx;
     private final Color clearColor = new Color();
     
     public VfxStartEntity(Color clearColor) {
@@ -15,8 +13,6 @@ public class VfxStartEntity extends Entity {
     
     @Override
     public void create() {
-        core = Core.core;
-        vfx = core.vfxManager;
     }
     
     @Override
@@ -31,10 +27,10 @@ public class VfxStartEntity extends Entity {
     
     @Override
     public void draw(float delta) {
-        core.batch.end();
-        vfx.cleanUpBuffers(clearColor);
-        vfx.beginCapture();
-        core.batch.begin();
+        batch.end();
+        vfxManager.cleanUpBuffers(clearColor);
+        vfxManager.beginCapture();
+        batch.begin();
     }
     
     @Override

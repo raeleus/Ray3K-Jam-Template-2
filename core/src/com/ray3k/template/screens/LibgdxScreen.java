@@ -20,11 +20,11 @@ import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.Core;
 import com.ray3k.template.JamScreen;
 
+import static com.ray3k.template.Core.*;
+import static com.ray3k.template.JamGame.*;
+
 public class LibgdxScreen extends JamScreen {
     private Stage stage;
-    private Skin skin;
-    private Core core;
-    private AssetManager assetManager;
     private Array<SkeletonDrawable> skeletonDrawables;
     private final static Color BG_COLOR = new Color(Color.WHITE);
     private ObjectSet<Sound> sounds;
@@ -32,22 +32,19 @@ public class LibgdxScreen extends JamScreen {
     @Override
     public void show() {
         super.show();
-        
-        core = Core.core;
-        skin = core.skin;
-        assetManager = core.assetManager;
+
         skeletonDrawables = new Array<>();
         sounds = new ObjectSet<>();
     
         SkeletonData skeletonData = assetManager.get("spine-libgdx/libgdx.json");
-        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(core.skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
+        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
         skeletonDrawable.setMinWidth(350);
         skeletonDrawable.setMinHeight(250);
         skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
         skeletonDrawable.getAnimationState().apply(skeletonDrawable.getSkeleton());
         skeletonDrawables.add(skeletonDrawable);
         
-        stage = new Stage(new ScreenViewport(), core.batch);
+        stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
         
         Table root = new Table();
@@ -70,7 +67,7 @@ public class LibgdxScreen extends JamScreen {
             @Override
             public void event(AnimationState.TrackEntry entry, Event event) {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
-                    Sound sound = core.assetManager.get("sfx/" + event.getData().getAudioPath());
+                    Sound sound = assetManager.get("sfx/" + event.getData().getAudioPath());
                     sound.play();
                     sounds.add(sound);
                 }
@@ -106,7 +103,7 @@ public class LibgdxScreen extends JamScreen {
         Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     
-        core.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         stage.draw();
     }
     
