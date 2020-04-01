@@ -20,13 +20,14 @@ import com.ray3k.template.AnimationStateDataLoader.AnimationStateDataParameter;
 import com.ray3k.template.screens.LoadScreen;
 import com.ray3k.template.transitions.Transitions;
 
+import static com.badlogic.gdx.Application.LOG_DEBUG;
+
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
     public static Core core;
     public static Skin skin;
     public static SkeletonRenderer skeletonRenderer;
     public static ChangeListener sndChangeListener;
-    public static VfxManager vfxManager;
     public static CrossPlatformWorker crossPlatformWorker;
     public enum Binding {
         LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
@@ -52,8 +53,6 @@ public class Core extends JamGame {
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
         
-        vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
-        
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -72,7 +71,6 @@ public class Core extends JamGame {
     public void dispose() {
         vfxManager.dispose();
         assetManager.dispose();
-        
         super.dispose();
     }
     

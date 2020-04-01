@@ -4,13 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.crashinvaders.vfx.VfxManager;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
-import com.ray3k.template.transitions.Transition;
-import com.ray3k.template.transitions.TransitionEngine;
+import com.ray3k.template.transitions.*;
 
-import static com.ray3k.template.transitions.Transitions.crossFade;
+import static com.ray3k.template.transitions.Transitions.*;
 
 public abstract class JamGame extends Game {
     private final static long MS_PER_UPDATE = 10;
@@ -23,6 +24,7 @@ public abstract class JamGame extends Game {
     public Transition defaultTransition;
     public float defaultTransitionDuration;
     public static ShapeRenderer shapeRenderer;
+    public static VfxManager vfxManager;
     
     @Override
     public void create() {
@@ -32,8 +34,8 @@ public abstract class JamGame extends Game {
         lag = 0;
         
         assetManager = new AssetManager(new InternalFileHandleResolver());
-        
         shapeRenderer = new ShapeRenderer();
+        vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         
         transitionEngine = new TransitionEngine(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         defaultTransition = crossFade();
@@ -75,14 +77,10 @@ public abstract class JamGame extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        
+    
         batch.dispose();
-        
-        if (assetManager != null) {
-            assetManager.dispose();
-            assetManager = null;
-        }
-        
+        vfxManager.dispose();
+        assetManager.dispose();
         transitionEngine.dispose();
         shapeRenderer.dispose();
     }

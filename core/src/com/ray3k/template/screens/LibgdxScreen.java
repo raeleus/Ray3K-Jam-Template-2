@@ -1,15 +1,14 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -17,11 +16,9 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.utils.SkeletonDrawable;
-import com.ray3k.template.Core;
-import com.ray3k.template.JamScreen;
+import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.JamGame.*;
 
 public class LibgdxScreen extends JamScreen {
     private Stage stage;
@@ -35,9 +32,10 @@ public class LibgdxScreen extends JamScreen {
 
         skeletonDrawables = new Array<>();
         sounds = new ObjectSet<>();
-    
-        SkeletonData skeletonData = assetManager.get("spine-libgdx/libgdx.json");
-        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, new Skeleton(skeletonData), new AnimationState(new AnimationStateData(skeletonData)));
+        
+        Skeleton skeleton = new Skeleton(assetManager.get("spine-libgdx/libgdx.json", SkeletonData.class));
+        AnimationState animationState = new AnimationState(assetManager.get("spine-libgdx/libgdx.json-animation", AnimationStateData.class));
+        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, skeleton, animationState);
         skeletonDrawable.setMinWidth(350);
         skeletonDrawable.setMinHeight(250);
         skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
