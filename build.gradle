@@ -88,8 +88,8 @@ project(":core") {
         api 'space.earlygrey:shapedrawer:2.0.1'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
-        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
+        api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
+        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
