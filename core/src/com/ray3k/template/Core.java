@@ -13,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.crashinvaders.vfx.VfxManager;
+import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
+import com.ray3k.template.AnimationStateDataLoader.AnimationStateDataParameter;
 import com.ray3k.template.screens.LoadScreen;
 import com.ray3k.template.transitions.Transitions;
 
@@ -26,7 +28,7 @@ public class Core extends JamGame {
     public ChangeListener sndChangeListener;
     public VfxManager vfxManager;
     public CrossPlatformWorker crossPlatformWorker;
-    public static enum Binding {
+    public enum Binding {
         LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
     }
     public float bgm;
@@ -59,7 +61,10 @@ public class Core extends JamGame {
             }
         };
         
-        setScreen(new LoadScreen(() -> core.skin = core.assetManager.get("skin/shimmer-ui.json")));
+        setScreen(new LoadScreen(() -> {
+            core.skin = core.assetManager.get("skin/shimmer-ui.json");
+            assetManager.get("spine-ray3k/ray3k.json-animation", AnimationStateData.class);
+        }));
         defaultTransition = Transitions.colorFade(Color.BLACK);
         defaultTransitionDuration = .5f;
     }
@@ -76,6 +81,7 @@ public class Core extends JamGame {
     public void loadAssets() {
         assetManager.setLoader(Skin.class, new SkinFreeTypeLoader(assetManager.getFileHandleResolver()));
         assetManager.setLoader(SkeletonData.class, new SkeletonDataLoader(assetManager.getFileHandleResolver()));
+        assetManager.setLoader(AnimationStateData.class, new AnimationStateDataLoader(assetManager.getFileHandleResolver()));
         
         FileHandle fileHandle = Gdx.files.internal("skin.txt");
         if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
@@ -97,7 +103,7 @@ public class Core extends JamGame {
             assetManager.load(path, TextureAtlas.class);
             fileHandle = Gdx.files.internal("spine.txt");
             if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2, SkeletonData.class, new SkeletonDataLoader.SkeletonDataLoaderParameter(path));
+                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
             }
             break;
         }
@@ -107,7 +113,7 @@ public class Core extends JamGame {
             assetManager.load(path, TextureAtlas.class);
             fileHandle = Gdx.files.internal("spine-libgdx.txt");
             if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2, SkeletonData.class, new SkeletonDataLoader.SkeletonDataLoaderParameter(path));
+                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
             }
             break;
         }
@@ -117,7 +123,7 @@ public class Core extends JamGame {
             assetManager.load(path, TextureAtlas.class);
             fileHandle = Gdx.files.internal("spine-ray3k.txt");
             if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2, SkeletonData.class, new SkeletonDataLoader.SkeletonDataLoaderParameter(path));
+                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
             }
             break;
         }
