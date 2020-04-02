@@ -2,6 +2,7 @@ package com.ray3k.template;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 import com.esotericsoftware.spine.SkeletonBounds;
+import com.ray3k.template.JamScreen.*;
 import regexodus.Matcher;
 import regexodus.Pattern;
 
@@ -146,16 +148,16 @@ public class Utils {
         }
     }
     
-    public static String controllerButtonToString(int buttonCode) {
-        return buttonCode == JamScreen.ANY_CONTROLLER_BUTTON ? "ANY CONTROLLER BUTTON" : "Button " + Integer.toString(buttonCode);
+    public static String controllerButtonToString(ControllerValue controllerValue) {
+        return controllerValue == JamScreen.ANY_CONTROLLER_BUTTON ? "ANY CONTROLLER BUTTON" : "Pad" + (controllerValue.controller == null ? "null" : Controllers.getControllers().indexOf(controllerValue.controller, true)) + " Button " + Integer.toString(controllerValue.value);
     }
     
-    public static String controllerAxisToString(int axisCode) {
-        return axisCode == JamScreen.ANY_CONTROLLER_AXIS ? "ANY CONTROLLER AXIS" : "Axis " + Integer.toString(axisCode);
+    public static String controllerAxisToString(ControllerValue controllerValue) {
+        return controllerValue == JamScreen.ANY_CONTROLLER_AXIS ? "ANY CONTROLLER AXIS" : "Pad" + (controllerValue.controller == null ? "null" : Controllers.getControllers().indexOf(controllerValue.controller, true)) + " Axis " + Integer.toString(controllerValue.axisCode) + " " + Integer.toString(controllerValue.value);
     }
     
-    public static String controllerPovToString(int povCode) {
-        return povCode == JamScreen.ANY_CONTROLLER_POV ? "ANY CONTROLLER POV" : "POV " + Integer.toString(povCode);
+    public static String controllerPovToString(ControllerValue controllerValue) {
+        return controllerValue == JamScreen.ANY_CONTROLLER_POV ? "ANY CONTROLLER POV" : "Pad" + (controllerValue.controller == null ? "null" : Controllers.getControllers().indexOf(controllerValue.controller, true)) + " POV " + Integer.toString(controllerValue.axisCode) + " " + Integer.toString(controllerValue.value);
     }
     
     public static float pointDistance(float x1, float y1, float x2, float y2) {

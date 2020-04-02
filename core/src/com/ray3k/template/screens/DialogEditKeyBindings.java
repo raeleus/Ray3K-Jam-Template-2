@@ -1,7 +1,6 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
@@ -15,10 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
-import com.ray3k.template.Core;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.ray3k.template.Core.Binding;
 import com.ray3k.template.JamScreen;
-import com.ray3k.template.Utils;
+import com.ray3k.template.JamScreen.*;
 
 import static com.ray3k.template.Core.*;
 
@@ -145,22 +144,7 @@ public class DialogEditKeyBindings extends Dialog {
         
         table.defaults().space(10).uniform().fill();
         for (Binding binding : JamScreen.getBindings()) {
-            String codeName;
-            if (JamScreen.hasKeyBinding(binding)) {
-                codeName = Input.Keys.toString(JamScreen.getBinding(binding));
-            } else if (JamScreen.hasButtonBinding(binding)) {
-                codeName = Utils.mouseButtonToString(JamScreen.getBinding(binding));
-            } else if (JamScreen.hasScrollBinding(binding)) {
-                codeName = Utils.scrollAmountToString(JamScreen.getBinding(binding));
-            } else if (JamScreen.hasControllerButtonBinding(binding)) {
-                codeName = Utils.controllerButtonToString(JamScreen.getBinding(binding));
-            } else if (JamScreen.hasControllerAxisBinding(binding)) {
-                codeName = Utils.controllerAxisToString(JamScreen.getBinding(binding));
-            } else if (JamScreen.hasControllerPovBinding(binding)) {
-                codeName = Utils.controllerPovToString(JamScreen.getBinding(binding));
-            } else {
-                codeName = "Unbound";
-            }
+            String codeName = JamScreen.getBindingCodeName(binding);
             
             TextButton textButton = new TextButton(binding.toString() + " : " + codeName, skin);
             table.add(textButton);
@@ -225,10 +209,10 @@ public class DialogEditKeyBindings extends Dialog {
                         }
     
                         @Override
-                        public void controllerButtonSelected(int buttonCode) {
+                        public void controllerButtonSelected(Controller controller, int value) {
                             Array<Binding> unbinds = new Array<>();
-                            for (Entry<Binding> binding : JamScreen.controllerButtonBindings) {
-                                if (binding.value == buttonCode) {
+                            for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerButtonBindings) {
+                                if (binding.value.value == value) {
                                     unbinds.add(binding.key);
                                 }
                             }
@@ -236,16 +220,16 @@ public class DialogEditKeyBindings extends Dialog {
                                 JamScreen.addUnboundBinding(binding);
                             }
     
-                            JamScreen.addControllerButtonBinding(binding, buttonCode);
+                            JamScreen.addControllerButtonBinding(binding, new ControllerValue(controller, 0, value));
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
     
                         @Override
-                        public void controllerAxisSelected(int axisCode) {
+                        public void controllerAxisSelected(Controller controller, int axisCode, int value) {
                             Array<Binding> unbinds = new Array<>();
-                            for (Entry<Binding> binding : JamScreen.controllerAxisBindings) {
-                                if (binding.value == axisCode) {
+                            for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerAxisBindings) {
+                                if (binding.value.axisCode == axisCode && binding.value.value == value) {
                                     unbinds.add(binding.key);
                                 }
                             }
@@ -253,16 +237,16 @@ public class DialogEditKeyBindings extends Dialog {
                                 JamScreen.addUnboundBinding(binding);
                             }
         
-                            JamScreen.addControllerAxisBinding(binding, axisCode);
+                            JamScreen.addControllerAxisBinding(binding, new ControllerValue(controller, axisCode, value));
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
     
                         @Override
-                        public void controllerPovSelected(int povCode) {
+                        public void controllerPovSelected(Controller controller, int povCode, int value) {
                             Array<Binding> unbinds = new Array<>();
-                            for (Entry<Binding> binding : JamScreen.controllerPovBindings) {
-                                if (binding.value == povCode) {
+                            for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerPovBindings) {
+                                if (binding.value.axisCode == povCode && binding.value.value == value) {
                                     unbinds.add(binding.key);
                                 }
                             }
@@ -270,7 +254,7 @@ public class DialogEditKeyBindings extends Dialog {
                                 JamScreen.addUnboundBinding(binding);
                             }
         
-                            JamScreen.addControllerPovBinding(binding, povCode);
+                            JamScreen.addControllerPovBinding(binding, new ControllerValue(controller, povCode, value));
                             JamScreen.saveBindings();
                             refreshTable(table);
                         }
@@ -352,7 +336,7 @@ public class DialogEditKeyBindings extends Dialog {
         
                 @Override
                 public boolean buttonDown(Controller controller, int buttonCode) {
-                    fire(new ControllerButtonBindingEvent(buttonCode));
+                    fire(new ControllerButtonBindingEvent(controller, buttonCode));
                     hide();
                     return false;
                 }
@@ -365,8 +349,7 @@ public class DialogEditKeyBindings extends Dialog {
                 @Override
                 public boolean axisMoved(Controller controller, int axisCode, float value) {
                     if (value > .5 || value < -.5) {
-                        int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
-                        fire(new ControllerAxisBindingEvent(code));
+                        fire(new ControllerAxisBindingEvent(controller, axisCode, MathUtils.round(value)));
                         hide();
                     }
                     return false;
@@ -375,8 +358,7 @@ public class DialogEditKeyBindings extends Dialog {
                 @Override
                 public boolean povMoved(Controller controller, int povCode, PovDirection value) {
                     if (value != PovDirection.center) {
-                        int code = Integer.parseInt("" + value.ordinal() + povCode);
-                        fire(new ControllerPovBindingEvent(code));
+                        fire(new ControllerPovBindingEvent(controller, povCode, value.ordinal()));
                         hide();
                     }
                     return false;
@@ -432,26 +414,36 @@ public class DialogEditKeyBindings extends Dialog {
     }
     
     private static class ControllerButtonBindingEvent extends Event {
-        private int buttonCode;
+        private Controller controller;
+        private int value;
         
-        public ControllerButtonBindingEvent(int buttonCode) {
-            this.buttonCode = buttonCode;
+        public ControllerButtonBindingEvent(Controller controller, int value) {
+            this.controller = controller;
+            this.value = value;
         }
     }
     
     private static class ControllerAxisBindingEvent extends Event {
+        private Controller controller;
         private int axisCode;
+        private int value;
         
-        public ControllerAxisBindingEvent(int axisCode) {
+        public ControllerAxisBindingEvent(Controller controller, int axisCode, int value) {
+            this.controller = controller;
             this.axisCode = axisCode;
+            this.value = value;
         }
     }
     
     private static class ControllerPovBindingEvent extends Event {
-        private int povCode;
+        private Controller controller;
+        private int axisCode;
+        private int value;
         
-        public ControllerPovBindingEvent(int povCode) {
-            this.povCode = povCode;
+        public ControllerPovBindingEvent(Controller controller, int axisCode, int value) {
+            this.controller = controller;
+            this.axisCode = axisCode;
+            this.value = value;
         }
     }
     
@@ -472,13 +464,16 @@ public class DialogEditKeyBindings extends Dialog {
                 scrollSelected(((ScrollBindingEvent) event).scroll);
                 return true;
             } else if (event instanceof ControllerButtonBindingEvent) {
-                controllerButtonSelected(((ControllerButtonBindingEvent) event).buttonCode);
+                ControllerButtonBindingEvent ev = (ControllerButtonBindingEvent) event;
+                controllerButtonSelected(ev.controller, ev.value);
                 return true;
             } else if (event instanceof ControllerAxisBindingEvent) {
-                controllerAxisSelected(((ControllerAxisBindingEvent) event).axisCode);
+                ControllerAxisBindingEvent ev = (ControllerAxisBindingEvent) event;
+                controllerAxisSelected(ev.controller, ev.axisCode, ev.value);
                 return true;
             } else if (event instanceof ControllerPovBindingEvent) {
-                controllerPovSelected(((ControllerPovBindingEvent) event).povCode);
+                ControllerPovBindingEvent ev = (ControllerPovBindingEvent) event;
+                controllerPovSelected(ev.controller, ev.axisCode, ev.value);
                 return true;
             } else if (event instanceof CancelEvent) {
                 cancelled();
@@ -491,9 +486,9 @@ public class DialogEditKeyBindings extends Dialog {
         public abstract void keySelected(int key);
         public abstract void buttonSelected(int button);
         public abstract void scrollSelected(int scroll);
-        public abstract void controllerButtonSelected(int buttonCode);
-        public abstract void controllerAxisSelected(int axisCode);
-        public abstract void controllerPovSelected(int povCode);
+        public abstract void controllerButtonSelected(Controller controller, int value);
+        public abstract void controllerAxisSelected(Controller controller, int axisCode, int value);
+        public abstract void controllerPovSelected(Controller controller, int axisCode, int value);
         public abstract void cancelled();
     }
 }

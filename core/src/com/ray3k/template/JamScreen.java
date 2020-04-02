@@ -1,7 +1,10 @@
 package com.ray3k.template;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -9,13 +12,13 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
-import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ray3k.template.Core.*;
+
+import java.util.Iterator;
+import java.util.Objects;
 
 import static com.ray3k.template.Core.*;
 
@@ -28,28 +31,23 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public IntArray buttonsJustPressed = new IntArray();
     public IntArray buttonsPressed = new IntArray();
     public IntArray scrollJustPressed = new IntArray();
-    public IntArray controllerButtonsJustPressed = new IntArray();
-    public IntArray controllerButtonsPressed = new IntArray();
-    public IntArray controllerAxisJustPressed = new IntArray();
-    public IntArray controllerAxisPressed = new IntArray();
-    public IntArray controllerPovJustPressed = new IntArray();
-    public IntArray controllerPovPressed = new IntArray();
     private static final Vector3 tempVector3 = new Vector3();
     public final static ObjectIntMap<Binding> keyBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Binding> buttonBindings = new ObjectIntMap<>();
     public final static ObjectIntMap<Binding> scrollBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Binding> controllerButtonBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Binding> controllerAxisBindings = new ObjectIntMap<>();
-    public final static ObjectIntMap<Binding> controllerPovBindings = new ObjectIntMap<>();
+    public final static ObjectMap<Binding, ControllerValue> controllerButtonBindings = new ObjectMap<>();
+    public final static ObjectMap<Binding, ControllerValue> controllerAxisBindings = new ObjectMap<>();
+    public final static ObjectMap<Binding, ControllerValue> controllerPovBindings = new ObjectMap<>();
     public final static ObjectSet<Binding> unboundBindings = new ObjectSet<>();
     public final static Array<Binding> bindings = new Array<>();
     public final static int ANY_BUTTON = -1;
     public final static int SCROLL_UP = -1;
     public final static int SCROLL_DOWN = 1;
     public final static int ANY_SCROLL = 0;
-    public final static int ANY_CONTROLLER_BUTTON = -1;
-    public final static int ANY_CONTROLLER_AXIS = -1;
-    public final static int ANY_CONTROLLER_POV = 0;
+    public final static ControllerValue ANY_CONTROLLER_BUTTON = new ControllerValue(null, -1, 0);
+    public final static ControllerValue ANY_CONTROLLER_AXIS = new ControllerValue(null, -1, 0);
+    public final static ControllerValue ANY_CONTROLLER_POV = new ControllerValue(null, -1, 0);
+    public final static ObjectMap<Controller, ControllerHandler> controllerMap = new ObjectMap<>();
     
     @Override
     public void show() {
@@ -86,8 +84,11 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keysJustPressed.clear();
         buttonsJustPressed.clear();
         scrollJustPressed.clear();
-        controllerButtonsJustPressed.clear();
-        controllerAxisJustPressed.clear();
+        for (ControllerHandler handler : controllerMap.values()) {
+            handler.controllerButtonsJustPressed.clear();
+            handler.controllerPovJustPressed.clear();
+            handler.controllerAxisJustPressed.clear();
+        }
     }
     
     public abstract void act(float delta);
@@ -143,51 +144,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return key == Input.Keys.ANY_KEY ? keysJustPressed.size > 0 : keysJustPressed.contains(key);
     }
     
-    public boolean isControllerButtonJustPressed(int buttonCode) {
-        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsJustPressed.size > 0 : controllerButtonsJustPressed.contains(
-                buttonCode);
-    }
-    
-    public boolean isControllerAxisJustPressed(int axisCode) {
-        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisJustPressed.size > 0 : controllerAxisJustPressed.contains(
-                axisCode);
-    }
-    
-    public boolean isControllerPovJustPressed(int povCode) {
-        return povCode == ANY_CONTROLLER_POV ? controllerPovJustPressed.size > 0 : controllerPovJustPressed.contains(
-                povCode);
-    }
-    
     public boolean isKeyJustPressed(int... keys) {
         for (int key : keys) {
             if (isKeyJustPressed(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isControllerButtonJustPressed(int... controllerButtons) {
-        for (int controllerButton : controllerButtons) {
-            if (isControllerButtonJustPressed(controllerButton)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isControllerAxisJustPressed(int... axisCodes) {
-        for (int axisCode : axisCodes) {
-            if (isControllerAxisJustPressed(axisCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isControllerPovJustPressed(int... povCodes) {
-        for (int povCode : povCodes) {
-            if (isControllerPovJustPressed(povCode)) {
                 return true;
             }
         }
@@ -230,20 +189,6 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return Gdx.input.isKeyPressed(key);
     }
     
-    public boolean isControllerButtonPressed(int buttonCode) {
-        return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsPressed.size > 0 : controllerButtonsPressed.contains(
-                buttonCode);
-    }
-    
-    public boolean isControllerAxisPressed(int axisCode) {
-        return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisPressed.size > 0 : controllerAxisPressed.contains(
-                axisCode);
-    }
-    
-    public boolean isControllerPovPressed(int povCode) {
-        return povCode == ANY_CONTROLLER_POV ? controllerPovPressed.size > 0 : controllerPovPressed.contains(povCode);
-    }
-    
     public boolean isAnyKeyPressed(int... keys) {
         for (int key : keys) {
             if (isKeyPressed(key)) {
@@ -270,84 +215,6 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return keysJustPressed.size > 0;
     }
     
-    public boolean isAnyControllerButtonPressed(int... buttonCodes) {
-        for (int buttonCode : buttonCodes) {
-            if (isControllerButtonPressed(buttonCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerButtonPressed() {
-        return controllerButtonsPressed.size > 0;
-    }
-    
-    public boolean isAnyControllerButtonJustPressed(int... buttonCodes) {
-        for (int buttonCode : buttonCodes) {
-            if (isControllerButtonJustPressed(buttonCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerButtonJustPressed() {
-        return controllerButtonsJustPressed.size > 0;
-    }
-    
-    public boolean isAnyControllerAxisPressed(int... axisCodes) {
-        for (int axisCode : axisCodes) {
-            if (isControllerAxisPressed(axisCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerAxisPressed() {
-        return controllerAxisPressed.size > 0;
-    }
-    
-    public boolean isAnyControllerAxisJustPressed(int... axisCodes) {
-        for (int axisCode : axisCodes) {
-            if (isControllerAxisJustPressed(axisCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerAxisJustPressed() {
-        return controllerButtonsJustPressed.size > 0;
-    }
-    
-    public boolean isAnyControllerPovPressed(int... povCodes) {
-        for (int povCode : povCodes) {
-            if (isControllerPovPressed(povCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerPovPressed() {
-        return controllerPovPressed.size > 0;
-    }
-    
-    public boolean isAnyControllerPovJustPressed(int... povCodes) {
-        for (int povCode : povCodes) {
-            if (isControllerPovJustPressed(povCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean isAnyControllerPovJustPressed() {
-        return controllerPovJustPressed.size > 0;
-    }
-    
     public boolean areAllKeysPressed(int... keys) {
         for (int key : keys) {
             if (!isKeyPressed(key)) {
@@ -357,31 +224,139 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return true;
     }
     
-    public boolean areAllControllerButtonsPressed(int... buttonCodes) {
-        for (int buttonCode : buttonCodes) {
-            if (!isControllerButtonPressed(buttonCode)) {
-                return false;
+    public boolean isControllerButtonJustPressed(ControllerValue... buttonCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerButtonJustPressed(buttonCodes)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
-    public boolean areAllControllerAxisPressed(int... axisCodes) {
-        for (int axisCode : axisCodes) {
-            if (!isControllerAxisPressed(axisCode)) {
-                return false;
+    public boolean isControllerAxisJustPressed(ControllerValue... axisCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerAxisJustPressed(axisCodes)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
-    public boolean areAllControllerPovPressed(int... povCodes) {
-        for (int povCode : povCodes) {
-            if (!isControllerPovPressed(povCode)) {
-                return false;
+    public boolean isControllerPovJustPressed(ControllerValue... povCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerPovJustPressed(povCodes)) {
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+    
+    public boolean isControllerButtonPressed(ControllerValue... buttonCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerButtonPressed(buttonCodes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isControllerAxisPressed(ControllerValue... axisCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerAxisPressed(axisCodes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isControllerPovPressed(ControllerValue... povCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isControllerPovPressed(povCodes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerButtonPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerButtonPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerButtonJustPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerButtonJustPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerAxisPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerAxisPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerAxisJustPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerAxisJustPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerPovPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerPovPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAnyControllerPovJustPressed() {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.isAnyControllerPovJustPressed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean areAllControllerButtonsPressed(ControllerValue... buttonCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.areAllControllerButtonsPressed(buttonCodes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean areAllControllerAxisPressed(ControllerValue... axisCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.areAllControllerAxisPressed(axisCodes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean areAllControllerPovPressed(ControllerValue... povCodes) {
+        for (ControllerHandler handler : controllerMap.values()) {
+            if (handler.areAllControllerPovPressed(povCodes)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public boolean isButtonPressed(int button) {
@@ -435,7 +410,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         } else if (buttonBindings.containsKey(binding)) {
             return isButtonPressed(keyBindings.get(binding, ANY_BUTTON));
         } else if (controllerButtonBindings.containsKey(binding)) {
-            return isControllerButtonPressed(controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON));
+            return isControllerButtonPressed(controllerButtonBindings.get(binding));
         } else if (controllerAxisBindings.containsKey(binding)) {
             return isControllerAxisPressed(controllerAxisBindings.get(binding, ANY_CONTROLLER_AXIS));
         } else if (controllerPovBindings.containsKey(binding)) {
@@ -531,9 +506,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public static void addKeyBinding(Binding binding, int key) {
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
         unboundBindings.remove(binding);
         keyBindings.put(binding, key);
         if (!bindings.contains(binding, true)) {
@@ -544,9 +519,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public static void addButtonBinding(Binding binding, int button) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         scrollBindings.remove(binding, ANY_SCROLL);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
         unboundBindings.remove(binding);
         buttonBindings.put(binding, button);
         if (!bindings.contains(binding, true)) {
@@ -557,9 +532,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public static void addScrollBinding(Binding binding, int scroll) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
         unboundBindings.remove(binding);
         scrollBindings.put(binding, scroll);
         if (!bindings.contains(binding, true)) {
@@ -567,40 +542,40 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     }
     
-    public static void addControllerButtonBinding(Binding binding, int buttonCode) {
+    public static void addControllerButtonBinding(Binding binding, ControllerValue controllerValue) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         unboundBindings.remove(binding);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
-        controllerButtonBindings.put(binding, buttonCode);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
+        controllerButtonBindings.put(binding, controllerValue);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
     }
     
-    public static void addControllerAxisBinding(Binding binding, int axisCode) {
+    public static void addControllerAxisBinding(Binding binding, ControllerValue controllerValue) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         unboundBindings.remove(binding);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
-        controllerAxisBindings.put(binding, axisCode);
+        controllerButtonBindings.remove(binding);
+        controllerPovBindings.remove(binding);
+        controllerAxisBindings.put(binding, controllerValue);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
     }
     
-    public static void addControllerPovBinding(Binding binding, int povCode) {
+    public static void addControllerPovBinding(Binding binding, ControllerValue controllerValue) {
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
         unboundBindings.remove(binding);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.put(binding, povCode);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.put(binding, controllerValue);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
         }
@@ -610,9 +585,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
         unboundBindings.add(binding);
         if (!bindings.contains(binding, true)) {
             bindings.add(binding);
@@ -623,9 +598,9 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         keyBindings.remove(binding, Input.Keys.ANY_KEY);
         buttonBindings.remove(binding, ANY_BUTTON);
         scrollBindings.remove(binding, ANY_SCROLL);
-        controllerButtonBindings.remove(binding, ANY_CONTROLLER_BUTTON);
-        controllerAxisBindings.remove(binding, ANY_CONTROLLER_AXIS);
-        controllerPovBindings.remove(binding, ANY_CONTROLLER_POV);
+        controllerButtonBindings.remove(binding);
+        controllerAxisBindings.remove(binding);
+        controllerPovBindings.remove(binding);
         bindings.removeValue(binding, true);
     }
     
@@ -677,31 +652,33 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         return scrollBindings.get(binding, ANY_SCROLL);
     }
     
-    public static int getControllerButtonBinding(Binding binding) {
+    public static ControllerValue getControllerButtonBinding(Binding binding) {
         return controllerButtonBindings.get(binding, ANY_CONTROLLER_BUTTON);
     }
     
-    public static int getControllerAxisBinding(Binding binding) {
+    public static ControllerValue getControllerAxisBinding(Binding binding) {
         return controllerAxisBindings.get(binding, ANY_CONTROLLER_AXIS);
     }
     
-    public static int getControllerPovBinding(Binding binding) {
+    public static ControllerValue getControllerPovBinding(Binding binding) {
         return controllerPovBindings.get(binding, ANY_CONTROLLER_POV);
     }
     
-    public static int getBinding(Binding binding) {
+    public static String getBindingCodeName(Binding binding) {
         if (keyBindings.containsKey(binding)) {
-            return getKeyBinding(binding);
+            return Input.Keys.toString(getKeyBinding(binding));
         } else if (buttonBindings.containsKey(binding)) {
-            return getButtonBinding(binding);
+            return Utils.mouseButtonToString(getButtonBinding(binding));
         } else if (controllerButtonBindings.containsKey(binding)) {
-            return getControllerButtonBinding(binding);
+            return Utils.controllerButtonToString(getControllerButtonBinding(binding));
         } else if (controllerAxisBindings.containsKey(binding)) {
-            return getControllerAxisBinding(binding);
+            return Utils.controllerAxisToString(getControllerAxisBinding(binding));
         } else if (controllerPovBindings.containsKey(binding)) {
-            return getControllerPovBinding(binding);
+            return Utils.controllerPovToString(getControllerPovBinding(binding));
+        } else if (scrollBindings.containsKey(binding)) {
+            return Utils.scrollAmountToString(getScrollBinding(binding));
         } else {
-            return getScrollBinding(binding);
+            return "UNBOUND";
         }
     }
     
@@ -736,8 +713,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             preferences.remove("unbound:" + binding.key.toString());
         }
         
-        for (Entry<Binding> binding : controllerButtonBindings) {
-            preferences.putInteger("controllerbutton:" + binding.key.toString(), binding.value);
+        for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerButtonBindings) {
+            preferences.putInteger("controllerbutton:" + binding.key.toString(), binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -746,8 +723,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             preferences.remove("unbound:" + binding.key.toString());
         }
         
-        for (Entry<Binding> binding : controllerAxisBindings) {
-            preferences.putInteger("controlleraxis:" + binding.key.toString(), binding.value);
+        for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerAxisBindings) {
+            preferences.putString("controlleraxis:" + binding.key.toString(), binding.value.axisCode + " " + binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -756,8 +733,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             preferences.remove("unbound:" + binding.key.toString());
         }
         
-        for (Entry<Binding> binding : controllerPovBindings) {
-            preferences.putInteger("controllerpov:" + binding.key.toString(), binding.value);
+        for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerPovBindings) {
+            preferences.putString("controllerpov:" + binding.key.toString(), binding.value.axisCode + " " + binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -797,17 +774,28 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             
             key = "controllerbutton:" + binding.toString();
             if (preferences.contains(key)) {
-                JamScreen.addControllerButtonBinding(binding, preferences.getInteger(key));
+                ControllerValue controllerValue = new ControllerValue();
+                controllerValue.axisCode = 0;
+                controllerValue.value = preferences.getInteger(key);
+                JamScreen.addControllerButtonBinding(binding, controllerValue);
             }
             
             key = "controlleraxis:" + binding.toString();
             if (preferences.contains(key)) {
-                JamScreen.addControllerAxisBinding(binding, preferences.getInteger(key));
+                ControllerValue controllerValue = new ControllerValue();
+                String[] line = preferences.getString(key).split(" ");
+                controllerValue.axisCode = Integer.parseInt(line[0]);
+                controllerValue.value = Integer.parseInt(line[1]);
+                JamScreen.addControllerAxisBinding(binding, controllerValue);
             }
             
             key = "controllerpov:" + binding.toString();
             if (preferences.contains(key)) {
-                JamScreen.addControllerPovBinding(binding, preferences.getInteger(key));
+                ControllerValue controllerValue = new ControllerValue();
+                String[] line = preferences.getString(key).split(" ");
+                controllerValue.axisCode = Integer.parseInt(line[0]);
+                controllerValue.value = Integer.parseInt(line[1]);
+                JamScreen.addControllerPovBinding(binding, controllerValue);
             }
             
             key = "unbound:" + binding.toString();
@@ -819,52 +807,49 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     
     @Override
     public void connected(Controller controller) {
-    
+        ControllerHandler controllerHandler = new ControllerHandler();
+        controller.addListener(controllerHandler);
+        controllerMap.put(controller, controllerHandler);
     }
     
     @Override
     public void disconnected(Controller controller) {
-    
+        controllerMap.remove(controller);
     }
     
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
-        controllerButtonsJustPressed.add(buttonCode);
-        controllerButtonsPressed.add(buttonCode);
+        for (ControllerValue controllerValue : controllerButtonBindings.values()) {
+            if (controllerValue.controller == null && buttonCode == controllerValue.value) {
+                controllerValue.controller = controller;
+                break;
+            }
+        }
         return false;
     }
     
     @Override
     public boolean buttonUp(Controller controller, int buttonCode) {
-        controllerButtonsPressed.removeValue(buttonCode);
         return false;
     }
     
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
-        if (MathUtils.isEqual(value, 1) || MathUtils.isEqual(value, -1)) {
-            int code = Integer.parseInt("" + MathUtils.round(value) + axisCode);
-            controllerAxisJustPressed.add(code);
-            controllerAxisPressed.add(code);
-        } else {
-            int code = (Integer.parseInt("" + -1 + axisCode));
-            controllerAxisPressed.removeValue(code);
-            code = (Integer.parseInt("" + 1 + axisCode));
-            controllerAxisPressed.removeValue(code);
+        for (ControllerValue controllerValue : controllerAxisBindings.values()) {
+            if (controllerValue.controller == null && axisCode == controllerValue.axisCode && MathUtils.round(value) == controllerValue.value) {
+                controllerValue.controller = controller;
+                break;
+            }
         }
         return false;
     }
     
     @Override
     public boolean povMoved(Controller controller, int povCode, PovDirection value) {
-        if (value != PovDirection.center) {
-            int code = Integer.parseInt("" + value.ordinal() + povCode);
-            controllerPovJustPressed.add(code);
-            controllerPovPressed.add(code);
-        } else {
-            for (PovDirection povDirection : PovDirection.values()) {
-                int code = (Integer.parseInt("" + povDirection.ordinal() + povCode));
-                controllerPovPressed.removeValue(code);
+        for (ControllerValue controllerValue : controllerPovBindings.values()) {
+            if (controllerValue.controller == null && povCode == controllerValue.axisCode && value.ordinal() == controllerValue.value) {
+                controllerValue.controller = controller;
+                break;
             }
         }
         return false;
@@ -883,5 +868,256 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     @Override
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
+    }
+    
+    public static class ControllerHandler implements ControllerListener {
+        public Array<ControllerValue> controllerButtonsJustPressed = new Array<>();
+        public Array<ControllerValue> controllerButtonsPressed = new Array<>();
+        public Array<ControllerValue> controllerAxisJustPressed = new Array<>();
+        public Array<ControllerValue> controllerAxisPressed = new SnapshotArray<>();
+        public Array<ControllerValue> controllerPovJustPressed = new Array<>();
+        public Array<ControllerValue> controllerPovPressed = new Array<>();
+    
+        //button
+        
+        public boolean isControllerButtonJustPressed(ControllerValue buttonCode) {
+            return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsJustPressed.size > 0 : controllerButtonsJustPressed.contains(buttonCode, false);
+        }
+    
+        public boolean isControllerButtonJustPressed(ControllerValue... controllerButtons) {
+            for (ControllerValue controllerButton : controllerButtons) {
+                if (isControllerButtonJustPressed(controllerButton)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        public boolean isAnyControllerButtonJustPressed() {
+            return controllerButtonsJustPressed.size > 0;
+        }
+    
+        public boolean isControllerButtonPressed(ControllerValue buttonCode) {
+            return buttonCode == ANY_CONTROLLER_BUTTON ? controllerButtonsPressed.size > 0 : controllerButtonsPressed.contains(buttonCode, false);
+        }
+        
+        public boolean isControllerButtonPressed(ControllerValue... buttonCodes) {
+            for (ControllerValue controllerButton : buttonCodes) {
+                if (isControllerButtonPressed(controllerButton)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        public boolean areAllControllerButtonsPressed(ControllerValue... buttonCodes) {
+            for (ControllerValue buttonCode : buttonCodes) {
+                if (!isControllerButtonPressed(buttonCode)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    
+        public boolean isAnyControllerButtonPressed() {
+            return controllerButtonsPressed.size > 0;
+        }
+    
+        //axis
+        
+        public boolean isControllerAxisJustPressed(ControllerValue axisCode) {
+            return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisJustPressed.size > 0 : controllerAxisJustPressed.contains(axisCode, false);
+        }
+    
+        public boolean isControllerAxisJustPressed(ControllerValue... axisCodes) {
+            for (ControllerValue axisCode : axisCodes) {
+                if (isControllerAxisJustPressed(axisCode)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        public boolean isAnyControllerAxisJustPressed() {
+            return controllerButtonsJustPressed.size > 0;
+        }
+    
+        public boolean isControllerAxisPressed(ControllerValue axisCode) {
+            return axisCode == ANY_CONTROLLER_AXIS ? controllerAxisPressed.size > 0 : controllerAxisPressed.contains(axisCode, false);
+        }
+    
+        public boolean isControllerAxisPressed(ControllerValue... axisCodes) {
+            for (ControllerValue axisCode : axisCodes) {
+                if (isControllerAxisPressed(axisCode)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        public boolean areAllControllerAxisPressed(ControllerValue... axisCodes) {
+            for (ControllerValue axisCode : axisCodes) {
+                if (!isControllerAxisPressed(axisCode)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    
+        public boolean isAnyControllerAxisPressed() {
+            return controllerAxisPressed.size > 0;
+        }
+    
+        //pov
+        
+        public boolean isControllerPovJustPressed(ControllerValue povCode) {
+            return povCode == ANY_CONTROLLER_POV ? controllerPovJustPressed.size > 0 : controllerPovJustPressed.contains(povCode, false);
+        }
+    
+        public boolean isControllerPovJustPressed(ControllerValue... povCodes) {
+            for (ControllerValue povCode : povCodes) {
+                if (isControllerPovJustPressed(povCode)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public boolean isAnyControllerPovJustPressed() {
+            return controllerPovJustPressed.size > 0;
+        }
+    
+        public boolean isControllerPovPressed(ControllerValue povCode) {
+            return povCode == ANY_CONTROLLER_POV ? controllerPovPressed.size > 0 : controllerPovPressed.contains(povCode, false);
+        }
+    
+        public boolean isControllerPovPressed(ControllerValue... povCodes) {
+            for (ControllerValue povCode : povCodes) {
+                if (isControllerPovPressed(povCode)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        public boolean areAllControllerPovPressed(ControllerValue... povCodes) {
+            for (ControllerValue povCode : povCodes) {
+                if (!isControllerPovPressed(povCode)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    
+        public boolean isAnyControllerPovPressed() {
+            return controllerPovPressed.size > 0;
+        }
+    
+        @Override
+        public void connected(Controller controller) {
+        
+        }
+    
+        @Override
+        public void disconnected(Controller controller) {
+
+        }
+    
+        @Override
+        public boolean buttonDown(Controller controller, int buttonCode) {
+            ControllerValue controllerValue = new ControllerValue(controller, 0, buttonCode);
+            controllerButtonsJustPressed.add(controllerValue);
+            controllerButtonsPressed.add(controllerValue);
+            return false;
+        }
+    
+        @Override
+        public boolean buttonUp(Controller controller, int buttonCode) {
+            ControllerValue controllerValue = new ControllerValue(controller, 0, buttonCode);
+            controllerButtonsPressed.removeValue(controllerValue, false);
+            return false;
+        }
+    
+        @Override
+        public boolean axisMoved(Controller controller, int axisCode, float value) {
+            int roundedValue = MathUtils.round(value);
+            
+            ControllerValue controllerValue = new ControllerValue(controller, axisCode, roundedValue);
+            if (roundedValue != 0) {
+                controllerAxisJustPressed.add(controllerValue);
+            }
+    
+            Iterator<ControllerValue> iterator = controllerAxisPressed.iterator();
+            while (iterator.hasNext()) {
+                ControllerValue next = iterator.next();
+                if (next.axisCode == axisCode) iterator.remove();
+            }
+            
+            if (roundedValue != 0) {
+                controllerAxisPressed.add(controllerValue);
+            }
+            return false;
+        }
+    
+        @Override
+        public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+            ControllerValue controllerValue = new ControllerValue(controller, povCode, value.ordinal());
+            if (value != PovDirection.center) {
+                controllerPovJustPressed.add(controllerValue);
+                controllerPovPressed.add(controllerValue);
+            } else {
+                Iterator<ControllerValue> iterator = controllerPovPressed.iterator();
+                while (iterator.hasNext()) {
+                    ControllerValue next = iterator.next();
+                    if (next.axisCode == povCode) iterator.remove();
+                }
+            }
+            return false;
+        }
+    
+        @Override
+        public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+            return false;
+        }
+    
+        @Override
+        public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+            return false;
+        }
+    
+        @Override
+        public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
+            return false;
+        }
+    }
+    
+    public static class ControllerValue {
+        public Controller controller;
+        public int axisCode;
+        public int value;
+    
+        public ControllerValue() {
+        }
+    
+        public ControllerValue(Controller controller, int axisCode, int value) {
+            this.controller = controller;
+            this.axisCode = axisCode;
+            this.value = value;
+        }
+    
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ControllerValue that = (ControllerValue) o;
+            return axisCode == that.axisCode &&
+                    value == that.value &&
+                    Objects.equals(that.controller, controller);
+        }
+    
+        @Override
+        public int hashCode() {
+            return Objects.hash(axisCode, value);
+        }
     }
 }

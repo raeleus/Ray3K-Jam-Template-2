@@ -103,6 +103,10 @@ public class GameScreen extends JamScreen {
             vfxEffect.update(delta);
         }
         stage.act(delta);
+    
+        if (isBindingJustPressed(Binding.LEFT)) {
+            System.out.println("hit me");
+        }
     }
     
     @Override

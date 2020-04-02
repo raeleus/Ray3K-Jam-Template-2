@@ -5,22 +5,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.crashinvaders.vfx.VfxManager;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import com.ray3k.template.AnimationStateDataLoader.AnimationStateDataParameter;
-import com.ray3k.template.screens.LoadScreen;
-import com.ray3k.template.transitions.Transitions;
-
-import static com.badlogic.gdx.Application.LOG_DEBUG;
+import com.ray3k.template.AnimationStateDataLoader.*;
+import com.ray3k.template.screens.*;
+import com.ray3k.template.transitions.*;
 
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
@@ -68,10 +65,8 @@ public class Core extends JamGame {
     }
     
     @Override
-    public void dispose() {
-        vfxManager.dispose();
-        assetManager.dispose();
-        super.dispose();
+    public void render() {
+        super.render();
     }
     
     @Override
