@@ -117,7 +117,7 @@ public class CreditsScreen extends JamScreen {
         root.defaults().space(30);
         TypingConfig.INTERVAL_MULTIPLIERS_BY_CHAR.put('\n', .5f);
         TypingLabel typingLabel = new TypingLabel("This game was made by Raeleus.\n" +
-                "Copyright Raymond \"Raeleus\" Buckley © 2019\n\n" +
+                "Copyright Raymond \"Raeleus\" Buckley © 2020\n\n" +
                 "Music by Devynn LaShure, Echo Blue Music\n" +
                 "https://www.echobluemusic.com", skin);
         typingLabel.setAlignment(Align.center);
