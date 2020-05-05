@@ -33,8 +33,8 @@ public class LibgdxScreen extends JamScreen {
         skeletonDrawables = new Array<>();
         sounds = new ObjectSet<>();
         
-        Skeleton skeleton = new Skeleton(assetManager.get("spine-libgdx/libgdx.json", SkeletonData.class));
-        AnimationState animationState = new AnimationState(assetManager.get("spine-libgdx/libgdx.json-animation", AnimationStateData.class));
+        Skeleton skeleton = new Skeleton(assetManager.get("spine/libgdx.json", SkeletonData.class));
+        AnimationState animationState = new AnimationState(assetManager.get("spine/libgdx.json-animation", AnimationStateData.class));
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, skeleton, animationState);
         skeletonDrawable.setMinWidth(350);
         skeletonDrawable.setMinHeight(250);

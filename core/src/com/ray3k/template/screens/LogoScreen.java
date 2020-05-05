@@ -37,8 +37,8 @@ public class LogoScreen extends JamScreen {
         skeletonDrawables = new Array<>();
         sounds = new ObjectSet<>();
     
-        Skeleton skeleton = new Skeleton(assetManager.get("spine-ray3k/ray3k.json", SkeletonData.class));
-        AnimationState animationState = new AnimationState(assetManager.get("spine-ray3k/ray3k.json-animation", AnimationStateData.class));
+        Skeleton skeleton = new Skeleton(assetManager.get("spine/ray3k.json", SkeletonData.class));
+        AnimationState animationState = new AnimationState(assetManager.get("spine/ray3k.json-animation", AnimationStateData.class));
         SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, skeleton, animationState);
         skeletonDrawable.setMinWidth(525);
         skeletonDrawable.setMinHeight(150);

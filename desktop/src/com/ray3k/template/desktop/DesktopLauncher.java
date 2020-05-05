@@ -34,11 +34,7 @@ public class DesktopLauncher implements CrossPlatformWorker {
 		if (createLists) {
 			boolean updated = createList("skin", "json", Gdx.files.local("core/assets/skin.txt"));
 			updated |= createList("spine", "json", Gdx.files.local("core/assets/spine.txt"));
-			updated |= createList("spine", "atlas", Gdx.files.local("core/assets/spine-atlas.txt"));
-			updated |= createList("spine-libgdx", "json", Gdx.files.local("core/assets/spine-libgdx.txt"));
-			updated |= createList("spine-libgdx", "atlas", Gdx.files.local("core/assets/spine-libgdx-atlas.txt"));
-			updated |= createList("spine-ray3k", "json", Gdx.files.local("core/assets/spine-ray3k.txt"));
-			updated |= createList("spine-ray3k", "atlas", Gdx.files.local("core/assets/spine-ray3k-atlas.txt"));
+			updated |= createList("textures", "atlas", Gdx.files.local("core/assets/textures.txt"));
 			updated |= createList("sfx", "mp3", Gdx.files.local("core/assets/sfx.txt"));
 			updated |= createList("bgm", "mp3", Gdx.files.local("core/assets/bgm.txt"));
 			

@@ -3,6 +3,7 @@ package com.ray3k.template;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controllers;
@@ -75,9 +76,16 @@ public class Core extends JamGame {
         assetManager.setLoader(SkeletonData.class, new SkeletonDataLoader(assetManager.getFileHandleResolver()));
         assetManager.setLoader(AnimationStateData.class, new AnimationStateDataLoader(assetManager.getFileHandleResolver()));
         
-        FileHandle fileHandle = Gdx.files.internal("skin.txt");
+        String textureAtlasPath = null;
+        FileHandle fileHandle = Gdx.files.internal("textures.txt");
         if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
-            assetManager.load(path, Skin.class);
+            assetManager.load(path, TextureAtlas.class);
+            textureAtlasPath = path;
+        }
+        
+        fileHandle = Gdx.files.internal("skin.txt");
+        if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
+            assetManager.load(path, Skin.class, new SkinParameter(textureAtlasPath));
         }
     
         fileHandle = Gdx.files.internal("bgm.txt");
@@ -90,34 +98,10 @@ public class Core extends JamGame {
             assetManager.load(path, Sound.class);
         }
     
-        fileHandle = Gdx.files.internal("spine-atlas.txt");
-        if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
-            assetManager.load(path, TextureAtlas.class);
-            fileHandle = Gdx.files.internal("spine.txt");
-            if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
-            }
-            break;
-        }
-    
-        fileHandle = Gdx.files.internal("spine-libgdx-atlas.txt");
-        if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
-            assetManager.load(path, TextureAtlas.class);
-            fileHandle = Gdx.files.internal("spine-libgdx.txt");
-            if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
-            }
-            break;
-        }
-    
-        fileHandle = Gdx.files.internal("spine-ray3k-atlas.txt");
-        if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
-            assetManager.load(path, TextureAtlas.class);
-            fileHandle = Gdx.files.internal("spine-ray3k.txt");
-            if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
-                assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, path));
-            }
-            break;
+        
+        fileHandle = Gdx.files.internal("spine.txt");
+        if (fileHandle.exists()) for (String path2 : fileHandle.readString().split("\\n")) {
+            assetManager.load(path2 + "-animation", AnimationStateData.class, new AnimationStateDataParameter(path2, textureAtlasPath));
         }
     }
     

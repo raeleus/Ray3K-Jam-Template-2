@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "+fsQibm3aDXFuIW+YF2V/90BlLo",
-	"spine": "3.8.61",
+	"hash": "X/xZ97gcyx+cvV7FpfnjGwXxPK0",
+	"spine": "3.8.95",
 	"x": -8.14,
 	"y": -5.16,
 	"width": 551,
@@ -16,22 +16,22 @@
 	{ "name": "ray3k-spot", "parent": "root", "length": 144.95, "x": -1.11 }
 ],
 "slots": [
-	{ "name": "ray3k-spot", "bone": "ray3k-spot", "attachment": "ray3k-spot" },
-	{ "name": "ray3k-line", "bone": "ray3k-line", "attachment": "ray3k-line" },
-	{ "name": "ray3k-logo", "bone": "ray3k-logo", "attachment": "ray3k-logo" }
+	{ "name": "ray3k-spot", "bone": "ray3k-spot", "attachment": "logo/ray3k-spot" },
+	{ "name": "ray3k-line", "bone": "ray3k-line", "attachment": "logo/ray3k-line" },
+	{ "name": "ray3k-logo", "bone": "ray3k-logo", "attachment": "logo/ray3k-logo" }
 ],
 "skins": [
 	{
 		"name": "default",
 		"attachments": {
-			"ray3k-logo": {
-				"ray3k-logo": { "x": -119.05, "width": 530, "height": 150 }
-			},
 			"ray3k-line": {
-				"ray3k-line": { "x": 0.36, "width": 551, "height": 31 }
+				"logo/ray3k-line": { "x": 0.36, "width": 551, "height": 31 }
+			},
+			"ray3k-logo": {
+				"logo/ray3k-logo": { "x": -119.05, "width": 530, "height": 150 }
 			},
 			"ray3k-spot": {
-				"ray3k-spot": { "x": 1.11, "width": 90, "height": 90 }
+				"logo/ray3k-spot": { "x": 1.11, "width": 90, "height": 90 }
 			}
 		}
 	}
