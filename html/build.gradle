@@ -1,5 +1,5 @@
 gwt {
-    gwtVersion='2.8.2' // Should match the gwt version used for building the gwt backend
+    gwtVersion='2.9.0' // Should match the gwt version used for building the gwt backend
     maxHeapSize="1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
     minHeapSize="1G"
 
@@ -11,6 +11,7 @@ gwt {
     compiler {
         strict = true;
         disableCastChecking = true;
+        sourceLevel = 11
     }
 }
 
@@ -88,5 +89,5 @@ task addSource {
 tasks.compileGwt.dependsOn(addSource)
 tasks.draftCompileGwt.dependsOn(addSource)
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 sourceSets.main.java.srcDirs = [ "src/" ]
