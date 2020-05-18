@@ -51,11 +51,6 @@ task superDev (type: GwtSuperDev) {
 
 
 task dist(dependsOn: [clean, compileGwt]) {
-    doFirst{
-        delete {
-            delete "C:\\xampp\\htdocs"
-        }
-    }
     doLast {
         file("build/dist").mkdirs()
         copy {
@@ -69,13 +64,6 @@ task dist(dependsOn: [clean, compileGwt]) {
         copy {
             from "war"
             into "build/dist"
-        }
-        delete {
-            delete "C:\\xampp\\htdocs"
-        }
-        copy {
-            from "build/dist"
-            into "C:\\xampp\\htdocs"
         }
     }
 }
