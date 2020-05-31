@@ -6,7 +6,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -77,7 +76,7 @@ public class Core extends JamGame {
         assetManager.setLoader(AnimationStateData.class, new AnimationStateDataLoader(assetManager.getFileHandleResolver()));
         
         String textureAtlasPath = null;
-        FileHandle fileHandle = Gdx.files.internal("textures.txt");
+        var fileHandle = Gdx.files.internal("textures.txt");
         if (fileHandle.exists()) for (String path : fileHandle.readString().split("\\n")) {
             assetManager.load(path, TextureAtlas.class);
             textureAtlasPath = path;
