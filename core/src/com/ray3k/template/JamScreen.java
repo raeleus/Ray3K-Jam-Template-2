@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.ObjectIntMap.Entry;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ray3k.template.Core.*;
+import com.ray3k.template.JamScreen.ControllerHandler.*;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -48,6 +49,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public final static ControllerValue ANY_CONTROLLER_AXIS = new ControllerValue(null, -1, 0);
     public final static ControllerValue ANY_CONTROLLER_POV = new ControllerValue(null, -1, 0);
     public final static ObjectMap<Controller, ControllerHandler> controllerMap = new ObjectMap<>();
+    public boolean separatePovDiaganol = true;
     
     @Override
     public void show() {
@@ -971,7 +973,32 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         //pov
         
         public boolean isControllerPovJustPressed(ControllerValue povCode) {
-            return povCode == ANY_CONTROLLER_POV ? controllerPovJustPressed.size > 0 : controllerPovJustPressed.contains(povCode, false);
+            if (povCode == ANY_CONTROLLER_POV) {
+                return controllerPovJustPressed.size > 0;
+            } else {
+                boolean returnValue = controllerPovJustPressed.contains(povCode, false);
+                if (!returnValue) {
+                    if (povCode.value == PovDirection.west.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southWest.ordinal());
+                        returnValue = controllerPovJustPressed.contains(val1, false) || controllerPovJustPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.north.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northEast.ordinal());
+                        returnValue = controllerPovJustPressed.contains(val1, false) || controllerPovPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.west.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northEast.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southEast.ordinal());
+                        returnValue = controllerPovJustPressed.contains(val1, false) || controllerPovJustPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.south.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southEast.ordinal());
+                        returnValue = controllerPovJustPressed.contains(val1, false) || controllerPovJustPressed.contains(val2, false);
+                    }
+                }
+        
+                return returnValue;
+            }
         }
     
         public boolean isControllerPovJustPressed(ControllerValue... povCodes) {
@@ -988,7 +1015,32 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
     
         public boolean isControllerPovPressed(ControllerValue povCode) {
-            return povCode == ANY_CONTROLLER_POV ? controllerPovPressed.size > 0 : controllerPovPressed.contains(povCode, false);
+            if (povCode == ANY_CONTROLLER_POV) {
+                return controllerPovPressed.size > 0;
+            } else {
+                boolean returnValue = controllerPovPressed.contains(povCode, false);
+                if (!returnValue) {
+                    if (povCode.value == PovDirection.west.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southWest.ordinal());
+                        returnValue = controllerPovPressed.contains(val1, false) || controllerPovPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.north.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northEast.ordinal());
+                        returnValue = controllerPovPressed.contains(val1, false) || controllerPovPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.west.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.northEast.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southEast.ordinal());
+                        returnValue = controllerPovPressed.contains(val1, false) || controllerPovPressed.contains(val2, false);
+                    } else if (povCode.value == PovDirection.south.ordinal()) {
+                        var val1 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southWest.ordinal());
+                        var val2 = new ControllerValue(povCode.controller, povCode.axisCode, PovDirection.southEast.ordinal());
+                        returnValue = controllerPovPressed.contains(val1, false) || controllerPovPressed.contains(val2, false);
+                    }
+                }
+                
+                return returnValue;
+            }
         }
     
         public boolean isControllerPovPressed(ControllerValue... povCodes) {
