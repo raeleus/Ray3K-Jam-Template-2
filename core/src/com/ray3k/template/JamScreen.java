@@ -879,6 +879,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         public Array<ControllerValue> controllerAxisPressed = new SnapshotArray<>();
         public Array<ControllerValue> controllerPovJustPressed = new Array<>();
         public Array<ControllerValue> controllerPovPressed = new Array<>();
+        private PovDirection previousPov = PovDirection.center;
     
         //button
         
@@ -1114,16 +1115,21 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         @Override
         public boolean povMoved(Controller controller, int povCode, PovDirection value) {
             ControllerValue controllerValue = new ControllerValue(controller, povCode, value.ordinal());
-            if (value != PovDirection.center) {
-                controllerPovJustPressed.add(controllerValue);
-                controllerPovPressed.add(controllerValue);
-            } else {
+    
+            if (value == PovDirection.center || value != previousPov) {
                 Iterator<ControllerValue> iterator = controllerPovPressed.iterator();
                 while (iterator.hasNext()) {
                     ControllerValue next = iterator.next();
                     if (next.axisCode == povCode) iterator.remove();
                 }
             }
+            
+            if (value != PovDirection.center) {
+                controllerPovJustPressed.add(controllerValue);
+                controllerPovPressed.add(controllerValue);
+            }
+            
+            previousPov = value;
             return false;
         }
     
