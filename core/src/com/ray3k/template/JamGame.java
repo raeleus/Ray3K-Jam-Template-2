@@ -89,7 +89,7 @@ public abstract class JamGame extends Game {
     public void resize(int width, int height) {
         super.resize(width, height);
         
-        transitionEngine.resize(width, height);
+        if (width != 0 && height != 0) transitionEngine.resize(width, height);
     }
     
     public abstract void loadAssets();
