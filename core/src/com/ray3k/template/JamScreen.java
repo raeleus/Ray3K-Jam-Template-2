@@ -49,7 +49,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     public final static ControllerValue ANY_CONTROLLER_AXIS = new ControllerValue(null, -1, 0);
     public final static ControllerValue ANY_CONTROLLER_POV = new ControllerValue(null, -1, 0);
     public final static ObjectMap<Controller, ControllerHandler> controllerMap = new ObjectMap<>();
-    public boolean separatePovDiaganol = true;
+    public boolean separatePodDiagonal = true;
     
     @Override
     public void show() {
@@ -716,7 +716,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
         
         for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerButtonBindings) {
-            preferences.putInteger("controllerbutton:" + binding.key.toString(), binding.value.value);
+            preferences.putString("controllerbutton:" + binding.key.toString(), Controllers.getControllers().indexOf(binding.value.controller, true) + " " + binding.value.axisCode + " " + binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -726,7 +726,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
         
         for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerAxisBindings) {
-            preferences.putString("controlleraxis:" + binding.key.toString(), binding.value.axisCode + " " + binding.value.value);
+            preferences.putString("controlleraxis:" + binding.key.toString(), Controllers.getControllers().indexOf(binding.value.controller, true) + " " + binding.value.axisCode + " " + binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -736,7 +736,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         }
         
         for (ObjectMap.Entry<Binding, ControllerValue> binding : controllerPovBindings) {
-            preferences.putString("controllerpov:" + binding.key.toString(), binding.value.axisCode + " " + binding.value.value);
+            preferences.putString("controllerpov:" + binding.key.toString(), Controllers.getControllers().indexOf(binding.value.controller, true) + " " + binding.value.axisCode + " " + binding.value.value);
             preferences.remove("key:" + binding.key.toString());
             preferences.remove("button:" + binding.key.toString());
             preferences.remove("scroll:" + binding.key.toString());
@@ -777,8 +777,13 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             key = "controllerbutton:" + binding.toString();
             if (preferences.contains(key)) {
                 ControllerValue controllerValue = new ControllerValue();
-                controllerValue.axisCode = 0;
-                controllerValue.value = preferences.getInteger(key);
+                String[] line = preferences.getString(key).split(" ");
+                var controllerIndex = Integer.parseInt(line[0]);
+                if (controllerIndex < Controllers.getControllers().size) {
+                    controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                }
+                controllerValue.axisCode = Integer.parseInt(line[1]);
+                controllerValue.value = Integer.parseInt(line[2]);
                 JamScreen.addControllerButtonBinding(binding, controllerValue);
             }
             
@@ -786,8 +791,12 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             if (preferences.contains(key)) {
                 ControllerValue controllerValue = new ControllerValue();
                 String[] line = preferences.getString(key).split(" ");
-                controllerValue.axisCode = Integer.parseInt(line[0]);
-                controllerValue.value = Integer.parseInt(line[1]);
+                var controllerIndex = Integer.parseInt(line[0]);
+                if (controllerIndex < Controllers.getControllers().size) {
+                    controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                }
+                controllerValue.axisCode = Integer.parseInt(line[1]);
+                controllerValue.value = Integer.parseInt(line[2]);
                 JamScreen.addControllerAxisBinding(binding, controllerValue);
             }
             
@@ -795,8 +804,12 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
             if (preferences.contains(key)) {
                 ControllerValue controllerValue = new ControllerValue();
                 String[] line = preferences.getString(key).split(" ");
-                controllerValue.axisCode = Integer.parseInt(line[0]);
-                controllerValue.value = Integer.parseInt(line[1]);
+                var controllerIndex = Integer.parseInt(line[0]);
+                if (controllerIndex < Controllers.getControllers().size) {
+                    controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                }
+                controllerValue.axisCode = Integer.parseInt(line[1]);
+                controllerValue.value = Integer.parseInt(line[2]);
                 JamScreen.addControllerPovBinding(binding, controllerValue);
             }
             
@@ -812,6 +825,41 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         ControllerHandler controllerHandler = new ControllerHandler();
         controller.addListener(controllerHandler);
         controllerMap.put(controller, controllerHandler);
+        
+        //fix null controllers in bindings loaded from preferences
+        for (var binding : bindings) {
+            if (JamScreen.hasControllerButtonBinding(binding)) {
+                var controllerValue = JamScreen.getControllerButtonBinding(binding);
+                var key = "controllerbutton:" + binding.toString();
+                if (preferences.contains(key)) {
+                    String[] line = preferences.getString(key).split(" ");
+                    var controllerIndex = Integer.parseInt(line[0]);
+                    if (controllerIndex < Controllers.getControllers().size) {
+                        controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                    }
+                }
+            } else if (JamScreen.hasControllerAxisBinding(binding)) {
+                var controllerValue = JamScreen.getControllerAxisBinding(binding);
+                var key = "controlleraxis:" + binding.toString();
+                if (preferences.contains(key)) {
+                    String[] line = preferences.getString(key).split(" ");
+                    var controllerIndex = Integer.parseInt(line[0]);
+                    if (controllerIndex < Controllers.getControllers().size) {
+                        controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                    }
+                }
+            } else if (JamScreen.hasControllerPovBinding(binding)) {
+                var controllerValue = JamScreen.getControllerPovBinding(binding);
+                var key = "controllerpov:" + binding.toString();
+                if (preferences.contains(key)) {
+                    String[] line = preferences.getString(key).split(" ");
+                    var controllerIndex = Integer.parseInt(line[0]);
+                    if (controllerIndex < Controllers.getControllers().size) {
+                        controllerValue.controller = Controllers.getControllers().get(controllerIndex);
+                    }
+                }
+            }
+        }
     }
     
     @Override
