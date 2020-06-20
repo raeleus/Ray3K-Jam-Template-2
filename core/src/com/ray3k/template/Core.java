@@ -45,7 +45,6 @@ public class Core extends JamGame {
         setDefaultBindings();
         JamScreen.loadBindings();
         
-        crossPlatformWorker.create();
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
         

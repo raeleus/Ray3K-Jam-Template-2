@@ -87,11 +87,6 @@ public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker 
     }
     
     @Override
-    public void create() {
-    
-    }
-    
-    @Override
     public void onModuleLoad() {
         FreetypeInjector.inject(() -> HtmlLauncher.super.onModuleLoad());
     }

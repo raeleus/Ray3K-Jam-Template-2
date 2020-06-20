@@ -25,18 +25,13 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
+task dist(type: Jar, dependsOn: classes) {
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+    dependsOn configurations.runtimeClasspath
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     with jar
 }
-
-mainClassName = "com.example.MyMainClass"
-
-
-
-dist.dependsOn classes

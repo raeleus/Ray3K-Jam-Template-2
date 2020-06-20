@@ -42,7 +42,7 @@ project(":desktop") {
     apply plugin: "java-library"
 
     dependencies {
-        implementation project(":core")
+        api project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
@@ -93,6 +93,6 @@ project(":core") {
         api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation 'com.github.raeleus:stripe:master-SNAPSHOT'
+        api 'com.github.raeleus:stripe:master-SNAPSHOT'
     }
 }
