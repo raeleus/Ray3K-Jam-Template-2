@@ -1073,8 +1073,8 @@
 	},
 	"play-stop-over": {
 		"region": "play-stop-over_00",
-		"horizontalStretchAreas": [ 0, 14 ],
-		"verticalStretchAreas": [ 0, 14 ],
+		"horizontalStretchAreas": [ 0, 15 ],
+		"verticalStretchAreas": [ 0, 15 ],
 		"tiling": false,
 		"minWidth": 16,
 		"minHeight": 16,
@@ -1127,8 +1127,8 @@
 	},
 	"play-stop-pressed": {
 		"region": "play-stop-pressed_00",
-		"horizontalStretchAreas": [ 0, 14 ],
-		"verticalStretchAreas": [ 0, 14 ],
+		"horizontalStretchAreas": [ 0, 15 ],
+		"verticalStretchAreas": [ 0, 15 ],
 		"tiling": false,
 		"minWidth": 16,
 		"minHeight": 16,
@@ -2085,8 +2085,7 @@
 	"default": {
 		"up": "button-normal",
 		"down": "button-normal-pressed-red-ten",
-		"over": "button-over",
-		"focused": "button-over"
+		"over": "button-over"
 	},
 	"play": {
 		"up": "play-play-over_00",
