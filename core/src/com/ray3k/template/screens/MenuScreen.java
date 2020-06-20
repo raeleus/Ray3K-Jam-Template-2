@@ -1,33 +1,21 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.ray3k.template.Core;
-import com.ray3k.template.JamScreen;
+import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
 
 public class MenuScreen extends JamScreen {
     private Stage stage;
     private final static Color BG_COLOR = new Color(Color.BLACK);
-    private Array<Actor> focusables;
-    
-    public MenuScreen() {
-        focusables = new Array<>();
-    }
     
     @Override
     public void show() {
@@ -42,96 +30,10 @@ public class MenuScreen extends JamScreen {
         
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-        
-        stage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                boolean shifting = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT);
-                switch (keycode) {
-                    case Keys.TAB:
-                        if (shifting) {
-                            previous();
-                        } else {
-                            next();
-                        }
-                        break;
-                    case Keys.RIGHT:
-                    case Keys.D:
-                    case Keys.DOWN:
-                    case Keys.S:
-                        next();
-                        break;
-                    case Keys.LEFT:
-                    case Keys.A:
-                    case Keys.UP:
-                    case Keys.W:
-                        previous();
-                        break;
-                    case Keys.SPACE:
-                    case Keys.ENTER:
-                        activate();
-                }
-                return super.keyDown(event, keycode);
-            }
-            
-            public void next() {
-                Actor focused = stage.getKeyboardFocus();
-                if (focused == null) {
-                    stage.setKeyboardFocus(focusables.first());
-                } else {
-                    int index = focusables.indexOf(focused, true) + 1;
-                    if (index >= focusables.size) index = 0;
-                    stage.setKeyboardFocus(focusables.get(index));
-                }
-            }
-            
-            public void previous() {
-                Actor focused = stage.getKeyboardFocus();
-                if (focused == null) {
-                    stage.setKeyboardFocus(focusables.first());
-                } else {
-                    int index = focusables.indexOf(focused, true) - 1;
-                    if (index < 0) index = focusables.size - 1;
-                    stage.setKeyboardFocus(focusables.get(index));
-                }
-            }
-            
-            public void activate() {
-                Actor focused = stage.getKeyboardFocus();
-                if (focused != null) {
-                    focused.fire(new ChangeEvent());
-                } else {
-                    stage.setKeyboardFocus(focusables.first());
-                }
-            }
-        });
-        
-        InputListener mouseEnterListener = new InputListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                stage.setKeyboardFocus(null);
-            }
-        };
     
-        Table root = new Table();
-        root.setFillParent(true);
-        stage.addActor(root);
-    
-        Image image = new Image(skin, "libgdx-animation");
-        image.setScaling(Scaling.none);
-        root.add(image);
-        
-        root.row();
-        Table table = new Table();
-        root.add(table);
-        
-        table.pad(30);
-        table.defaults().uniform().space(10);
-        TextButton textButton = new TextButton("Play", skin);
-        table.add(textButton);
-        focusables.add(textButton);
+        sceneBuilder.build(stage, skin, Gdx.files.internal("menus/main.json"));
+        TextButton textButton = stage.getRoot().findActor("play");
         textButton.addListener(sndChangeListener);
-        textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -140,11 +42,8 @@ public class MenuScreen extends JamScreen {
             }
         });
     
-        textButton = new TextButton("Options", skin);
-        table.add(textButton);
-        focusables.add(textButton);
+        textButton = stage.getRoot().findActor("options");
         textButton.addListener(sndChangeListener);
-        textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -153,11 +52,8 @@ public class MenuScreen extends JamScreen {
             }
         });
     
-        textButton = new TextButton("Credits", skin);
-        table.add(textButton);
-        focusables.add(textButton);
+        textButton = stage.getRoot().findActor("credits");
         textButton.addListener(sndChangeListener);
-        textButton.addListener(mouseEnterListener);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -165,10 +61,6 @@ public class MenuScreen extends JamScreen {
                 core.transition(new CreditsScreen());
             }
         });
-        
-        root.row();
-        Label label = new Label("Copyright Raymond \"Raeleus\" Buckley © 2020", skin);
-        root.add(label);
     }
     
     @Override

@@ -6,16 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.ray3k.template.Core;
-import com.ray3k.template.JamScreen;
+import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.JamGame.*;
 
 public class SplashScreen extends JamScreen {
     private Stage stage;
@@ -27,13 +23,8 @@ public class SplashScreen extends JamScreen {
         
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-    
-        Table root = new Table();
-        root.setFillParent(true);
-        stage.addActor(root);
-    
-        Label label = new Label("CLICK HERE TO PLAY", skin);
-        root.add(label);
+        
+        sceneBuilder.build(stage, skin, Gdx.files.internal("menus/splash.json"));
         
         stage.addListener(new ClickListener(Input.Buttons.LEFT) {
             @Override

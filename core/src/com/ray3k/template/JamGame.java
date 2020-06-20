@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.crashinvaders.vfx.VfxManager;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
+import com.ray3k.stripe.scenecomposer.SceneComposerStageBuilder;
 import com.ray3k.template.transitions.*;
 
 import static com.ray3k.template.transitions.Transitions.*;
@@ -25,6 +26,7 @@ public abstract class JamGame extends Game {
     public float defaultTransitionDuration;
     public static ShapeRenderer shapeRenderer;
     public static VfxManager vfxManager;
+    public static SceneComposerStageBuilder sceneBuilder;
     
     @Override
     public void create() {
@@ -40,6 +42,8 @@ public abstract class JamGame extends Game {
         transitionEngine = new TransitionEngine(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         defaultTransition = crossFade();
         defaultTransitionDuration = .5f;
+    
+        sceneBuilder = new SceneComposerStageBuilder();
         
         loadAssets();
     }
