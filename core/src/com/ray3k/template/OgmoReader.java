@@ -81,7 +81,7 @@ public class OgmoReader {
                     int row = 0;
                     for (JsonValue grid : child.get("grid").iterator()) {
                         for (OgmoListener ogmoListener : layerListeners) {
-                            ogmoListener.grid(column, row, column * cellWidth, levelHeight - row * cellHeight, grid.asInt());
+                            ogmoListener.grid(column, row, column * cellWidth, levelHeight - (row + 1) * cellHeight, cellWidth, cellHeight, grid.asInt());
                         }
                         
                         column++;
@@ -99,9 +99,9 @@ public class OgmoReader {
                         int column = 0;
                         for (JsonValue grid : gridY.iterator()) {
                             for (OgmoListener ogmoListener : layerListeners) {
-                                ogmoListener.grid(column, row, column * cellWidth, levelHeight - row * cellHeight, grid.asInt());
+                                ogmoListener.grid(column, row, column * cellWidth, levelHeight - (row + 1) * cellHeight, cellWidth, cellHeight, grid.asInt());
                             }
-    
+                            
                             column++;
                         }
                         row++;
@@ -120,14 +120,14 @@ public class OgmoReader {
                     int cellWidth = child.getInt("gridCellWidth");
                     int cellHeight = child.getInt("gridCellHeight");
                     int columns = child.getInt("gridCellsX");
-    
+                    
                     int column = 0;
                     int row = 0;
                     for (JsonValue data : child.get("data").iterator()) {
                         for (OgmoListener ogmoListener : layerListeners) {
                             ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.asInt());
                         }
-        
+                        
                         column++;
                         if (column >= columns) {
                             column = 0;
@@ -138,7 +138,7 @@ public class OgmoReader {
                     String tileSet = child.getString("tileSet");
                     int cellWidth = child.getInt("gridCellWidth");
                     int cellHeight = child.getInt("gridCellHeight");
-    
+                    
                     int row = 0;
                     for (JsonValue dataY : child.get("data2D").iterator()) {
                         int column = 0;
@@ -146,7 +146,7 @@ public class OgmoReader {
                             for (OgmoListener ogmoListener : layerListeners) {
                                 ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.asInt());
                             }
-            
+                            
                             column++;
                         }
                         row++;
@@ -156,14 +156,14 @@ public class OgmoReader {
                     int cellWidth = child.getInt("gridCellWidth");
                     int cellHeight = child.getInt("gridCellHeight");
                     int columns = child.getInt("gridCellsX");
-    
+                    
                     int column = 0;
                     int row = 0;
                     for (JsonValue data : child.get("dataCoords").iterator()) {
                         for (OgmoListener ogmoListener : layerListeners) {
                             ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.getInt(0), data.getInt(1));
                         }
-        
+                        
                         column++;
                         if (column >= columns) {
                             column = 0;
@@ -174,7 +174,7 @@ public class OgmoReader {
                     String tileSet = child.getString("tileSet");
                     int cellWidth = child.getInt("gridCellWidth");
                     int cellHeight = child.getInt("gridCellHeight");
-    
+                    
                     int row = 0;
                     for (JsonValue dataY : child.get("dataCoords2D").iterator()) {
                         int column = 0;
@@ -182,13 +182,13 @@ public class OgmoReader {
                             for (OgmoListener ogmoListener : layerListeners) {
                                 ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.getInt(0), data.getInt(1));
                             }
-            
+                            
                             column++;
                         }
                         row++;
                     }
                 }
-    
+                
                 for (OgmoListener ogmoListener : layerListeners) {
                     ogmoListener.layerComplete();
                 }
@@ -234,7 +234,7 @@ public class OgmoReader {
          * @param offsetY Currently unused by the editor.
          */
         void layer(String name, int gridCellWidth, int gridCellHeight, int offsetX, int offsetY);
-    
+        
         /**
          * Called for every entity found in an entity layer.
          * @param name The name of the entity type.
@@ -252,7 +252,7 @@ public class OgmoReader {
          * @param valuesMap An ObjectMap of the user specified values for the entity by value name.
          */
         void entity(String name, int id, int x, int y, int width, int height, boolean flippedX, boolean flippedY, int originX, int originY, int rotation, Array<EntityNode> nodes, ObjectMap<String, OgmoValue> valuesMap);
-    
+        
         /**
          * Called for every grid point found in a grid layer.
          * @param col The column number of the grid.
@@ -261,20 +261,20 @@ public class OgmoReader {
          * @param y The y coordinate of the grid, adjusted to y-up coordinates.
          * @param id The unique ID of the grid numbered from 0.
          */
-        void grid(int col, int row, int x, int y, int id);
-    
+        void grid(int col, int row, int x, int y, int width, int height, int id);
+        
         /**
          * Called for every decal image placed in a decal layer.
-         * @param x The x coordinate of the decal.
-         * @param y The y coordinate of the decal, adjusted to y-up coordinates.
+         * @param centerX The x coordinate of the decal.
+         * @param centerY The y coordinate of the decal, adjusted to y-up coordinates.
          * @param scaleX The horizontal scale multiplier. 1.0f is the original scale of the image.
          * @param scaleY The vertical scale multiplier. 1.0f is the original scale of the image.
          * @param rotation The rotation of the decal in degrees wound CCW.
          * @param texture The name of the texture linked by the decal.
          * @param folder The name of the folder that the decal layer is linked to.
          */
-        void decal(int x, int y, float scaleX, float scaleY, int rotation, String texture, String folder);
-    
+        void decal(int centerX, int centerY, float scaleX, float scaleY, int rotation, String texture, String folder);
+        
         /**
          * Called for every tile placed in a tile layer when the layer uses id's.
          * @param tileSet The name of the tile set that this layer is associated with.
@@ -285,7 +285,7 @@ public class OgmoReader {
          * @param id The ID number of the tile in the tileset as numbered from the top left.
          */
         void tile(String tileSet, int col, int row, int x, int y, int id);
-    
+        
         /**
          * Called for every tile placed in a tile layer when the layer uses XY coordinates.
          * @param tileSet The name of the tile set that this layer is associated with.
@@ -297,7 +297,7 @@ public class OgmoReader {
          * @param tileY The row number of the tile in the tileset as numbered from top down.
          */
         void tile(String tileSet, int col, int row, int x, int y, int tileX, int tileY);
-    
+        
         /**
          * Called after the layer is completely read.
          */
@@ -319,7 +319,7 @@ public class OgmoReader {
         public void level(String ogmoVersion, int width, int height, int offsetX, int offsetY, ObjectMap<String, OgmoValue> valuesMap) {
         
         }
-    
+        
         /**
          * Called when a layer has been found while iterating through the level JSON.
          *
@@ -333,7 +333,7 @@ public class OgmoReader {
         public void layer(String name, int gridCellWidth, int gridCellHeight, int offsetX, int offsetY) {
         
         }
-    
+        
         /**
          * Called for every entity found in an entity layer.
          *
@@ -355,7 +355,7 @@ public class OgmoReader {
         public void entity(String name, int id, int x, int y, int width, int height, boolean flippedX, boolean flippedY, int originX, int originY, int rotation, Array<EntityNode> nodes, ObjectMap<String, OgmoValue> valuesMap) {
         
         }
-    
+        
         /**
          * Called for every grid point found in a grid layer.
          *
@@ -366,15 +366,15 @@ public class OgmoReader {
          * @param id  The unique ID of the grid numbered from 0.
          */
         @Override
-        public void grid(int col, int row, int x, int y, int id) {
+        public void grid(int col, int row, int x, int y, int width, int height, int id) {
         
         }
-    
+        
         /**
          * Called for every decal image placed in a decal layer.
          *
-         * @param x        The x coordinate of the decal.
-         * @param y        The y coordinate of the decal, adjusted to y-up coordinates.
+         * @param centerX        The x coordinate of the decal.
+         * @param centerY        The y coordinate of the decal, adjusted to y-up coordinates.
          * @param scaleX   The horizontal scale multiplier. 1.0f is the original scale of the image.
          * @param scaleY   The vertical scale multiplier. 1.0f is the original scale of the image.
          * @param rotation The rotation of the decal in degrees wound CCW.
@@ -382,10 +382,10 @@ public class OgmoReader {
          * @param folder   The name of the folder that the decal layer is linked to.
          */
         @Override
-        public void decal(int x, int y, float scaleX, float scaleY, int rotation, String texture, String folder) {
+        public void decal(int centerX, int centerY, float scaleX, float scaleY, int rotation, String texture, String folder) {
         
         }
-    
+        
         /**
          * Called for every tile placed in a tile layer when the layer uses id's.
          *
@@ -400,7 +400,7 @@ public class OgmoReader {
         public void tile(String tileSet, int col, int row, int x, int y, int id) {
         
         }
-    
+        
         /**
          * Called for every tile placed in a tile layer when the layer uses XY coordinates.
          *
@@ -416,7 +416,7 @@ public class OgmoReader {
         public void tile(String tileSet, int col, int row, int x, int y, int tileX, int tileY) {
         
         }
-    
+        
         /**
          * Called after the layer is completely read.
          */
