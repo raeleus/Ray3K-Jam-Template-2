@@ -109,6 +109,8 @@ public class DialogEditKeyBindings extends Dialog {
     
         Table table = new Table();
         ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setName("scroll");
+        scrollPane.setFadeScrollBars(false);
         root.add(scrollPane).grow();
         
         refreshTable(table);
@@ -490,5 +492,12 @@ public class DialogEditKeyBindings extends Dialog {
         public abstract void controllerAxisSelected(Controller controller, int axisCode, int value);
         public abstract void controllerPovSelected(Controller controller, int axisCode, int value);
         public abstract void cancelled();
+    }
+    
+    @Override
+    public Dialog show(Stage stage, Action action) {
+        var dialog = super.show(stage, action);
+        stage.setScrollFocus(stage.getRoot().findActor("scroll"));
+        return dialog;
     }
 }
