@@ -63,7 +63,7 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api 'com.github.tommyettinger:regexodus:0.1.10:sources'
         api 'com.rafaskoberg.gdx:typing-label:1.2.0:sources'
-        api 'space.earlygrey:shapedrawer:1.2.0:sources'
+        api 'space.earlygrey:shapedrawer:2.3.0:sources'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0:sources'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1:sources'
         api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3:sources'
@@ -86,7 +86,7 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api 'com.rafaskoberg.gdx:typing-label:1.2.0'
-        api 'space.earlygrey:shapedrawer:2.0.1'
+        api 'space.earlygrey:shapedrawer:2.3.0'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
         api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
