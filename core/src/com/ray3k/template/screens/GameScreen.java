@@ -140,10 +140,12 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void resize(int width, int height) {
-        vfxManager.resize(width, height);
-        viewport.update(width, height);
+        if (width + height != 0) {
+            vfxManager.resize(width, height);
+            viewport.update(width, height);
         
-        stage.getViewport().update(width, height, true);
+            stage.getViewport().update(width, height, true);
+        }
     }
     
     @Override
