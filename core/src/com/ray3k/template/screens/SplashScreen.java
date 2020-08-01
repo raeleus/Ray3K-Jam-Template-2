@@ -33,6 +33,14 @@ public class SplashScreen extends JamScreen {
                 core.transition(new LibgdxScreen());
             }
         });
+    
+        stage.addListener(new ClickListener(Input.Buttons.RIGHT) {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(null);
+                core.transition(new GameScreen());
+            }
+        });
     }
     
     @Override
