@@ -18,4 +18,5 @@
 	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
 	<set-property name="user.agent" value="gecko1_8, safari"/>
 	<collapse-property name="user.agent" values="*" />
+	<set-property name="compiler.useSourceMaps" value="true"/>
 </module>
