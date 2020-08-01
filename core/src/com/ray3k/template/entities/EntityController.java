@@ -73,7 +73,6 @@ public class EntityController {
                     //interpolate position
                     entity.skeleton.setPosition(entity.x + entity.deltaX * delta, entity.y + entity.deltaY * delta);
                     entity.skeleton.updateWorldTransform();
-                    entity.animationState.apply(entity.skeleton);
                     
                     skeletonRenderer.draw(batch, entity.skeleton);
                 }
