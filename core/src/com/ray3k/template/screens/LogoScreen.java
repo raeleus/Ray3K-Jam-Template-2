@@ -1,16 +1,13 @@
 package com.ray3k.template.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -18,15 +15,13 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.utils.SkeletonDrawable;
-import com.ray3k.template.Core;
-import com.ray3k.template.JamScreen;
+import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.JamGame.*;
 
 public class LogoScreen extends JamScreen {
     private Stage stage;
-    private Array<SkeletonDrawable> skeletonDrawables;
+    private Array<SpineDrawable> spineDrawables;
     private final static Color BG_COLOR = new Color(Color.BLACK);
     private ObjectSet<Sound> sounds;
     
@@ -34,17 +29,15 @@ public class LogoScreen extends JamScreen {
     public void show() {
         super.show();
         
-        skeletonDrawables = new Array<>();
+        spineDrawables = new Array<>();
         sounds = new ObjectSet<>();
     
         Skeleton skeleton = new Skeleton(assetManager.get("spine/ray3k.json", SkeletonData.class));
         AnimationState animationState = new AnimationState(assetManager.get("spine/ray3k.json-animation", AnimationStateData.class));
-        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, skeleton, animationState);
-        skeletonDrawable.setMinWidth(525);
-        skeletonDrawable.setMinHeight(150);
-        skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
-        skeletonDrawable.getAnimationState().apply(skeletonDrawable.getSkeleton());
-        skeletonDrawables.add(skeletonDrawable);
+        var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
+        spineDrawable.getAnimationState().setAnimation(0, "stand", false);
+        spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
+        spineDrawables.add(spineDrawable);
         
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
@@ -53,13 +46,13 @@ public class LogoScreen extends JamScreen {
         root.setFillParent(true);
         stage.addActor(root);
         
-        Image image = new Image(skeletonDrawable);
+        Image image = new Image(spineDrawable);
         image.setScaling(Scaling.none);
         root.add(image);
     
-        skeletonDrawable.getAnimationState().setAnimation(0, "animation", false);
+        spineDrawable.getAnimationState().setAnimation(0, "animation", false);
         
-        skeletonDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
+        spineDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
                 if (entry.getAnimation().getName().equals("animation")) {
@@ -96,7 +89,7 @@ public class LogoScreen extends JamScreen {
     public void act(float delta) {
         stage.act(delta);
         
-        for (SkeletonDrawable skeletonDrawable : skeletonDrawables) {
+        for (SkeletonDrawable skeletonDrawable : spineDrawables) {
             skeletonDrawable.update(delta);
         }
     }

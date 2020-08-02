@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,7 +21,7 @@ import static com.ray3k.template.Core.*;
 
 public class LibgdxScreen extends JamScreen {
     private Stage stage;
-    private Array<SkeletonDrawable> skeletonDrawables;
+    private Array<SpineDrawable> spineDrawables;
     private final static Color BG_COLOR = new Color(Color.WHITE);
     private ObjectSet<Sound> sounds;
     
@@ -30,17 +29,15 @@ public class LibgdxScreen extends JamScreen {
     public void show() {
         super.show();
 
-        skeletonDrawables = new Array<>();
+        spineDrawables = new Array<>();
         sounds = new ObjectSet<>();
         
         Skeleton skeleton = new Skeleton(assetManager.get("spine/libgdx.json", SkeletonData.class));
         AnimationState animationState = new AnimationState(assetManager.get("spine/libgdx.json-animation", AnimationStateData.class));
-        SkeletonDrawable skeletonDrawable = new SkeletonDrawable(skeletonRenderer, skeleton, animationState);
-        skeletonDrawable.setMinWidth(350);
-        skeletonDrawable.setMinHeight(250);
-        skeletonDrawable.getAnimationState().setAnimation(0, "stand", false);
-        skeletonDrawable.getAnimationState().apply(skeletonDrawable.getSkeleton());
-        skeletonDrawables.add(skeletonDrawable);
+        var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
+        spineDrawable.getAnimationState().setAnimation(0, "stand", false);
+        spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
+        spineDrawables.add(spineDrawable);
         
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
@@ -49,12 +46,12 @@ public class LibgdxScreen extends JamScreen {
         root.setFillParent(true);
         stage.addActor(root);
     
-        Image image = new Image(skeletonDrawable);
+        Image image = new Image(spineDrawable);
         image.setScaling(Scaling.none);
         root.add(image);
-        skeletonDrawable.getAnimationState().setAnimation(0, "animation", false);
+        spineDrawable.getAnimationState().setAnimation(0, "animation", false);
     
-        skeletonDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
+        spineDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
                 if (entry.getAnimation().getName().equals("animation")) {
@@ -91,7 +88,7 @@ public class LibgdxScreen extends JamScreen {
     public void act(float delta) {
         stage.act(delta);
         
-        for (SkeletonDrawable skeletonDrawable : skeletonDrawables) {
+        for (SkeletonDrawable skeletonDrawable : spineDrawables) {
             skeletonDrawable.update(delta);
         }
     }
