@@ -58,8 +58,8 @@ project(":html") {
 
     dependencies {
         implementation project(":core")
-        implementation 'com.badlogicgames.gdx:gdx-backend-gwt:1.910.2'
-        implementation 'com.badlogicgames.gdx:gdx-backend-gwt:1.910.2:sources'
+        implementation 'com.github.tommyettinger:gdx-backend-gwt:1.911.2'
+        implementation 'com.github.tommyettinger:gdx-backend-gwt:1.911.2:sources'
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api 'com.github.tommyettinger:regexodus:0.1.10:sources'
         api 'com.rafaskoberg.gdx:typing-label:1.2.0:sources'
