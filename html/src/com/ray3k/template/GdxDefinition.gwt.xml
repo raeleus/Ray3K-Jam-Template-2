@@ -8,6 +8,7 @@
 	<inherits name="com.rafaskoberg.gdx.typinglabel.typinglabel" />
 	<inherits name="regexodus"/>
 	<inherits name="com.esotericsoftware.spine"/>
+	<inherits name="com.ray3k.stripe" />
 	<inherits name='com.crashinvaders.vfx.GdxVfxCore' />
 	<inherits name='com.crashinvaders.vfx.GdxVfxGwt' />
 	<inherits name='com.crashinvaders.vfx.GdxVfxEffects' />
