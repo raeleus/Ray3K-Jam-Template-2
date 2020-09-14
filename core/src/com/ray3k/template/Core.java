@@ -56,12 +56,7 @@ public class Core extends JamGame {
         skeletonRenderer.setPremultipliedAlpha(true);
         
         world = new World<>();
-        defaultCollisionFilter = new CollisionFilter() {
-            @Override
-            public Response filter(Item item, Item other) {
-                return Response.slide;
-            }
-        };
+        defaultCollisionFilter = (item, other) -> Response.slide;
         
         sndChangeListener = new ChangeListener() {
             @Override
