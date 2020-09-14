@@ -2,6 +2,7 @@ package com.ray3k.template.entities;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.dongbat.jbump.Rect;
 
 import java.util.Comparator;
@@ -9,7 +10,7 @@ import java.util.Comparator;
 import static com.ray3k.template.Core.*;
 import static com.ray3k.template.JamGame.batch;
 
-public class EntityController {
+public class EntityController implements Disposable {
     public Array<Entity> entities;
     public Comparator<Entity> depthComparator;
     private Array<Entity> sortedEntities;
@@ -89,6 +90,13 @@ public class EntityController {
                 
                 entity.draw(delta);
             }
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        for (Entity entity : entities) {
+            if (entity instanceof Disposable) ((Disposable) entity).dispose();
         }
     }
 }
