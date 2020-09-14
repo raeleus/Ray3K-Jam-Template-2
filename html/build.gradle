@@ -23,9 +23,7 @@ gretty.resourceBase = project.buildDir.path + "/gwt/draftOut"
 gretty.contextPath = "/"
 gretty.portPropertiesFileName = "TEMP_PORTS.properties"
 
-task startHttpServer () {
-    dependsOn draftCompileGwt
-
+task startHttpServer (dependsOn: [draftCompileGwt]) {
     doFirst {
         copy {
             from "webapp"
