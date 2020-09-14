@@ -66,10 +66,10 @@ project(":html") {
         api 'space.earlygrey:shapedrawer:2.3.0:sources'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0:sources'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1:sources'
-        api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3:sources'
-        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3'
-        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3:sources'
-        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0'
+        api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0:sources'
+        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0:sources'
         implementation 'org.wisepersist:gwt-gradle-plugin:1.0.13:sources'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
@@ -90,8 +90,8 @@ project(":core") {
         api 'space.earlygrey:shapedrawer:2.3.0'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
-        api 'com.crashinvaders.vfx:gdx-vfx-core:0.4.3'
-        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3'
+        api 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
+        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api 'com.github.raeleus:stripe:master-SNAPSHOT'
