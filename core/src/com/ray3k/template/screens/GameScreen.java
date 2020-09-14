@@ -26,7 +26,6 @@ public class GameScreen extends JamScreen {
     public static final Color BG_COLOR = new Color();
     public Stage stage;
     public ShapeDrawer shapeDrawer;
-    public EntityController entityController;
     private EarthquakeEffect vfxEffect;
     public boolean paused;
     
@@ -84,14 +83,14 @@ public class GameScreen extends JamScreen {
             entityController.add(ballTestEntity);
         }
         
-//        vfxManager.addEffect(vfxEffect);
+        vfxManager.addEffect(vfxEffect);
     }
     
     @Override
     public void act(float delta) {
         if (!paused) {
             entityController.act(delta);
-//            vfxEffect.update(delta);
+            vfxEffect.update(delta);
         }
         stage.act(delta);
     

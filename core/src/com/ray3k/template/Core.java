@@ -29,6 +29,7 @@ public class Core extends JamGame {
     public static Skin skin;
     public static SkeletonRenderer skeletonRenderer;
     public static ChangeListener sndChangeListener;
+    public static EntityController entityController;
     public static World<Entity> world;
     public static CollisionFilter defaultCollisionFilter;
     public static CrossPlatformWorker crossPlatformWorker;
