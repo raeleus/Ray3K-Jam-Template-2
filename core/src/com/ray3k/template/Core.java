@@ -56,6 +56,8 @@ public class Core extends JamGame {
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
         
+        entityController = new EntityController();
+        
         world = new World<>();
         defaultCollisionFilter = (item, other) -> Response.slide;
         

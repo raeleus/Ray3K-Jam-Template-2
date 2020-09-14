@@ -31,6 +31,11 @@ public class EntityController implements Disposable {
         entities.removeValue(entity, false);
     }
     
+    public void clear() {
+        entities.clear();
+        sortedEntities.clear();
+    }
+    
     public void act(float delta) {
         sortedEntities.clear();
         sortedEntities.addAll(entities);

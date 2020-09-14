@@ -72,7 +72,7 @@ public class GameScreen extends JamScreen {
         camera = new OrthographicCamera();
         viewport = new FitViewport(1024, 576, camera);
         
-        entityController = new EntityController();
+        entityController.clear();
         BallTestEntity ballTestEntity = new BallTestEntity();
         ballTestEntity.moveCamera = true;
         entityController.add(ballTestEntity);
