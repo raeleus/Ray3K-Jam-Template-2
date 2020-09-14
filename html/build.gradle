@@ -11,7 +11,7 @@ gwt {
     compiler {
         strict = true;
         disableCastChecking = true;
-        sourceLevel = 11
+        sourceLevel = 1.11
     }
 }
 

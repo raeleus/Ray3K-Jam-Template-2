@@ -10,7 +10,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'org.wisepersist:gwt-gradle-plugin:1.0.9'
+        classpath 'org.wisepersist:gwt-gradle-plugin:1.0.13'
         classpath 'org.gretty:gretty:3.0.2'
     }
 }
@@ -20,7 +20,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "ray3k-jam-template"
-        gdxVersion = '1.9.11-SNAPSHOT'
+        gdxVersion = '1.9.11'
         roboVMVersion = '2.3.7'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -70,7 +70,7 @@ project(":html") {
         api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3'
         api 'com.crashinvaders.vfx:gdx-vfx-gwt:0.4.3:sources'
         api 'com.crashinvaders.vfx:gdx-vfx-effects:0.4.3:sources'
-        implementation 'org.wisepersist:gwt-gradle-plugin:1.0.9:sources'
+        implementation 'org.wisepersist:gwt-gradle-plugin:1.0.13:sources'
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
