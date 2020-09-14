@@ -96,6 +96,7 @@ public class EntityController implements Disposable {
     @Override
     public void dispose() {
         for (Entity entity : entities) {
+            if (entity.item != null) world.remove(entity.item);
             if (entity instanceof Disposable) ((Disposable) entity).dispose();
         }
     }
