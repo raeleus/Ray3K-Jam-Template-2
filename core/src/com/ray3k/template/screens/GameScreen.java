@@ -12,11 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.crashinvaders.vfx.effects.ChainVfxEffect;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
+import com.crashinvaders.vfx.effects.VfxEffect;
+import com.crashinvaders.vfx.effects.WaterDistortionEffect;
 import com.ray3k.template.Core.*;
 import com.ray3k.template.*;
 import com.ray3k.template.entities.*;
 import com.ray3k.template.screens.DialogPause.*;
+import com.ray3k.template.vfx.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static com.ray3k.template.Core.*;
@@ -27,11 +31,11 @@ public class GameScreen extends JamScreen {
     public Stage stage;
     public ShapeDrawer shapeDrawer;
     public boolean paused;
-    private GaussianBlurEffect vfxEffect;
+    private ChainVfxEffect vfxEffect;
     
     public GameScreen() {
         gameScreen = this;
-        vfxEffect = new GaussianBlurEffect();
+        vfxEffect = new EarthquakeEffect();
         vfxManager.addEffect(vfxEffect);
         
         BG_COLOR.set(Color.PINK);
@@ -88,6 +92,7 @@ public class GameScreen extends JamScreen {
     public void act(float delta) {
         if (!paused) {
             entityController.act(delta);
+            vfxManager.update(delta);
         }
         stage.act(delta);
     
