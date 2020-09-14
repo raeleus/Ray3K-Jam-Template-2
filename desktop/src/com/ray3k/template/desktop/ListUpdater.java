@@ -12,6 +12,7 @@ import java.security.MessageDigest;
 
 public class ListUpdater {
     public static void main(String args[]) {
+        System.out.println("Check if lists need to be updated.");
         boolean updated = createList("skin", "json", Paths.get("core/assets/skin.txt").toFile());
         updated |= createList("spine", "json", Paths.get("core/assets/spine.txt").toFile());
         updated |= createList("textures", "atlas", Paths.get("core/assets/textures.txt").toFile());
@@ -20,6 +21,8 @@ public class ListUpdater {
         
         if (updated) {
             System.out.println("Updated lists.");
+        } else {
+            System.out.println("Lists not updated.");
         }
     }
     
