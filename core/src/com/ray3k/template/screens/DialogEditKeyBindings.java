@@ -214,7 +214,10 @@ public class DialogEditKeyBindings extends Dialog {
                         public void controllerButtonSelected(Controller controller, int value) {
                             Array<Binding> unbinds = new Array<>();
                             for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerButtonBindings) {
-                                if (binding.value.value == value) {
+                                int bindingControllerIndex = Controllers.getControllers().indexOf(binding.value.controller, true);
+                                int controllerIndex = Controllers.getControllers().indexOf(controller, true);
+                                
+                                if (binding.value.value == value && controllerIndex == bindingControllerIndex) {
                                     unbinds.add(binding.key);
                                 }
                             }
@@ -231,7 +234,10 @@ public class DialogEditKeyBindings extends Dialog {
                         public void controllerAxisSelected(Controller controller, int axisCode, int value) {
                             Array<Binding> unbinds = new Array<>();
                             for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerAxisBindings) {
-                                if (binding.value.axisCode == axisCode && binding.value.value == value) {
+                                int bindingControllerIndex = Controllers.getControllers().indexOf(binding.value.controller, true);
+                                int controllerIndex = Controllers.getControllers().indexOf(controller, true);
+                                
+                                if (binding.value.axisCode == axisCode && binding.value.value == value && controllerIndex == bindingControllerIndex) {
                                     unbinds.add(binding.key);
                                 }
                             }
@@ -248,7 +254,10 @@ public class DialogEditKeyBindings extends Dialog {
                         public void controllerPovSelected(Controller controller, int povCode, int value) {
                             Array<Binding> unbinds = new Array<>();
                             for (ObjectMap.Entry<Binding, ControllerValue> binding : JamScreen.controllerPovBindings) {
-                                if (binding.value.axisCode == povCode && binding.value.value == value) {
+                                int bindingControllerIndex = Controllers.getControllers().indexOf(binding.value.controller, true);
+                                int controllerIndex = Controllers.getControllers().indexOf(controller, true);
+                                
+                                if (binding.value.axisCode == povCode && binding.value.value == value && controllerIndex == bindingControllerIndex) {
                                     unbinds.add(binding.key);
                                 }
                             }
