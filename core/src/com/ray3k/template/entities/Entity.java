@@ -1,7 +1,12 @@
 package com.ray3k.template.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.dongbat.jbump.CollisionFilter;
+import com.dongbat.jbump.Item;
 import com.esotericsoftware.spine.*;
+import com.ray3k.template.*;
+
+import static com.ray3k.template.Core.*;
 
 public abstract class Entity {
     private static final Vector2 temp1 = new Vector2();
@@ -9,14 +14,19 @@ public abstract class Entity {
     public Skeleton skeleton;
     public AnimationState animationState;
     public SkeletonBounds skeletonBounds;
+    public Item<Entity> item;
+    public CollisionFilter collisionFilter;
     public float x;
     public float y;
+    public float bboxX;
+    public float bboxY;
+    public float bboxWidth;
+    public float bboxHeight;
     public float deltaX;
     public float deltaY;
     public boolean destroy;
     public float gravityX;
     public float gravityY;
-    public boolean collidable;
     public boolean visible;
     public int depth;
     
@@ -112,6 +122,17 @@ public abstract class Entity {
         skeleton.updateWorldTransform();
         animationState.apply(skeleton);
         skeletonBounds.update(skeleton, true);
+    }
+    
+    public void setCollisionBox(float offsetX, float offsetY, float width, float height, CollisionFilter collisionFilter) {
+        bboxX = offsetX;
+        bboxY = offsetY;
+        bboxWidth = width;
+        bboxHeight = height;
+        this.collisionFilter = collisionFilter;
+        
+        item = new Item<>(this);
+        world.add(item, x + bboxX, y + bboxY, width, height);
     }
     
     public boolean isOutside(float left, float bottom, float width, float height, float border) {

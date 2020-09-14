@@ -84,14 +84,14 @@ public class GameScreen extends JamScreen {
             entityController.add(ballTestEntity);
         }
         
-        vfxManager.addEffect(vfxEffect);
+//        vfxManager.addEffect(vfxEffect);
     }
     
     @Override
     public void act(float delta) {
         if (!paused) {
             entityController.act(delta);
-            vfxEffect.update(delta);
+//            vfxEffect.update(delta);
         }
         stage.act(delta);
     

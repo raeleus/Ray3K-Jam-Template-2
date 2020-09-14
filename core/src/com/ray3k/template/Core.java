@@ -11,10 +11,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.dongbat.jbump.CollisionFilter;
+import com.dongbat.jbump.Item;
+import com.dongbat.jbump.Response;
+import com.dongbat.jbump.World;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.ray3k.template.AnimationStateDataLoader.*;
+import com.ray3k.template.entities.*;
 import com.ray3k.template.screens.*;
 import com.ray3k.template.transitions.*;
 
@@ -24,6 +29,8 @@ public class Core extends JamGame {
     public static Skin skin;
     public static SkeletonRenderer skeletonRenderer;
     public static ChangeListener sndChangeListener;
+    public static World<Entity> world;
+    public static CollisionFilter defaultCollisionFilter;
     public static CrossPlatformWorker crossPlatformWorker;
     public enum Binding {
         LEFT, RIGHT, UP, DOWN, SHOOT, SPECIAL, SHIELD;
@@ -48,6 +55,14 @@ public class Core extends JamGame {
         skeletonRenderer = new SkeletonRenderer();
         skeletonRenderer.setPremultipliedAlpha(true);
         
+        world = new World<>();
+        defaultCollisionFilter = new CollisionFilter() {
+            @Override
+            public Response filter(Item item, Item other) {
+                return Response.slide;
+            }
+        };
+        
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -55,9 +70,7 @@ public class Core extends JamGame {
             }
         };
         
-        setScreen(new LoadScreen(() -> {
-            skin = assetManager.get("skin/shimmer-ui.json");
-        }));
+        setScreen(new LoadScreen(() -> skin = assetManager.get("skin/shimmer-ui.json")));
         defaultTransition = Transitions.colorFade(Color.BLACK);
         defaultTransitionDuration = .5f;
     }

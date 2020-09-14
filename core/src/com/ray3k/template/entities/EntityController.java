@@ -1,6 +1,8 @@
 package com.ray3k.template.entities;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.dongbat.jbump.Rect;
 
 import java.util.Comparator;
 
@@ -53,6 +55,13 @@ public class EntityController {
                 entity.skeletonBounds.update(entity.skeleton, true);
             }
             
+            if (entity.item != null) {
+                world.move(entity.item, entity.x + entity.bboxX, entity.y + entity.bboxY, entity.collisionFilter);
+                Rect rect = world.getRect(entity.item);
+                entity.x = rect.x - entity.bboxX;
+                entity.y = rect.y - entity.bboxY;
+            }
+            
             entity.act(delta);
         }
     
@@ -61,6 +70,7 @@ public class EntityController {
             if (entity.destroy) {
                 entity.destroy();
                 entities.removeValue(entity, false);
+                if (entity.item != null) world.remove(entity.item);
             }
         }
     }

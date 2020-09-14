@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.ray3k.template.Core;
-import com.ray3k.template.Utils;
-import com.ray3k.template.screens.GameScreen;
-import space.earlygrey.shapedrawer.JoinType;
+import com.dongbat.jbump.Rect;
+import com.ray3k.template.*;
+import com.ray3k.template.screens.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-import space.earlygrey.shapedrawer.ShapeUtils;
+
+import static com.ray3k.template.Core.*;
 
 public class BallTestEntity extends Entity {
     private GameScreen gameScreen;
@@ -30,6 +30,7 @@ public class BallTestEntity extends Entity {
         color.set(Color.RED);
         
         setMotion(100, MathUtils.random(360f));
+        setCollisionBox(-50, -50, 100, 100, defaultCollisionFilter);
     }
     
     @Override
@@ -75,6 +76,9 @@ public class BallTestEntity extends Entity {
     public void draw(float delta) {
         shapeDrawer.setColor(color);
         shapeDrawer.filledCircle(x, y, 50);
+        shapeDrawer.setDefaultLineWidth(1f);
+        Rect rect = world.getRect(item);
+        shapeDrawer.rectangle(rect.x, rect.y, rect.w, rect.h);
     }
     
     @Override
