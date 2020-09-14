@@ -62,7 +62,6 @@ public class GameScreen extends JamScreen {
             }
         });
         
-        skin = assetManager.get("skin/shimmer-ui.json");
         shapeDrawer = new ShapeDrawer(batch, skin.getRegion("white"));
         shapeDrawer.setPixelSize(.5f);
         

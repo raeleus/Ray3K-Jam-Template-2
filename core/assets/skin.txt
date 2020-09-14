@@ -1,1 +1,1 @@
-skin/shimmer-ui.json
+skin/skin.json
