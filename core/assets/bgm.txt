@@ -1,2 +1,2 @@
-bgm/audio-test.mp3
-bgm/music-test.mp3
+bgm/audio-sample.mp3
+bgm/menu.mp3

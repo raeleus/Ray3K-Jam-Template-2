@@ -21,7 +21,7 @@ public class MenuScreen extends JamScreen {
     public void show() {
         super.show();
     
-        final Music bgm = assetManager.get("bgm/music-test.mp3");
+        final Music bgm = assetManager.get("bgm/menu.mp3");
         if (!bgm.isPlaying()) {
             bgm.play();
             bgm.setVolume(core.bgm);
