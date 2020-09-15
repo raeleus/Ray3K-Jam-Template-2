@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
+import static com.ray3k.template.Resources.*;
 
 public class MenuScreen extends JamScreen {
     private Stage stage;
@@ -21,7 +22,7 @@ public class MenuScreen extends JamScreen {
     public void show() {
         super.show();
     
-        final Music bgm = assetManager.get("bgm/menu.mp3");
+        final Music bgm = bgm_music;
         if (!bgm.isPlaying()) {
             bgm.play();
             bgm.setVolume(core.bgm);

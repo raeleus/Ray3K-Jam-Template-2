@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
+import static com.ray3k.template.Resources.*;
 
 public class OptionsScreen extends JamScreen {
     private Stage stage;
@@ -54,7 +55,7 @@ public class OptionsScreen extends JamScreen {
             }
         });
         
-        final Music bgm = assetManager.get("bgm/menu.mp3");
+        final Music bgm = bgm_music;
         Slider slider = stage.getRoot().findActor("bgm");
         slider.setValue(Core.bgm);
         slider.addListener(new ChangeListener() {
@@ -67,7 +68,7 @@ public class OptionsScreen extends JamScreen {
             }
         });
     
-        final Music sfx = assetManager.get("bgm/audio-sample.mp3");
+        final Music sfx = bgm_audio_sample;
         sfx.setLooping(true);
         
         slider = stage.getRoot().findActor("sfx");

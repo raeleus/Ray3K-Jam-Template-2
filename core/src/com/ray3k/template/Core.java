@@ -68,7 +68,10 @@ public class Core extends JamGame {
             }
         };
         
-        setScreen(new LoadScreen(() -> skin = assetManager.get("skin/skin.json")));
+        setScreen(new LoadScreen(() -> {
+            skin = assetManager.get("skin/skin.json");
+            Resources.loadResources(assetManager);
+        }));
         defaultTransition = Transitions.colorFade(Color.BLACK);
         defaultTransitionDuration = .5f;
     }
