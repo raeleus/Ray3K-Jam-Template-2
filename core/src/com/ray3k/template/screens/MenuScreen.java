@@ -22,7 +22,7 @@ public class MenuScreen extends JamScreen {
     public void show() {
         super.show();
     
-        final Music bgm = bgm_music;
+        final Music bgm = bgm_menu;
         if (!bgm.isPlaying()) {
             bgm.play();
             bgm.setVolume(core.bgm);

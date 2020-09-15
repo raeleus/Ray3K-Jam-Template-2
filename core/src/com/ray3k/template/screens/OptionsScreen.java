@@ -55,7 +55,7 @@ public class OptionsScreen extends JamScreen {
             }
         });
         
-        final Music bgm = bgm_music;
+        final Music bgm = bgm_menu;
         Slider slider = stage.getRoot().findActor("bgm");
         slider.setValue(Core.bgm);
         slider.addListener(new ChangeListener() {
@@ -68,7 +68,7 @@ public class OptionsScreen extends JamScreen {
             }
         });
     
-        final Music sfx = bgm_audio_sample;
+        final Music sfx = bgm_audioSample;
         sfx.setLooping(true);
         
         slider = stage.getRoot().findActor("sfx");

@@ -23,6 +23,8 @@ import com.ray3k.template.entities.*;
 import com.ray3k.template.screens.*;
 import com.ray3k.template.transitions.*;
 
+import static com.ray3k.template.Resources.*;
+
 public class Core extends JamGame {
     public static final String PROJECT_NAME = "Template Game";
     public static Core core;
@@ -64,13 +66,13 @@ public class Core extends JamGame {
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                assetManager.get("sfx/click.mp3", Sound.class).play();
+                sfx_click.play();
             }
         };
         
         setScreen(new LoadScreen(() -> {
-            skin = assetManager.get("skin/skin.json");
-            Resources.loadResources(assetManager);
+            loadResources(assetManager);
+            skin = skin_skin;
         }));
         defaultTransition = Transitions.colorFade(Color.BLACK);
         defaultTransitionDuration = .5f;

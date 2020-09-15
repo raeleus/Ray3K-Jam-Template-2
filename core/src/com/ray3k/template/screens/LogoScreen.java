@@ -18,6 +18,7 @@ import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
+import static com.ray3k.template.Resources.*;
 
 public class LogoScreen extends JamScreen {
     private Stage stage;
@@ -32,8 +33,8 @@ public class LogoScreen extends JamScreen {
         spineDrawables = new Array<>();
         sounds = new ObjectSet<>();
     
-        Skeleton skeleton = new Skeleton(assetManager.get("spine/ray3k.json", SkeletonData.class));
-        AnimationState animationState = new AnimationState(assetManager.get("spine/ray3k.json-animation", AnimationStateData.class));
+        Skeleton skeleton = new Skeleton(spine_ray3k);
+        AnimationState animationState = new AnimationState(spine_ray3kAnimation);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
         spineDrawable.getAnimationState().setAnimation(0, "stand", false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
