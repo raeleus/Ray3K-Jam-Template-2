@@ -143,7 +143,9 @@ public class ListUpdater {
         }
         var typeSpec = typeSpecBuilder.build();
         
-        var javaFile = JavaFile.builder("com.ray3k.template", typeSpec).build();
+        var javaFile = JavaFile.builder("com.ray3k.template", typeSpec)
+                .indent("    ")
+                .build();
     
         try {
             Files.writeString(resourcesFile.toPath(), javaFile.toString());
