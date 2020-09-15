@@ -1,16 +1,7 @@
 {
-"skeleton": {
-	"hash": "eWQCCdjdjJzexZ6gpbRopj7O8Lc",
-	"spine": "3.8.95",
-	"x": 27.55,
-	"y": 74.47,
-	"width": 404.76,
-	"height": 86.97,
-	"images": "../output/",
-	"audio": "../output/"
-},
+"skeleton": { "hash": "ggdpOYry/WRi0jIKlySToYZciCc", "spine": "3.8.99", "width": 1024, "height": 576, "images": "../output/", "audio": "../output/" },
 "bones": [
-	{ "name": "root", "x": 196.08, "y": 127.45 },
+	{ "name": "root", "x": 512, "y": 288 },
 	{ "name": "blood-0", "parent": "root", "length": 21.13, "rotation": 1.76, "x": -143.86, "y": 0.75 },
 	{ "name": "blood-1", "parent": "root", "length": 21.13, "rotation": 1.76, "x": -119.16, "y": -11.93 },
 	{ "name": "blood-2", "parent": "root", "length": 21.13, "rotation": 1.76, "x": -85.68, "y": -8.68 },
@@ -33,6 +24,7 @@
 ],
 "slots": [
 	{ "name": "libgdx-reference", "bone": "root" },
+	{ "name": "white", "bone": "root" },
 	{ "name": "blood-0", "bone": "blood-0", "attachment": "logo/blood-0" },
 	{ "name": "blood-1", "bone": "blood-1", "attachment": "logo/blood-0" },
 	{ "name": "blood-2", "bone": "blood-2", "attachment": "logo/blood-0" },

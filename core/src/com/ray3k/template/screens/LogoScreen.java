@@ -48,8 +48,8 @@ public class LogoScreen extends JamScreen {
         stage.addActor(root);
         
         Image image = new Image(spineDrawable);
-        image.setScaling(Scaling.none);
-        root.add(image);
+        image.setScaling(Scaling.fit);
+        root.add(image).grow();
     
         spineDrawable.getAnimationState().setAnimation(0, "animation", false);
         
