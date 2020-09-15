@@ -7,8 +7,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.spine.Animation;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
+import com.esotericsoftware.spine.SkeletonJson;
+import com.esotericsoftware.spine.attachments.*;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -22,19 +25,15 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 
 public class ListUpdater {
+    private final static LameDuckAttachmentLoader lameDuckAttachmentLoader = new LameDuckAttachmentLoader();
+    
     public static void main(String args[]) {
         System.out.println("Check if lists need to be updated.");
         
         var resources = new Array<ResourceDescriptor>();
         
         boolean updated = createList("skin", "json", Paths.get("core/assets/skin.txt").toFile(), Skin.class, resources);
-        var spineResources = new Array<ResourceDescriptor>();
-        updated |= createList("spine", "json", Paths.get("core/assets/spine.txt").toFile(), SkeletonData.class, spineResources);
-        resources.addAll(spineResources);
-        for (var spineResource : spineResources) {
-            var resource = new ResourceDescriptor(AnimationStateData.class, spineResource.file.sibling(spineResource.file.name() + "-animation"), spineResource.variableName + "Animation");
-            resources.add(resource);
-        }
+        updated |= createList("spine", "json", Paths.get("core/assets/spine.txt").toFile(), SkeletonData.class, resources);
         updated |= createList("textures", "atlas", Paths.get("core/assets/textures.txt").toFile(), TextureAtlas.class, resources);
         updated |= createList("sfx", "mp3", Paths.get("core/assets/sfx.txt").toFile(), Sound.class, resources);
         updated |= createList("bgm", "mp3", Paths.get("core/assets/bgm.txt").toFile(), Music.class, resources);
@@ -130,8 +129,29 @@ public class ListUpdater {
         var methodSpecBuilder = MethodSpec.methodBuilder("loadResources")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(AssetManager.class, "assetManager");
+        var subTypes = new Array<TypeSpec>();
         for (var resource : resources) {
             methodSpecBuilder.addStatement("$L = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()));
+    
+            if (resource.type.equals(SkeletonData.class)) {
+                methodSpecBuilder.addStatement("$LAnimationData = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()) + "-animation");
+                
+                var name = sanitizeVariableName(resource.file.nameWithoutExtension());
+                name = upperCaseFirstLetter(name) + "Animation";
+                var typeSpecBuilder = TypeSpec.classBuilder(name)
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        
+                SkeletonJson skeletonJson = new SkeletonJson(lameDuckAttachmentLoader);
+                var skeletonData = skeletonJson.readSkeletonData(resource.file);
+                for (var animation : skeletonData.getAnimations()) {
+                    var variableName = sanitizeVariableName(animation.getName());
+                    typeSpecBuilder.addField(Animation.class, variableName, Modifier.PUBLIC, Modifier.STATIC);
+                    
+                    methodSpecBuilder.addStatement("$L.$L = $L.findAnimation($S)", name, variableName, resource.variableName, animation.getName());
+                }
+        
+                subTypes.add(typeSpecBuilder.build());
+            }
         }
         var methodSpec = methodSpecBuilder.build();
     
@@ -140,6 +160,13 @@ public class ListUpdater {
                 .addMethod(methodSpec);
         for (var resource : resources) {
             typeSpecBuilder.addField(resource.type, resource.variableName, Modifier.PUBLIC, Modifier.STATIC);
+    
+            if (resource.type.equals(SkeletonData.class)) {
+                typeSpecBuilder.addField(AnimationStateData.class, resource.variableName + "AnimationData", Modifier.PUBLIC, Modifier.STATIC);
+            }
+        }
+        for (var subType : subTypes) {
+            typeSpecBuilder.addType(subType);
         }
         var typeSpec = typeSpecBuilder.build();
         
@@ -160,7 +187,7 @@ public class ListUpdater {
         public ResourceDescriptor(Class type, FileHandle file) {
             this.type = type;
             this.file = file;
-            variableName = sanitizeVariableName(file.pathWithoutExtension());
+            variableName = sanitizeResourceName(file.pathWithoutExtension());
         }
     
         public ResourceDescriptor(Class type, FileHandle file, String variableName) {
@@ -170,7 +197,7 @@ public class ListUpdater {
         }
     }
     
-    private static String sanitizeVariableName(String name) {
+    private static String sanitizeResourceName(String name) {
         name = name.replaceAll("^[./]*", "").replaceAll("[\\\\/\\-\\s]", "_").replaceAll("['\"]", "");
         var splits = name.split("_");
         var builder = new StringBuilder(splits[2]);
@@ -188,7 +215,59 @@ public class ListUpdater {
         return builder.toString();
     }
     
+    private static String sanitizeVariableName(String name) {
+        name = name.replaceAll("^[./]*", "").replaceAll("[\\\\/\\-\\s]", "_").replaceAll("['\"]", "");
+        var splits = name.split("_");
+        var builder = new StringBuilder(splits[0]);
+        for (int i = 1; i < splits.length - 1; i++) {
+            var split = splits[i];
+            builder.append(Character.toUpperCase(split.charAt(0)));
+            builder.append(split.substring(1));
+        }
+        
+        return builder.toString();
+    }
+    
     private static String sanitizePath(String path) {
         return path.replaceAll("\\./core/assets/", "");
+    }
+    
+    private static String upperCaseFirstLetter(String string) {
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
+    
+    private static class LameDuckAttachmentLoader implements AttachmentLoader {
+        @Override
+        public RegionAttachment newRegionAttachment(com.esotericsoftware.spine.Skin skin, String name,
+                                                    String path) {
+            return new RegionAttachment(name);
+        }
+    
+        @Override
+        public MeshAttachment newMeshAttachment(com.esotericsoftware.spine.Skin skin, String name,
+                                                String path) {
+            return new MeshAttachment(name);
+        }
+    
+        @Override
+        public BoundingBoxAttachment newBoundingBoxAttachment(com.esotericsoftware.spine.Skin skin,
+                                                              String name) {
+            return new BoundingBoxAttachment(name);
+        }
+    
+        @Override
+        public ClippingAttachment newClippingAttachment(com.esotericsoftware.spine.Skin skin, String name) {
+            return new ClippingAttachment(name);
+        }
+    
+        @Override
+        public PathAttachment newPathAttachment(com.esotericsoftware.spine.Skin skin, String name) {
+            return new PathAttachment(name);
+        }
+    
+        @Override
+        public PointAttachment newPointAttachment(com.esotericsoftware.spine.Skin skin, String name) {
+            return new PointAttachment(name);
+        }
     }
 }

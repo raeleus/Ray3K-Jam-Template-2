@@ -19,6 +19,7 @@ import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
 import static com.ray3k.template.Resources.*;
+import static com.ray3k.template.Resources.LibgdxAnimation.*;
 
 public class LibgdxScreen extends JamScreen {
     private Stage stage;
@@ -34,9 +35,9 @@ public class LibgdxScreen extends JamScreen {
         sounds = new ObjectSet<>();
         
         Skeleton skeleton = new Skeleton(spine_libgdx);
-        AnimationState animationState = new AnimationState(spine_libgdxAnimation);
+        AnimationState animationState = new AnimationState(spine_libgdxAnimationData);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
-        spineDrawable.getAnimationState().setAnimation(0, "stand", false);
+        spineDrawable.getAnimationState().setAnimation(0, stand, false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
         spineDrawables.add(spineDrawable);
         
@@ -50,12 +51,12 @@ public class LibgdxScreen extends JamScreen {
         Image image = new Image(spineDrawable);
         image.setScaling(Scaling.fit);
         root.add(image).grow();
-        spineDrawable.getAnimationState().setAnimation(0, "animation", false);
+        spineDrawable.getAnimationState().setAnimation(0, animation, false);
     
         spineDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
-                if (entry.getAnimation().getName().equals("animation")) {
+                if (entry.getAnimation() == animation) {
                     core.transition(new LogoScreen());
                 }
             }
