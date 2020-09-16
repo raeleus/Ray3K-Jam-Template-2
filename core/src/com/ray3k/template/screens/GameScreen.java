@@ -13,9 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.crashinvaders.vfx.effects.ChainVfxEffect;
-import com.crashinvaders.vfx.effects.GaussianBlurEffect;
-import com.crashinvaders.vfx.effects.VfxEffect;
-import com.crashinvaders.vfx.effects.WaterDistortionEffect;
 import com.ray3k.template.Core.*;
 import com.ray3k.template.*;
 import com.ray3k.template.entities.*;
@@ -35,7 +32,7 @@ public class GameScreen extends JamScreen {
     
     public GameScreen() {
         gameScreen = this;
-        vfxEffect = new EarthquakeEffect();
+        vfxEffect = new ShockwaveEffect();
         vfxManager.addEffect(vfxEffect);
         
         BG_COLOR.set(Color.PINK);
