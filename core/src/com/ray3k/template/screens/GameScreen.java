@@ -32,7 +32,7 @@ public class GameScreen extends JamScreen {
     
     public GameScreen() {
         gameScreen = this;
-        vfxEffect = new ShockwaveEffect();
+        vfxEffect = new PixelateEffect();
         vfxManager.addEffect(vfxEffect);
         
         BG_COLOR.set(Color.PINK);
