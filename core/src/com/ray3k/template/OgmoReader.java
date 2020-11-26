@@ -12,11 +12,11 @@ import com.badlogic.gdx.utils.ObjectMap;
  * OgmoReader#readFile().
  */
 public class OgmoReader {
-    private Array<OgmoListener> layerListeners;
+    private Array<OgmoListener> ogmoListeners;
     private JsonReader jsonReader;
     
     public OgmoReader() {
-        layerListeners = new Array<>();
+        ogmoListeners = new Array<>();
         jsonReader = new JsonReader();
     }
     
@@ -35,13 +35,13 @@ public class OgmoReader {
             valuesMap.put(ogmoValue.name, ogmoValue);
         }
         
-        for (OgmoListener ogmoListener : layerListeners) {
+        for (OgmoListener ogmoListener : ogmoListeners) {
             ogmoListener.level(version, levelWidth, levelHeight, levelOffsetX, levelOffsetY, valuesMap);
         }
         
         if (root.has("layers")) {
             for (JsonValue child : root.get("layers").iterator()) {
-                for (OgmoListener ogmoListener : layerListeners) {
+                for (OgmoListener ogmoListener : ogmoListeners) {
                     ogmoListener.layer(child.getString("name"),
                             child.getInt("gridCellWidth"), child.getInt("gridCellheight"),
                             child.getInt("offsetX"), child.getInt("offsetY"));
@@ -49,7 +49,7 @@ public class OgmoReader {
                 
                 if (child.has("entities")) {
                     for (JsonValue entity : child.get("entities").iterator()) {
-                        for (OgmoListener ogmoListener : layerListeners) {
+                        for (OgmoListener ogmoListener : ogmoListeners) {
                             Array<EntityNode> nodes = new Array<>();
                             if (entity.has("nodes")) for (JsonValue coordinate : entity.get("nodes")) {
                                 EntityNode node = new EntityNode();
@@ -80,7 +80,7 @@ public class OgmoReader {
                     int column = 0;
                     int row = 0;
                     for (JsonValue grid : child.get("grid").iterator()) {
-                        for (OgmoListener ogmoListener : layerListeners) {
+                        for (OgmoListener ogmoListener : ogmoListeners) {
                             ogmoListener.grid(column, row, column * cellWidth, levelHeight - (row + 1) * cellHeight, cellWidth, cellHeight, grid.asInt());
                         }
                         
@@ -98,7 +98,7 @@ public class OgmoReader {
                     for (JsonValue gridY : child.get("grid2D").iterator()) {
                         int column = 0;
                         for (JsonValue grid : gridY.iterator()) {
-                            for (OgmoListener ogmoListener : layerListeners) {
+                            for (OgmoListener ogmoListener : ogmoListeners) {
                                 ogmoListener.grid(column, row, column * cellWidth, levelHeight - (row + 1) * cellHeight, cellWidth, cellHeight, grid.asInt());
                             }
                             
@@ -109,7 +109,7 @@ public class OgmoReader {
                 } else if (child.has("decals")) {
                     String folder = child.getString("folder");
                     for (JsonValue decal : child.get("decals").iterator()) {
-                        for (OgmoListener ogmoListener : layerListeners) {
+                        for (OgmoListener ogmoListener : ogmoListeners) {
                             ogmoListener.decal(decal.getInt("x"), levelHeight - decal.getInt("y"),
                                     decal.getFloat("scaleX", 1f), decal.getFloat("scaleY", 1f),
                                     (360 - decal.getInt("rotation", 0)) % 360, decal.getString("texture"), folder);
@@ -124,7 +124,7 @@ public class OgmoReader {
                     int column = 0;
                     int row = 0;
                     for (JsonValue data : child.get("data").iterator()) {
-                        for (OgmoListener ogmoListener : layerListeners) {
+                        for (OgmoListener ogmoListener : ogmoListeners) {
                             ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.asInt());
                         }
                         
@@ -143,7 +143,7 @@ public class OgmoReader {
                     for (JsonValue dataY : child.get("data2D").iterator()) {
                         int column = 0;
                         for (JsonValue data : dataY.iterator()) {
-                            for (OgmoListener ogmoListener : layerListeners) {
+                            for (OgmoListener ogmoListener : ogmoListeners) {
                                 ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.asInt());
                             }
                             
@@ -160,7 +160,7 @@ public class OgmoReader {
                     int column = 0;
                     int row = 0;
                     for (JsonValue data : child.get("dataCoords").iterator()) {
-                        for (OgmoListener ogmoListener : layerListeners) {
+                        for (OgmoListener ogmoListener : ogmoListeners) {
                             ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.getInt(0), data.getInt(1));
                         }
                         
@@ -179,7 +179,7 @@ public class OgmoReader {
                     for (JsonValue dataY : child.get("dataCoords2D").iterator()) {
                         int column = 0;
                         for (JsonValue data : dataY.iterator()) {
-                            for (OgmoListener ogmoListener : layerListeners) {
+                            for (OgmoListener ogmoListener : ogmoListeners) {
                                 ogmoListener.tile(tileSet, column, row, column * cellWidth, levelHeight - row * cellHeight, data.getInt(0), data.getInt(1));
                             }
                             
@@ -189,24 +189,29 @@ public class OgmoReader {
                     }
                 }
                 
-                for (OgmoListener ogmoListener : layerListeners) {
+                for (OgmoListener ogmoListener : ogmoListeners) {
                     ogmoListener.layerComplete();
                 }
             }
         }
+        
+        for (OgmoListener ogmoListener : ogmoListeners) {
+            ogmoListener.levelComplete();
+        }
+        
     }
     
     public OgmoReader addListener(OgmoListener ogmoListener) {
-        layerListeners.add(ogmoListener);
+        ogmoListeners.add(ogmoListener);
         return this;
     }
     
     public void clearListeners() {
-        layerListeners.clear();
+        ogmoListeners.clear();
     }
     
-    public Array<OgmoListener> getLayerListeners() {
-        return layerListeners;
+    public Array<OgmoListener> getOgmoListeners() {
+        return ogmoListeners;
     }
     
     /**
@@ -215,7 +220,7 @@ public class OgmoReader {
      */
     public interface OgmoListener {
         /**
-         * Called once when OgmoReader#readFile() is called.
+         * Called first when OgmoReader#readFile() is called.
          * @param ogmoVersion The version of Ogmo Editor used to create the level.
          * @param width The width of the level.
          * @param height The height of the level.
@@ -302,11 +307,16 @@ public class OgmoReader {
          * Called after the layer is completely read.
          */
         void layerComplete();
+        
+        /**
+         * Called after the level is completely read.
+         */
+        void levelComplete();
     }
     
     public static class OgmoAdapter implements OgmoListener {
         /**
-         * Called once when OgmoReader#readFile() is called.
+         * Called first when OgmoReader#readFile() is called.
          *
          * @param ogmoVersion The version of Ogmo Editor used to create the level.
          * @param width       The width of the level.
@@ -422,6 +432,14 @@ public class OgmoReader {
          */
         @Override
         public void layerComplete() {
+        
+        }
+        
+        /**
+         * Called after the level is completely read.
+         */
+        @Override
+        public void levelComplete() {
         
         }
     }
