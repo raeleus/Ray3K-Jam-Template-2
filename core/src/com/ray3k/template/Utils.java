@@ -69,7 +69,7 @@ public class Utils {
             floatArray.add(points.get(shortArray.get(i) * 2));
             floatArray.add(points.get(shortArray.get(i) * 2 + 1));
         }
-        return floatArray.items;
+        return floatArray.toArray();
     }
     
     public static Rectangle verticesToAABB(FloatArray vertices) {
