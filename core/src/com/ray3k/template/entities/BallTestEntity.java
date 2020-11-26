@@ -89,6 +89,19 @@ public class BallTestEntity extends Entity {
     
     @Override
     public void collision(Collisions collisions) {
+        for (int i = 0; i < collisions.size(); i++) {
+            var collision = collisions.get(i);
+            var other = (Entity) collision.other.userData;
+            
+            if (collision.normal.x == -1) deltaX = -Math.abs(deltaX);
+            if (collision.normal.x == 1) deltaX = Math.abs(deltaX);
+            if (collision.normal.y == -1) deltaY = -Math.abs(deltaY);
+            if (collision.normal.y == 1) deltaY = Math.abs(deltaY);
     
+            if (collision.normal.x == -1) other.deltaX = Math.abs(other.deltaX);
+            if (collision.normal.x == 1) other.deltaX = -Math.abs(other.deltaX);
+            if (collision.normal.y == -1) other.deltaY = Math.abs(other.deltaY);
+            if (collision.normal.y == 1) other.deltaY = -Math.abs(other.deltaY);
+        }
     }
 }
