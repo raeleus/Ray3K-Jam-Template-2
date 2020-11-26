@@ -30,22 +30,25 @@ public class GameScreen extends JamScreen {
     public boolean paused;
     private ChainVfxEffect vfxEffect;
     
-    public GameScreen() {
+    @Override
+    public void show() {
+        super.show();
+    
         gameScreen = this;
         vfxEffect = new GlitchEffect();
         vfxManager.addEffect(vfxEffect);
-        
+    
         BG_COLOR.set(Color.PINK);
     
         paused = false;
-        
+    
         stage = new Stage(new ScreenViewport(), batch);
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (!paused && keycode == Keys.ESCAPE) {
                     paused = true;
-                    
+                
                     DialogPause dialogPause = new DialogPause(GameScreen.this);
                     dialogPause.show(stage);
                     dialogPause.addListener(new PauseListener() {
@@ -53,7 +56,7 @@ public class GameScreen extends JamScreen {
                         public void resume() {
                             paused = false;
                         }
-    
+                    
                         @Override
                         public void quit() {
                             core.transition(new MenuScreen());
@@ -63,21 +66,21 @@ public class GameScreen extends JamScreen {
                 return super.keyDown(event, keycode);
             }
         });
-        
+    
         shapeDrawer = new ShapeDrawer(batch, skin.getRegion("white"));
         shapeDrawer.setPixelSize(.5f);
-        
+    
         InputMultiplexer inputMultiplexer = new InputMultiplexer(stage, this);
         Gdx.input.setInputProcessor(inputMultiplexer);
-        
+    
         camera = new OrthographicCamera();
         viewport = new FitViewport(1024, 576, camera);
-        
+    
         entityController.clear();
         BallTestEntity ballTestEntity = new BallTestEntity();
         ballTestEntity.moveCamera = true;
         entityController.add(ballTestEntity);
-        
+    
         for (int i = 0; i < 10; i++) {
             ballTestEntity = new BallTestEntity();
             ballTestEntity.setPosition(MathUtils.random(viewport.getWorldWidth()), MathUtils.random(viewport.getWorldHeight()));
