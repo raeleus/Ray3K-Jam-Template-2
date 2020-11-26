@@ -90,7 +90,7 @@ project(":html") {
         api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10"
         api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10:sources"
         implementation 'com.github.raeleus:stripe:master-SNAPSHOT:sources'
-        implementation 'com.github.tommyettinger:jbump:659fea75c3:sources'
+        implementation 'com.github.tommyettinger:jbump:v1.0.0:sources'
     }
 }
 
@@ -100,7 +100,7 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api 'com.rafaskoberg.gdx:typing-label:1.2.0'
-        api 'space.earlygrey:shapedrawer:2.3.0'
+        api 'space.earlygrey:shapedrawer:2.4.0'
         api 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         api 'com.esotericsoftware.spine:spine-libgdx:3.8.55.1'
         api 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
@@ -108,6 +108,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api 'com.github.raeleus:stripe:master-SNAPSHOT'
-        implementation 'com.github.tommyettinger:jbump:659fea75c3'
+        implementation 'com.github.tommyettinger:jbump:v1.0.0'
     }
 }
