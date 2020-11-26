@@ -132,7 +132,7 @@ public class ListUpdater {
         var subTypes = new Array<TypeSpec>();
         for (var resource : resources) {
             methodSpecBuilder.addStatement("$L = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()));
-    
+            
             if (resource.type.equals(SkeletonData.class)) {
                 methodSpecBuilder.addStatement("$LAnimationData = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()) + "-animation");
                 
@@ -140,7 +140,7 @@ public class ListUpdater {
                 name = upperCaseFirstLetter(name) + "Animation";
                 var typeSpecBuilder = TypeSpec.classBuilder(name)
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
-        
+                
                 SkeletonJson skeletonJson = new SkeletonJson(lameDuckAttachmentLoader);
                 var skeletonData = skeletonJson.readSkeletonData(resource.file);
                 for (var animation : skeletonData.getAnimations()) {
@@ -149,18 +149,18 @@ public class ListUpdater {
                     
                     methodSpecBuilder.addStatement("$L.$L = $L.findAnimation($S)", name, variableName, resource.variableName, animation.getName());
                 }
-        
+                
                 subTypes.add(typeSpecBuilder.build());
             }
         }
         var methodSpec = methodSpecBuilder.build();
-    
+        
         var typeSpecBuilder = TypeSpec.classBuilder("Resources")
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(methodSpec);
         for (var resource : resources) {
             typeSpecBuilder.addField(resource.type, resource.variableName, Modifier.PUBLIC, Modifier.STATIC);
-    
+            
             if (resource.type.equals(SkeletonData.class)) {
                 typeSpecBuilder.addField(AnimationStateData.class, resource.variableName + "AnimationData", Modifier.PUBLIC, Modifier.STATIC);
             }
@@ -173,7 +173,7 @@ public class ListUpdater {
         var javaFile = JavaFile.builder("com.ray3k.template", typeSpec)
                 .indent("    ")
                 .build();
-    
+        
         try {
             Files.writeString(resourcesFile.toPath(), javaFile.toString());
         } catch (Exception e) {}
@@ -183,13 +183,13 @@ public class ListUpdater {
         Class type;
         FileHandle file;
         String variableName;
-    
+        
         public ResourceDescriptor(Class type, FileHandle file) {
             this.type = type;
             this.file = file;
             variableName = sanitizeResourceName(file.pathWithoutExtension());
         }
-    
+        
         public ResourceDescriptor(Class type, FileHandle file, String variableName) {
             this.type = type;
             this.file = file;
@@ -219,7 +219,7 @@ public class ListUpdater {
         name = name.replaceAll("^[./]*", "").replaceAll("[\\\\/\\-\\s]", "_").replaceAll("['\"]", "");
         var splits = name.split("_");
         var builder = new StringBuilder(splits[0]);
-        for (int i = 1; i < splits.length - 1; i++) {
+        for (int i = 1; i < splits.length; i++) {
             var split = splits[i];
             builder.append(Character.toUpperCase(split.charAt(0)));
             builder.append(split.substring(1));
@@ -242,29 +242,29 @@ public class ListUpdater {
                                                     String path) {
             return new RegionAttachment(name);
         }
-    
+        
         @Override
         public MeshAttachment newMeshAttachment(com.esotericsoftware.spine.Skin skin, String name,
                                                 String path) {
             return new MeshAttachment(name);
         }
-    
+        
         @Override
         public BoundingBoxAttachment newBoundingBoxAttachment(com.esotericsoftware.spine.Skin skin,
                                                               String name) {
             return new BoundingBoxAttachment(name);
         }
-    
+        
         @Override
         public ClippingAttachment newClippingAttachment(com.esotericsoftware.spine.Skin skin, String name) {
             return new ClippingAttachment(name);
         }
-    
+        
         @Override
         public PathAttachment newPathAttachment(com.esotericsoftware.spine.Skin skin, String name) {
             return new PathAttachment(name);
         }
-    
+        
         @Override
         public PointAttachment newPointAttachment(com.esotericsoftware.spine.Skin skin, String name) {
             return new PointAttachment(name);
