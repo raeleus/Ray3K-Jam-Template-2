@@ -1,4 +1,4 @@
-package com.ray3k.template.desktop;
+package com.ray3k.template.listupdater;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
