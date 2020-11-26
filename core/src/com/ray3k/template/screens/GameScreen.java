@@ -36,7 +36,7 @@ public class GameScreen extends JamScreen {
     
         gameScreen = this;
         vfxEffect = new GlitchEffect();
-//        vfxManager.addEffect(vfxEffect);
+        vfxManager.addEffect(vfxEffect);
         BG_COLOR.set(Color.PINK);
     
         paused = false;
