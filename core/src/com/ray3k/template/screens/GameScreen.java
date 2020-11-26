@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.crashinvaders.vfx.effects.ChainVfxEffect;
@@ -29,6 +32,7 @@ public class GameScreen extends JamScreen {
     public ShapeDrawer shapeDrawer;
     public boolean paused;
     private ChainVfxEffect vfxEffect;
+    private Label fpsLabel;
     
     @Override
     public void show() {
@@ -42,6 +46,16 @@ public class GameScreen extends JamScreen {
         paused = false;
     
         stage = new Stage(new ScreenViewport(), batch);
+        
+        var root = new Table();
+        root.setFillParent(true);
+        root.align(Align.bottomLeft);
+        root.pad(10);
+        stage.addActor(root);
+        
+        fpsLabel = new Label("test", skin);
+        root.add(fpsLabel);
+        
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -101,6 +115,8 @@ public class GameScreen extends JamScreen {
         if (isBindingJustPressed(Binding.UP)) {
             System.out.println("up");
         }
+        
+        fpsLabel.setText(Gdx.graphics.getFramesPerSecond());
     }
     
     @Override
