@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.dongbat.jbump.Collisions;
 import com.dongbat.jbump.Rect;
 import com.ray3k.template.*;
 import com.ray3k.template.screens.*;
@@ -83,6 +84,11 @@ public class BallTestEntity extends Entity {
     
     @Override
     public void destroy() {
+    
+    }
+    
+    @Override
+    public void collision(Collisions collisions) {
     
     }
 }
