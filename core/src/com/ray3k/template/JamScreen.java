@@ -137,8 +137,8 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
     }
     
     @Override
-    public boolean scrolled(int amount) {
-        scrollJustPressed.add(amount);
+    public boolean scrolled(float amountX, float amountY) {
+        scrollJustPressed.add((int) amountY);
         return false;
     }
     

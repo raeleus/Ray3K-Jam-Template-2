@@ -327,8 +327,8 @@ public class DialogEditKeyBindings extends Dialog {
                 }
                 
                 @Override
-                public boolean scrolled(InputEvent event, float x, float y, int amount) {
-                    fire(new ScrollBindingEvent(amount));
+                public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                    fire(new ScrollBindingEvent((int) amountY));
                     hide();
                     return true;
                 }
