@@ -48,14 +48,14 @@ public abstract class Entity {
     
     public void setMotion(float speed, float direction) {
         temp1.set(speed, 0);
-        temp1.rotate(direction);
+        temp1.rotateDeg(direction);
         deltaX = temp1.x;
         deltaY = temp1.y;
     }
     
     public void addMotion(float speed, float direction) {
         temp1.set(speed, 0);
-        temp1.rotate(direction);
+        temp1.rotateDeg(direction);
         deltaX += temp1.x;
         deltaY += temp1.y;
     }
@@ -63,13 +63,13 @@ public abstract class Entity {
     public void moveTowards(float speed, float x, float y) {
         temp1.set(x, y);
         temp1.sub(this.x, this.y);
-        setMotion(speed, temp1.angle());
+        setMotion(speed, temp1.angleDeg());
     }
     
     public void moveTowards(float speed, float x, float y, float delta) {
         temp1.set(x, y);
         temp1.sub(this.x, this.y);
-        setMotion(Math.min(speed, temp1.len() / delta), temp1.angle());
+        setMotion(Math.min(speed, temp1.len() / delta), temp1.angleDeg());
     }
     
     public void setPosition(float x, float y) {
@@ -88,7 +88,7 @@ public abstract class Entity {
     
     public float getDirection() {
         temp1.set(deltaX, deltaY);
-        return temp1.angle();
+        return temp1.angleDeg();
     }
     
     public void setDirection(float direction) {
@@ -97,7 +97,7 @@ public abstract class Entity {
     
     public float getGravityDirection() {
         temp1.set(gravityX, gravityY);
-        return temp1.angle();
+        return temp1.angleDeg();
     }
     
     public float getGravitySpeed() {
@@ -107,14 +107,14 @@ public abstract class Entity {
     
     public void setGravity(float speed, float direction) {
         temp1.set(speed, 0);
-        temp1.rotate(direction);
+        temp1.rotateDeg(direction);
         gravityX = temp1.x;
         gravityY = temp1.y;
     }
     
     public void addGravity(float speed, float direction) {
         temp1.set(speed, 0);
-        temp1.rotate(direction);
+        temp1.rotateDeg(direction);
         gravityX += temp1.x;
         gravityY += temp1.y;
     }

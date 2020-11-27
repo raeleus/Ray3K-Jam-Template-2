@@ -56,7 +56,7 @@ public class TransitionBlinds implements Transition {
     public void draw(Batch batch, float delta) {
         float distance = Utils.rectLongestDiagonal(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         vector2.set(distance / 2, 0);
-        vector2.rotate(toDirection + 180);
+        vector2.rotateDeg(toDirection + 180);
         float startX = Gdx.graphics.getWidth() / 2 + vector2.x;
         float startY = Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2;
 
@@ -78,7 +78,7 @@ public class TransitionBlinds implements Transition {
         shapeRenderer.begin(ShapeType.Filled);
         shapeRenderer.setProjectionMatrix(te.viewport.getCamera().combined);
         vector2.set(distance / blindsNumber, 0);
-        vector2.rotate(toDirection);
+        vector2.rotateDeg(toDirection);
         for (int i = 0; i < blindsNumber; i++) {
             Utils.rotatedRectangle(startX + vector2.x * i,
                     startY + vector2.y * i,

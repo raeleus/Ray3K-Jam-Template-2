@@ -57,7 +57,7 @@ public class TransitionPush implements Transition {
         float distance = Utils.pointDistance(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, temp3.x, temp3.y) * 2;
         
         screenPosition.set(distance * interpolation.apply((te.time + delta) / te.duration), 0);
-        screenPosition.rotate(toDirection);
+        screenPosition.rotateDeg(toDirection);
 
         Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -69,7 +69,7 @@ public class TransitionPush implements Transition {
         batch.draw(te.textureRegion, screenPosition.x, screenPosition.y);
 
         nextScreenPosition.set(distance * interpolation.apply((te.time + delta) / te.duration ) - distance, 0);
-        nextScreenPosition.rotate(toDirection);
+        nextScreenPosition.rotateDeg(toDirection);
 
         te.textureRegion.setRegion(new TextureRegion(te.nextFrameBuffer.getFbo().getColorBufferTexture()));
         te.textureRegion.flip(false, true);

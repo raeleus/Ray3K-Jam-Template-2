@@ -55,7 +55,7 @@ public class TransitionWipe implements Transition {
     public void draw(Batch batch, float delta) {
         float distance = Utils.rectLongestDiagonal(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         vector2.set(distance / 2, 0);
-        vector2.rotate(toDirection + 180);
+        vector2.rotateDeg(toDirection + 180);
         Utils.rotatedRectangle(Gdx.graphics.getWidth() / 2 + vector2.x, Gdx.graphics.getHeight() / 2 + vector2.y - distance / 2, distance * interpolation.apply((te.time + delta) / te.duration), distance, toDirection, 0, distance / 2, polygon);
 
         te.textureRegion.setRegion(new TextureRegion(te.frameBuffer.getFbo().getColorBufferTexture()));

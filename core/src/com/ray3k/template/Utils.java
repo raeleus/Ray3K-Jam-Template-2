@@ -196,7 +196,7 @@ public class Utils {
     public static float pointDirection(float x1, float y1, float x2, float y2) {
         vector2.set(x2, y2);
         vector2.sub(x1, y1);
-        return vector2.angle();
+        return vector2.angleDeg();
     }
     
     public static float approach(float start, float target, float increment) {
@@ -234,7 +234,7 @@ public class Utils {
         rectToBoundingBox(rectangle, bboxTemp);
         
         vector2.set(1,0);
-        vector2.rotate(direction);
+        vector2.rotateDeg(direction);
         
         rayTemp.set(x, y, 0, vector2.x, vector2.y, 0);
         return Intersector.intersectRayBounds(rayTemp, bboxTemp, intersection);
@@ -242,7 +242,7 @@ public class Utils {
     
     public static boolean rayIntersectRectangle(float x, float y, float direction, Rectangle rectangle, Vector3 intersection) {
         vector2.set(1,0);
-        vector2.rotate(direction);
+        vector2.rotateDeg(direction);
         rayTemp.set(x, y, 0, vector2.x, vector2.y, 0);
         
         rectToBoundingBox(rectangle.x, rectangle.y, 0, rectangle.height, bboxTemp);

@@ -61,7 +61,7 @@ public class TransitionSlide implements Transition {
         batch.draw(te.textureRegion, 0, 0);
 
         nextScreenPosition.set(distance * interpolation.apply((te.time + delta) / te.duration ) - distance, 0);
-        nextScreenPosition.rotate(toDirection);
+        nextScreenPosition.rotateDeg(toDirection);
 
         te.textureRegion.setRegion(new TextureRegion(te.nextFrameBuffer.getFbo().getColorBufferTexture()));
         te.textureRegion.flip(false, true);
