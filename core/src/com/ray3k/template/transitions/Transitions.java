@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 
 public class Transitions {
+    public static TransitionInstant instant() {
+        return new TransitionInstant();
+    }
+    
     public static TransitionCrossFade crossFade(Interpolation interpolation) {
         return new TransitionCrossFade(interpolation);
     }
