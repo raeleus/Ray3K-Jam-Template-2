@@ -112,7 +112,6 @@ public class GameScreen extends JamScreen {
         vfxFrameBuffer = new VfxFrameBuffer(Format.RGB888);
         vfxFrameBuffer.initialize(WORLD_WIDTH, WORLD_HEIGHT);
         vfxManager.resize(WORLD_WIDTH, WORLD_HEIGHT);
-        stage.getViewport().update(WORLD_WIDTH, WORLD_HEIGHT, true);
     }
     
     @Override
@@ -135,8 +134,7 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void draw(float delta) {
-        batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        
+        batch.setColor(Color.WHITE);
         batch.begin();
         vfxManager.cleanUpBuffers();
         vfxManager.beginInputCapture();
@@ -154,12 +152,7 @@ public class GameScreen extends JamScreen {
         vfxManager.endInputCapture();
         vfxManager.applyEffects();
         vfxManager.renderToFbo(vfxFrameBuffer);
-        
-        vfxFrameBuffer.begin();
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        stage.draw();
-        vfxFrameBuffer.end();
-        
+
         batch.begin();
         viewport.apply();
         batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -169,12 +162,18 @@ public class GameScreen extends JamScreen {
         region.flip(false, true);
         batch.draw(region, 0, 0);
         batch.end();
+        batch.disableBlending();
+        
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        stage.getViewport().apply();
+        stage.draw();
     }
     
     @Override
     public void resize(int width, int height) {
         if (width + height != 0) {
             viewport.update(width, height, true);
+            stage.getViewport().update(width, height, true);
         }
     }
     
