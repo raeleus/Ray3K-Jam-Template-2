@@ -2,6 +2,7 @@ package com.ray3k.template.entities;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.dongbat.jbump.Collisions;
+import com.dongbat.jbump.Response.Result;
 
 import static com.ray3k.template.JamGame.*;
 
@@ -38,6 +39,11 @@ public class ParticleEntity extends Entity {
     @Override
     public void destroy() {
         particleEffect.dispose();
+    }
+    
+    @Override
+    public void projectedCollision(Result result) {
+    
     }
     
     @Override

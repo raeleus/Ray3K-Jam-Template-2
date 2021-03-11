@@ -62,7 +62,9 @@ public class EntityController implements Disposable {
             }
             
             if (entity.item != null && world.hasItem(entity.item)) {
-                var result = world.move(entity.item, entity.x + entity.bboxX, entity.y + entity.bboxY, entity.collisionFilter);
+                var result = world.check(entity.item, entity.x + entity.bboxX, entity.y + entity.bboxY, entity.collisionFilter);
+                entity.projectedCollision(result);
+                world.update(entity.item, result.goalX, result.goalY);
                 for (int i = 0; i < result.projectedCollisions.size(); i++) {
                     var collision = result.projectedCollisions.get(i);
                     entity.collisions.add(collision);

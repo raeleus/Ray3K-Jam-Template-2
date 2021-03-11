@@ -40,6 +40,7 @@ public abstract class Entity {
     public abstract void act(float delta);
     public abstract void draw(float delta);
     public abstract void destroy();
+    public abstract void projectedCollision(Result result);
     public abstract void collision(Collisions collisions);
     
     public Entity() {

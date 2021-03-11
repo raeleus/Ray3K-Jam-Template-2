@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dongbat.jbump.Collisions;
 import com.dongbat.jbump.Rect;
+import com.dongbat.jbump.Response.Result;
 import com.ray3k.template.*;
 import com.ray3k.template.screens.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -84,6 +85,11 @@ public class BallTestEntity extends Entity {
     
     @Override
     public void destroy() {
+    
+    }
+    
+    @Override
+    public void projectedCollision(Result result) {
     
     }
     
