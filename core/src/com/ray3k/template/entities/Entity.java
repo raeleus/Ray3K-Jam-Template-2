@@ -150,4 +150,28 @@ public abstract class Entity {
     public boolean isOutside(float left, float bottom, float width, float height, float border) {
         return x < left - border || x > left + width + border || y < bottom - border || y > bottom + height + border;
     }
+    
+    public float getCollisionBoxLeft() {
+        return x + bboxX;
+    }
+    
+    public float getCollisionBoxRight() {
+        return x + bboxX + bboxWidth;
+    }
+    
+    public float getCollisionBoxBottom() {
+        return y + bboxY;
+    }
+    
+    public float getCollisionBoxTop() {
+        return y + bboxY + bboxHeight;
+    }
+    
+    public float getCollisionBoxCenterX() {
+        return x + bboxX + bboxWidth / 2;
+    }
+    
+    public float getCollisionBoxCenterY() {
+        return y + bboxY + bboxHeight / 2;
+    }
 }
