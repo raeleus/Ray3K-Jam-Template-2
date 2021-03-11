@@ -33,7 +33,7 @@ public abstract class Entity {
     public float gravityX;
     public float gravityY;
     public boolean visible;
-    public int depth;
+    public float depth;
     
     public abstract void create();
     public abstract void actBefore(float delta);
