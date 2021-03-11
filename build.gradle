@@ -89,7 +89,7 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
         api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10"
         api "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10:sources"
-        implementation 'com.github.raeleus:stripe:master-SNAPSHOT:sources'
+        api 'com.github.raeleus:stripe:master-SNAPSHOT:sources'
         implementation 'com.github.tommyettinger:jbump:v1.0.0:sources'
     }
 }
