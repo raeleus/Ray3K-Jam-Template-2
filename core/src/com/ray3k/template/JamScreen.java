@@ -410,7 +410,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         if (keyBindings.containsKey(binding)) {
             return isKeyPressed(keyBindings.get(binding, Input.Keys.ANY_KEY));
         } else if (buttonBindings.containsKey(binding)) {
-            return isButtonPressed(keyBindings.get(binding, ANY_BUTTON));
+            return isButtonPressed(buttonBindings.get(binding, ANY_BUTTON));
         } else if (controllerButtonBindings.containsKey(binding)) {
             return isControllerButtonPressed(controllerButtonBindings.get(binding));
         } else if (controllerAxisBindings.containsKey(binding)) {
@@ -471,7 +471,7 @@ public abstract class JamScreen extends ScreenAdapter implements InputProcessor,
         if (keyBindings.containsKey(binding)) {
             return isKeyJustPressed(keyBindings.get(binding, Input.Keys.ANY_KEY));
         } else if (buttonBindings.containsKey(binding)) {
-            return isButtonJustPressed(keyBindings.get(binding, ANY_BUTTON));
+            return isButtonJustPressed(buttonBindings.get(binding, ANY_BUTTON));
         } else if (scrollBindings.containsKey(binding)) {
             return isScrollJustPressed(scrollBindings.get(binding, ANY_SCROLL));
         } else if (controllerButtonBindings.containsKey(binding)) {
