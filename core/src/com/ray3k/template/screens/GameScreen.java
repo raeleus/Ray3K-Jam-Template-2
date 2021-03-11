@@ -134,6 +134,7 @@ public class GameScreen extends JamScreen {
     
     @Override
     public void draw(float delta) {
+        batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
         batch.setColor(Color.WHITE);
         batch.begin();
         vfxManager.cleanUpBuffers();
