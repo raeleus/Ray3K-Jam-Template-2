@@ -39,6 +39,7 @@ public class MenuScreen extends JamScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.input.setInputProcessor(null);
+                bgm.stop();
                 core.transition(new GameScreen());
             }
         });
