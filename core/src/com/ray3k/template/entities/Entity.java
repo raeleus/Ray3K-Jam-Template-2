@@ -147,6 +147,24 @@ public abstract class Entity {
         }
     }
     
+    public void setCollisionBox(SkeletonBounds skeletonBounds, CollisionFilter collisionFilter) {
+        float minX = 0;
+        float minY = 0;
+        float maxX = 0;
+        float maxY = 0;
+        for (var bbox : skeletonBounds.getBoundingBoxes()) {
+            var verts = bbox.getVertices();
+            for (int i = 0; i < verts.length; i += 2) {
+                if (verts[i] < minX) minX = verts[i];
+                if (verts[i] > maxX) maxX = verts[i];
+                if (verts[i+1] < minY) minY = verts[i+1];
+                if (verts[i+1] > maxY) maxY = verts[i+1];
+            }
+        }
+        System.out.println(minX + " " + maxX);
+        setCollisionBox(minX, minY, maxX - minX, maxY - minY, collisionFilter);
+    }
+    
     public boolean isOutside(float left, float bottom, float width, float height, float border) {
         return x < left - border || x > left + width + border || y < bottom - border || y > bottom + height + border;
     }
