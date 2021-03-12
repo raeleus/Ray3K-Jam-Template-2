@@ -13,12 +13,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.esotericsoftware.spine.*;
+import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.Event;
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.Resources.*;
 import static com.ray3k.template.Resources.Ray3kSpine.*;
 
 public class LogoScreen extends JamScreen {
@@ -37,7 +38,7 @@ public class LogoScreen extends JamScreen {
         Skeleton skeleton = new Skeleton(skeletonData);
         AnimationState animationState = new AnimationState(animationData);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
-        spineDrawable.getAnimationState().setAnimation(0, stand, false);
+        spineDrawable.getAnimationState().setAnimation(0, standAnimation, false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
         spineDrawables.add(spineDrawable);
         
@@ -52,12 +53,12 @@ public class LogoScreen extends JamScreen {
         image.setScaling(Scaling.fit);
         root.add(image).grow();
     
-        spineDrawable.getAnimationState().setAnimation(0, animation, false);
+        spineDrawable.getAnimationState().setAnimation(0, animationAnimation, false);
         
         spineDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
-                if (entry.getAnimation() == animation) {
+                if (entry.getAnimation() == animationAnimation) {
                     core.transition(new MenuScreen());
                 }
             }

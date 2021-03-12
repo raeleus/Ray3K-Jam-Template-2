@@ -38,7 +38,7 @@ public class LibgdxScreen extends JamScreen {
         Skeleton skeleton = new Skeleton(skeletonData);
         AnimationState animationState = new AnimationState(animationData);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
-        spineDrawable.getAnimationState().setAnimation(0, stand, false);
+        spineDrawable.getAnimationState().setAnimation(0, standAnimation, false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
         spineDrawables.add(spineDrawable);
         
@@ -52,12 +52,12 @@ public class LibgdxScreen extends JamScreen {
         Image image = new Image(spineDrawable);
         image.setScaling(Scaling.fit);
         root.add(image).grow();
-        spineDrawable.getAnimationState().setAnimation(0, animation, false);
+        spineDrawable.getAnimationState().setAnimation(0, animationAnimation, false);
     
         spineDrawable.getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
             @Override
             public void complete(AnimationState.TrackEntry entry) {
-                if (entry.getAnimation() == animation) {
+                if (entry.getAnimation() == animationAnimation) {
                     core.transition(new LogoScreen());
                 }
             }
