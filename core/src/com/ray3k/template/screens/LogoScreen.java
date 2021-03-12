@@ -19,7 +19,7 @@ import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
 import static com.ray3k.template.Resources.*;
-import static com.ray3k.template.Resources.Ray3kAnimation.*;
+import static com.ray3k.template.Resources.Ray3kSpine.*;
 
 public class LogoScreen extends JamScreen {
     private Stage stage;
@@ -34,8 +34,8 @@ public class LogoScreen extends JamScreen {
         spineDrawables = new Array<>();
         sounds = new ObjectSet<>();
     
-        Skeleton skeleton = new Skeleton(spine_ray3k);
-        AnimationState animationState = new AnimationState(spine_ray3kAnimationData);
+        Skeleton skeleton = new Skeleton(skeletonData);
+        AnimationState animationState = new AnimationState(animationData);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
         spineDrawable.getAnimationState().setAnimation(0, stand, false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());

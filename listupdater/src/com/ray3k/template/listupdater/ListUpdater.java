@@ -131,15 +131,17 @@ public class ListUpdater {
                 .addParameter(AssetManager.class, "assetManager");
         var subTypes = new Array<TypeSpec>();
         for (var resource : resources) {
-            methodSpecBuilder.addStatement("$L = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()));
-            
             if (resource.type.equals(SkeletonData.class)) {
-                methodSpecBuilder.addStatement("$LAnimationData = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()) + "-animation");
-                
                 var name = sanitizeVariableName(resource.file.nameWithoutExtension());
-                name = upperCaseFirstLetter(name) + "Animation";
+                name = upperCaseFirstLetter(name) + "Spine";
+                methodSpecBuilder.addStatement("$L.skeletonData = assetManager.get($S)", name, sanitizePath(resource.file.path()));
+                methodSpecBuilder.addStatement("$L.animationData = assetManager.get($S)", name, sanitizePath(resource.file.path()) + "-animation");
+                
                 var typeSpecBuilder = TypeSpec.classBuilder(name)
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+    
+                typeSpecBuilder.addField(SkeletonData.class, "skeletonData", Modifier.PUBLIC, Modifier.STATIC);
+                typeSpecBuilder.addField(AnimationStateData.class, "animationData", Modifier.PUBLIC, Modifier.STATIC);
                 
                 SkeletonJson skeletonJson = new SkeletonJson(lameDuckAttachmentLoader);
                 var skeletonData = skeletonJson.readSkeletonData(resource.file);
@@ -147,10 +149,12 @@ public class ListUpdater {
                     var variableName = sanitizeVariableName(animation.getName());
                     typeSpecBuilder.addField(Animation.class, variableName, Modifier.PUBLIC, Modifier.STATIC);
                     
-                    methodSpecBuilder.addStatement("$L.$L = $L.findAnimation($S)", name, variableName, resource.variableName, animation.getName());
+                    methodSpecBuilder.addStatement("$L.$L = $L.skeletonData.findAnimation($S)", name, variableName, name, animation.getName());
                 }
                 
                 subTypes.add(typeSpecBuilder.build());
+            } else {
+                methodSpecBuilder.addStatement("$L = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()));
             }
         }
         var methodSpec = methodSpecBuilder.build();
@@ -159,11 +163,7 @@ public class ListUpdater {
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(methodSpec);
         for (var resource : resources) {
-            typeSpecBuilder.addField(resource.type, resource.variableName, Modifier.PUBLIC, Modifier.STATIC);
-            
-            if (resource.type.equals(SkeletonData.class)) {
-                typeSpecBuilder.addField(AnimationStateData.class, resource.variableName + "AnimationData", Modifier.PUBLIC, Modifier.STATIC);
-            }
+            if (!resource.type.equals(SkeletonData.class)) typeSpecBuilder.addField(resource.type, resource.variableName, Modifier.PUBLIC, Modifier.STATIC);
         }
         for (var subType : subTypes) {
             typeSpecBuilder.addType(subType);

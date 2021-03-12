@@ -12,14 +12,6 @@ import com.esotericsoftware.spine.SkeletonData;
 public class Resources {
     public static Skin skin_skin;
 
-    public static SkeletonData spine_libgdx;
-
-    public static AnimationStateData spine_libgdxAnimationData;
-
-    public static SkeletonData spine_ray3k;
-
-    public static AnimationStateData spine_ray3kAnimationData;
-
     public static TextureAtlas textures_textures;
 
     public static Sound sfx_ahh;
@@ -42,14 +34,14 @@ public class Resources {
 
     public static void loadResources(AssetManager assetManager) {
         skin_skin = assetManager.get("skin/skin.json");
-        spine_libgdx = assetManager.get("spine/libgdx.json");
-        spine_libgdxAnimationData = assetManager.get("spine/libgdx.json-animation");
-        LibgdxAnimation.animation = spine_libgdx.findAnimation("animation");
-        LibgdxAnimation.stand = spine_libgdx.findAnimation("stand");
-        spine_ray3k = assetManager.get("spine/ray3k.json");
-        spine_ray3kAnimationData = assetManager.get("spine/ray3k.json-animation");
-        Ray3kAnimation.animation = spine_ray3k.findAnimation("animation");
-        Ray3kAnimation.stand = spine_ray3k.findAnimation("stand");
+        LibgdxSpine.skeletonData = assetManager.get("spine/libgdx.json");
+        LibgdxSpine.animationData = assetManager.get("spine/libgdx.json-animation");
+        LibgdxSpine.animation = LibgdxSpine.skeletonData.findAnimation("animation");
+        LibgdxSpine.stand = LibgdxSpine.skeletonData.findAnimation("stand");
+        Ray3kSpine.skeletonData = assetManager.get("spine/ray3k.json");
+        Ray3kSpine.animationData = assetManager.get("spine/ray3k.json-animation");
+        Ray3kSpine.animation = Ray3kSpine.skeletonData.findAnimation("animation");
+        Ray3kSpine.stand = Ray3kSpine.skeletonData.findAnimation("stand");
         textures_textures = assetManager.get("textures/textures.atlas");
         sfx_ahh = assetManager.get("sfx/ahh.mp3");
         sfx_click = assetManager.get("sfx/click.mp3");
@@ -62,13 +54,21 @@ public class Resources {
         bgm_menu = assetManager.get("bgm/menu.mp3");
     }
 
-    public static class LibgdxAnimation {
+    public static class LibgdxSpine {
+        public static SkeletonData skeletonData;
+
+        public static AnimationStateData animationData;
+
         public static Animation animation;
 
         public static Animation stand;
     }
 
-    public static class Ray3kAnimation {
+    public static class Ray3kSpine {
+        public static SkeletonData skeletonData;
+
+        public static AnimationStateData animationData;
+
         public static Animation animation;
 
         public static Animation stand;

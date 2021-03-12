@@ -13,13 +13,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.esotericsoftware.spine.*;
+import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.Event;
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.Resources.*;
-import static com.ray3k.template.Resources.LibgdxAnimation.*;
+import static com.ray3k.template.Resources.LibgdxSpine.*;
 
 public class LibgdxScreen extends JamScreen {
     private Stage stage;
@@ -34,8 +35,8 @@ public class LibgdxScreen extends JamScreen {
         spineDrawables = new Array<>();
         sounds = new ObjectSet<>();
         
-        Skeleton skeleton = new Skeleton(spine_libgdx);
-        AnimationState animationState = new AnimationState(spine_libgdxAnimationData);
+        Skeleton skeleton = new Skeleton(skeletonData);
+        AnimationState animationState = new AnimationState(animationData);
         var spineDrawable = new SpineDrawable(skeletonRenderer, skeleton, animationState);
         spineDrawable.getAnimationState().setAnimation(0, stand, false);
         spineDrawable.getAnimationState().apply(spineDrawable.getSkeleton());
