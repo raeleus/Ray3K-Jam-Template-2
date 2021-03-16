@@ -33,5 +33,13 @@ task dist(type: Jar, dependsOn: classes) {
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    archiveFileName.set("${rootProject.appName}.jar")
     with jar
+}
+
+task distZip(type: Zip, dependsOn: dist) {
+    from '/build/libs/'
+    include '*.jar'
+    archiveFileName.set("${rootProject.appName}.zip")
+    destinationDirectory.set(file('/build/'))
 }
