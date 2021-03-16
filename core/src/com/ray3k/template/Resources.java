@@ -44,12 +44,6 @@ public class Resources {
         Ray3kSpine.animationAnimation = Ray3kSpine.skeletonData.findAnimation("animation");
         Ray3kSpine.standAnimation = Ray3kSpine.skeletonData.findAnimation("stand");
         Ray3kSpine.defaultSkin = Ray3kSpine.skeletonData.findSkin("default");
-        TesterSpine.skeletonData = assetManager.get("spine/tester.json");
-        TesterSpine.animationData = assetManager.get("spine/tester.json-animation");
-        TesterSpine.testAnimation = TesterSpine.skeletonData.findAnimation("test");
-        TesterSpine.test2Animation = TesterSpine.skeletonData.findAnimation("test2");
-        TesterSpine.toolsFuckSkin = TesterSpine.skeletonData.findSkin("tools/fuck");
-        TesterSpine.fuckersSkin = TesterSpine.skeletonData.findSkin("fuckers");
         textures_textures = assetManager.get("textures/textures.atlas");
         sfx_ahh = assetManager.get("sfx/ahh.mp3");
         sfx_click = assetManager.get("sfx/click.mp3");
@@ -84,19 +78,5 @@ public class Resources {
         public static Animation standAnimation;
 
         public static com.esotericsoftware.spine.Skin defaultSkin;
-    }
-
-    public static class TesterSpine {
-        public static SkeletonData skeletonData;
-
-        public static AnimationStateData animationData;
-
-        public static Animation testAnimation;
-
-        public static Animation test2Animation;
-
-        public static com.esotericsoftware.spine.Skin toolsFuckSkin;
-
-        public static com.esotericsoftware.spine.Skin fuckersSkin;
     }
 }
