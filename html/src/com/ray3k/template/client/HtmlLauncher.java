@@ -75,7 +75,7 @@ public class HtmlLauncher extends GwtApplication implements CrossPlatformWorker 
     
     @Override
     public Preloader.PreloaderCallback getPreloaderCallback() {
-        return createPreloaderPanel(GWT.getHostPageBaseURL() + "preloadlogo.png");
+        return createPreloaderPanel(GWT.getHostPageBaseURL() + "preloadlogo.gif");
     }
     
     @Override
