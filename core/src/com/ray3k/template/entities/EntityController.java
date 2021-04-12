@@ -18,7 +18,7 @@ public class EntityController implements Disposable {
         entities = new Array<>();
         sortedEntities = new Array<>();
         
-        depthComparator = (o1, o2) -> Float.compare(o1.depth, o2.depth);
+        depthComparator = (o1, o2) -> Float.compare(o2.depth, o1.depth);
     }
     
     public void add(Entity entity) {
