@@ -162,7 +162,7 @@ public abstract class Entity {
                 if (verts[i+1] > maxY) maxY = verts[i+1];
             }
         }
-        System.out.println(minX + " " + maxX);
+        
         setCollisionBox(minX, minY, maxX - minX, maxY - minY, collisionFilter);
     }
     
