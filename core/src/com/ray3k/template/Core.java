@@ -66,7 +66,7 @@ public class Core extends JamGame {
         sndChangeListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                sfx_click.play();
+                sfx_click.play(sfx);
             }
         };
         

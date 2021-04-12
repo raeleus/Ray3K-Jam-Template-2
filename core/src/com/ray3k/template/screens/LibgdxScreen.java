@@ -66,7 +66,7 @@ public class LibgdxScreen extends JamScreen {
             public void event(AnimationState.TrackEntry entry, Event event) {
                 if (event.getData().getAudioPath() != null && !event.getData().getAudioPath().equals("")) {
                     Sound sound = assetManager.get("sfx/" + event.getData().getAudioPath());
-                    sound.play();
+                    sound.play(sfx);
                     sounds.add(sound);
                 }
             }
