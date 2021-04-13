@@ -105,6 +105,11 @@ public class EntityController implements Disposable {
                     
                     skeletonRenderer.draw(batch, entity.skeleton);
                 }
+    
+                if (entity.collisionBoxDebugColor != null && shapeDrawer != null) {
+                    var rect = world.getRect(entity.item);
+                    if (rect != null) shapeDrawer.rectangle(rect.x, rect.y, rect.w, rect.h, entity.collisionBoxDebugColor, 1.0f);
+                }
                 
                 entity.draw(delta);
             }

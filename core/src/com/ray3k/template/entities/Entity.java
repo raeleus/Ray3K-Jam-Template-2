@@ -1,14 +1,12 @@
 package com.ray3k.template.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Collisions;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Response.Result;
 import com.esotericsoftware.spine.*;
-import com.ray3k.template.*;
-
-import java.lang.reflect.Array;
 
 import static com.ray3k.template.Core.*;
 
@@ -34,6 +32,7 @@ public abstract class Entity {
     public float gravityY;
     public boolean visible;
     public float depth;
+    public Color collisionBoxDebugColor;
     
     public abstract void create();
     public abstract void actBefore(float delta);
