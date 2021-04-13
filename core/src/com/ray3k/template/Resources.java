@@ -37,13 +37,13 @@ public class Resources {
         LibgdxSpine.skeletonData = assetManager.get("spine/libgdx.json");
         LibgdxSpine.animationData = assetManager.get("spine/libgdx.json-animation");
         LibgdxSpine.animationAnimation = LibgdxSpine.skeletonData.findAnimation("animation");
-        LibgdxSpine.standAnimation = LibgdxSpine.skeletonData.findAnimation("stand");
-        LibgdxSpine.defaultSkin = LibgdxSpine.skeletonData.findSkin("default");
+        LibgdxSpine.animationStand = LibgdxSpine.skeletonData.findAnimation("stand");
+        LibgdxSpine.skinDefault = LibgdxSpine.skeletonData.findSkin("default");
         Ray3kSpine.skeletonData = assetManager.get("spine/ray3k.json");
         Ray3kSpine.animationData = assetManager.get("spine/ray3k.json-animation");
         Ray3kSpine.animationAnimation = Ray3kSpine.skeletonData.findAnimation("animation");
-        Ray3kSpine.standAnimation = Ray3kSpine.skeletonData.findAnimation("stand");
-        Ray3kSpine.defaultSkin = Ray3kSpine.skeletonData.findSkin("default");
+        Ray3kSpine.animationStand = Ray3kSpine.skeletonData.findAnimation("stand");
+        Ray3kSpine.skinDefault = Ray3kSpine.skeletonData.findSkin("default");
         textures_textures = assetManager.get("textures/textures.atlas");
         sfx_ahh = assetManager.get("sfx/ahh.mp3");
         sfx_click = assetManager.get("sfx/click.mp3");
@@ -63,9 +63,9 @@ public class Resources {
 
         public static Animation animationAnimation;
 
-        public static Animation standAnimation;
+        public static Animation animationStand;
 
-        public static com.esotericsoftware.spine.Skin defaultSkin;
+        public static com.esotericsoftware.spine.Skin skinDefault;
     }
 
     public static class Ray3kSpine {
@@ -75,8 +75,8 @@ public class Resources {
 
         public static Animation animationAnimation;
 
-        public static Animation standAnimation;
+        public static Animation animationStand;
 
-        public static com.esotericsoftware.spine.Skin defaultSkin;
+        public static com.esotericsoftware.spine.Skin skinDefault;
     }
 }

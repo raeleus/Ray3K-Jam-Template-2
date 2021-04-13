@@ -146,14 +146,14 @@ public class ListUpdater {
                 SkeletonJson skeletonJson = new SkeletonJson(lameDuckAttachmentLoader);
                 var skeletonData = skeletonJson.readSkeletonData(resource.file);
                 for (var animation : skeletonData.getAnimations()) {
-                    var variableName = sanitizeVariableName(animation.getName()) + "Animation";
+                    var variableName = "animation" + upperCaseFirstLetter(sanitizeVariableName(animation.getName()));
                     typeSpecBuilder.addField(Animation.class, variableName, Modifier.PUBLIC, Modifier.STATIC);
                     
                     methodSpecBuilder.addStatement("$L.$L = $L.skeletonData.findAnimation($S)", name, variableName, name, animation.getName());
                 }
                 
                 for (var skin : skeletonData.getSkins()) {
-                    var variableName = sanitizeVariableName(skin.getName()) + "Skin";
+                    var variableName = "skin" + upperCaseFirstLetter(sanitizeVariableName(skin.getName()));
                     typeSpecBuilder.addField(com.esotericsoftware.spine.Skin.class, variableName, Modifier.PUBLIC, Modifier.STATIC);
     
                     methodSpecBuilder.addStatement("$L.$L = $L.skeletonData.findSkin($S)", name, variableName, name, skin.getName());
