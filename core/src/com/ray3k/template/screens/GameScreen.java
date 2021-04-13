@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.crashinvaders.vfx.effects.ChainVfxEffect;
 import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
-import com.ray3k.template.Core.*;
 import com.ray3k.template.*;
 import com.ray3k.template.entities.*;
 import com.ray3k.template.screens.DialogPause.*;
@@ -33,7 +32,6 @@ public class GameScreen extends JamScreen {
     public static GameScreen gameScreen;
     public static final Color BG_COLOR = new Color();
     public Stage stage;
-    public static ShapeDrawer shapeDrawer;
     public boolean paused;
     private ChainVfxEffect vfxEffect;
     private Label fpsLabel;

@@ -11,6 +11,7 @@ import com.crashinvaders.vfx.VfxManager;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import com.ray3k.stripe.scenecomposer.SceneComposerStageBuilder;
 import com.ray3k.template.transitions.*;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static com.ray3k.template.transitions.Transitions.*;
 
@@ -27,6 +28,7 @@ public abstract class JamGame extends Game {
     public static ShapeRenderer shapeRenderer;
     public static VfxManager vfxManager;
     public static SceneComposerStageBuilder sceneBuilder;
+    public static ShapeDrawer shapeDrawer;
     
     @Override
     public void create() {
