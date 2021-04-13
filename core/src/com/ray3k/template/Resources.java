@@ -34,16 +34,16 @@ public class Resources {
 
     public static void loadResources(AssetManager assetManager) {
         skin_skin = assetManager.get("skin/skin.json");
-        LibgdxSpine.skeletonData = assetManager.get("spine/libgdx.json");
-        LibgdxSpine.animationData = assetManager.get("spine/libgdx.json-animation");
-        LibgdxSpine.animationAnimation = LibgdxSpine.skeletonData.findAnimation("animation");
-        LibgdxSpine.animationStand = LibgdxSpine.skeletonData.findAnimation("stand");
-        LibgdxSpine.skinDefault = LibgdxSpine.skeletonData.findSkin("default");
-        Ray3kSpine.skeletonData = assetManager.get("spine/ray3k.json");
-        Ray3kSpine.animationData = assetManager.get("spine/ray3k.json-animation");
-        Ray3kSpine.animationAnimation = Ray3kSpine.skeletonData.findAnimation("animation");
-        Ray3kSpine.animationStand = Ray3kSpine.skeletonData.findAnimation("stand");
-        Ray3kSpine.skinDefault = Ray3kSpine.skeletonData.findSkin("default");
+        SpineLibgdx.skeletonData = assetManager.get("spine/libgdx.json");
+        SpineLibgdx.animationData = assetManager.get("spine/libgdx.json-animation");
+        SpineLibgdx.animationAnimation = SpineLibgdx.skeletonData.findAnimation("animation");
+        SpineLibgdx.animationStand = SpineLibgdx.skeletonData.findAnimation("stand");
+        SpineLibgdx.skinDefault = SpineLibgdx.skeletonData.findSkin("default");
+        SpineRay3k.skeletonData = assetManager.get("spine/ray3k.json");
+        SpineRay3k.animationData = assetManager.get("spine/ray3k.json-animation");
+        SpineRay3k.animationAnimation = SpineRay3k.skeletonData.findAnimation("animation");
+        SpineRay3k.animationStand = SpineRay3k.skeletonData.findAnimation("stand");
+        SpineRay3k.skinDefault = SpineRay3k.skeletonData.findSkin("default");
         textures_textures = assetManager.get("textures/textures.atlas");
         sfx_ahh = assetManager.get("sfx/ahh.mp3");
         sfx_click = assetManager.get("sfx/click.mp3");
@@ -56,7 +56,7 @@ public class Resources {
         bgm_menu = assetManager.get("bgm/menu.mp3");
     }
 
-    public static class LibgdxSpine {
+    public static class SpineLibgdx {
         public static SkeletonData skeletonData;
 
         public static AnimationStateData animationData;
@@ -68,7 +68,7 @@ public class Resources {
         public static com.esotericsoftware.spine.Skin skinDefault;
     }
 
-    public static class Ray3kSpine {
+    public static class SpineRay3k {
         public static SkeletonData skeletonData;
 
         public static AnimationStateData animationData;

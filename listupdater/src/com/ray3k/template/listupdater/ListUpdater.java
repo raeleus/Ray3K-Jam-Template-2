@@ -133,7 +133,7 @@ public class ListUpdater {
         for (var resource : resources) {
             if (resource.type.equals(SkeletonData.class)) {
                 var name = sanitizeVariableName(resource.file.nameWithoutExtension());
-                name = upperCaseFirstLetter(name) + "Spine";
+                name = "Spine" + upperCaseFirstLetter(name);
                 methodSpecBuilder.addStatement("$L.skeletonData = assetManager.get($S)", name, sanitizePath(resource.file.path()));
                 methodSpecBuilder.addStatement("$L.animationData = assetManager.get($S)", name, sanitizePath(resource.file.path()) + "-animation");
                 

@@ -20,7 +20,7 @@ import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.Resources.LibgdxSpine.*;
+import static com.ray3k.template.Resources.SpineLibgdx.*;
 
 public class LibgdxScreen extends JamScreen {
     private Stage stage;

@@ -20,7 +20,7 @@ import com.esotericsoftware.spine.utils.SkeletonDrawable;
 import com.ray3k.template.*;
 
 import static com.ray3k.template.Core.*;
-import static com.ray3k.template.Resources.Ray3kSpine.*;
+import static com.ray3k.template.Resources.SpineRay3k.*;
 
 public class LogoScreen extends JamScreen {
     private Stage stage;
