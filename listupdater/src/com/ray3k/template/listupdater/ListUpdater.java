@@ -7,11 +7,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
 import com.esotericsoftware.spine.Animation;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import com.esotericsoftware.spine.attachments.*;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -38,7 +40,7 @@ public class ListUpdater {
         updated |= createList("sfx", "mp3", Paths.get("core/assets/sfx.txt").toFile(), Sound.class, resources);
         updated |= createList("bgm", "mp3", Paths.get("core/assets/bgm.txt").toFile(), Music.class, resources);
         
-        writeResources(resources, Paths.get("core/src/com/ray3k/template/Resources.java").toFile());
+        writeResources(resources, Paths.get("core/src/com/ray3k/template/Resources.java").toFile(), new FileHandle(Paths.get("core/assets/data").toFile()));
         
         if (updated) {
             System.out.println("Updated lists.");
@@ -125,7 +127,7 @@ public class ListUpdater {
         return sb.toString();
     }
     
-    private static void writeResources(Array<ResourceDescriptor> resources, File resourcesFile) {
+    private static void writeResources(Array<ResourceDescriptor> resources, File resourcesFile, FileHandle dataPath) {
         var methodSpecBuilder = MethodSpec.methodBuilder("loadResources")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(AssetManager.class, "assetManager");
@@ -164,6 +166,11 @@ public class ListUpdater {
                 methodSpecBuilder.addStatement("$L = assetManager.get($S)", resource.variableName, sanitizePath(resource.file.path()));
             }
         }
+        
+        for (var dataFile : dataPath.list()) {
+            subTypes.add(readEnum(dataFile));
+        }
+        
         var methodSpec = methodSpecBuilder.build();
         
         var typeSpecBuilder = TypeSpec.classBuilder("Resources")
@@ -276,5 +283,49 @@ public class ListUpdater {
         public PointAttachment newPointAttachment(com.esotericsoftware.spine.Skin skin, String name) {
             return new PointAttachment(name);
         }
+    }
+    
+    public static TypeSpec readEnum(FileHandle file) {
+        var typeSpecBuilder = TypeSpec.classBuilder(upperCaseFirstLetter(sanitizeVariableName(file.nameWithoutExtension())))
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        var jsonReader = new JsonReader();
+        var root = jsonReader.parse(file);
+        
+        var iter = root.iterator();
+        while (iter.hasNext()) {
+            var value = iter.next();
+            if (value.isBoolean()) {
+                var fieldSpec = FieldSpec.builder(Boolean.TYPE, sanitizeVariableName(value.name), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$L", value.asBoolean())
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+            } else if (value.isDouble()) {
+                var fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$Lf", value.asFloat())
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+            } else if (value.isLong()) {
+                var fieldSpec = FieldSpec.builder(Integer.TYPE, sanitizeVariableName(value.name), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$L", (int) value.asLong())
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+            } else if (value.isString()) {
+                var fieldSpec = FieldSpec.builder(String.class, sanitizeVariableName(value.name), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$S", value.asString())
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+            } else if (value.isArray()) {
+                var fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name + "Min"), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$Lf", value.asFloatArray()[0])
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+                fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name + "Max"), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$Lf", value.asFloatArray()[1])
+                        .build();
+                typeSpecBuilder.addField(fieldSpec);
+            }
+        }
+        
+        return typeSpecBuilder.build();
     }
 }

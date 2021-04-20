@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.spine.Animation;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
+import java.lang.String;
 
 public class Resources {
     public static Skin skin_skin;
@@ -78,5 +79,19 @@ public class Resources {
         public static Animation animationStand;
 
         public static com.esotericsoftware.spine.Skin skinDefault;
+    }
+
+    public static class Values {
+        public static float jumpVelocity = 10.0f;
+
+        public static String name = "Raeleus";
+
+        public static boolean godMode = true;
+
+        public static int id = 10;
+
+        public static float speedLimitMin = 0.0f;
+
+        public static float speedLimitMax = 10.0f;
     }
 }
