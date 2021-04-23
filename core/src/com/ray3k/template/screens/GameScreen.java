@@ -22,6 +22,7 @@ import com.crashinvaders.vfx.effects.ChainVfxEffect;
 import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
 import com.ray3k.template.*;
 import com.ray3k.template.entities.*;
+import com.ray3k.template.screens.DialogDebug.*;
 import com.ray3k.template.screens.DialogPause.*;
 import com.ray3k.template.vfx.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -85,6 +86,8 @@ public class GameScreen extends JamScreen {
                 return super.keyDown(event, keycode);
             }
         });
+        
+        stage.addListener(new DebugListener());
     
         shapeDrawer = new ShapeDrawer(batch, skin.getRegion("white"));
         shapeDrawer.setPixelSize(.5f);

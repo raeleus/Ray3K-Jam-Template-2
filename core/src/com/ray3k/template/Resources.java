@@ -90,8 +90,19 @@ public class Resources {
 
         public static int id = 10;
 
-        public static float speedLimitMin = 0.0f;
+        public static Range speedLimitRange = new Range(0.0f, 10.0f);
 
-        public static float speedLimitMax = 10.0f;
+        public static float speedLimit = 5.0f;
+    }
+
+    public static class Range {
+        public float min;
+
+        public float max;
+
+        Range(float min, float max) {
+            this.min = min;
+            this.max = max;
+        }
     }
 }

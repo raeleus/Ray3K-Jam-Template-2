@@ -13,10 +13,7 @@ import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import com.esotericsoftware.spine.attachments.*;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.io.File;
@@ -167,8 +164,20 @@ public class ListUpdater {
             }
         }
         
+        var rangeType = TypeSpec.classBuilder("Range")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addField(Float.TYPE, "min", Modifier.PUBLIC)
+                .addField(Float.TYPE, "max", Modifier.PUBLIC)
+                .addMethod(MethodSpec.constructorBuilder()
+                        .addParameter(Float.TYPE, "min")
+                        .addParameter(Float.TYPE, "max")
+                        .addStatement("this.min = min")
+                        .addStatement("this.max = max")
+                        .build())
+                .build();
+        
         for (var dataFile : dataPath.list()) {
-            subTypes.add(readEnum(dataFile));
+            subTypes.add(readDataFile(dataFile, rangeType));
         }
         
         var methodSpec = methodSpecBuilder.build();
@@ -182,6 +191,8 @@ public class ListUpdater {
         for (var subType : subTypes) {
             typeSpecBuilder.addType(subType);
         }
+        
+        typeSpecBuilder.addType(rangeType);
         var typeSpec = typeSpecBuilder.build();
         
         var javaFile = JavaFile.builder("com.ray3k.template", typeSpec)
@@ -285,7 +296,7 @@ public class ListUpdater {
         }
     }
     
-    public static TypeSpec readEnum(FileHandle file) {
+    public static TypeSpec readDataFile(FileHandle file, TypeSpec rangeType) {
         var typeSpecBuilder = TypeSpec.classBuilder(upperCaseFirstLetter(sanitizeVariableName(file.nameWithoutExtension())))
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         var jsonReader = new JsonReader();
@@ -315,12 +326,14 @@ public class ListUpdater {
                         .build();
                 typeSpecBuilder.addField(fieldSpec);
             } else if (value.isArray()) {
-                var fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name + "Min"), Modifier.PUBLIC, Modifier.STATIC)
-                        .initializer("$Lf", value.asFloatArray()[0])
+                var floats = value.asFloatArray();
+                var fieldSpec = FieldSpec.builder(TypeVariableName.get(rangeType.name), sanitizeVariableName(value.name + "Range"), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("new $N($Lf, $Lf)", rangeType, floats[0], floats[1])
                         .build();
                 typeSpecBuilder.addField(fieldSpec);
-                fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name + "Max"), Modifier.PUBLIC, Modifier.STATIC)
-                        .initializer("$Lf", value.asFloatArray()[1])
+    
+                fieldSpec = FieldSpec.builder(Float.TYPE, sanitizeVariableName(value.name), Modifier.PUBLIC, Modifier.STATIC)
+                        .initializer("$Lf", floats[2])
                         .build();
                 typeSpecBuilder.addField(fieldSpec);
             }
