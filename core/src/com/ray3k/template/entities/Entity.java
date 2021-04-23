@@ -147,14 +147,16 @@ public abstract class Entity {
         }
     }
     
-    public void setCollisionBox(SkeletonBounds skeletonBounds, CollisionFilter collisionFilter) {
-        float minX = 0;
-        float minY = 0;
+    private static float[] verts;
+    public void setCollisionBox(Slot slot, SkeletonBounds skeletonBounds, CollisionFilter collisionFilter) {
+        float minX = Float.MAX_VALUE;
+        float minY = Float.MAX_VALUE;
         float maxX = 0;
         float maxY = 0;
         for (var bbox : skeletonBounds.getBoundingBoxes()) {
-            var verts = bbox.getVertices();
-            for (int i = 0; i < verts.length; i += 2) {
+            if (verts == null || verts.length < bbox.getWorldVerticesLength()) verts = new float[bbox.getWorldVerticesLength()];
+            bbox.computeWorldVertices(slot, 0, bbox.getWorldVerticesLength(), verts, 0, 2);
+            for (int i = 0; i < bbox.getWorldVerticesLength(); i += 2) {
                 if (verts[i] < minX) minX = verts[i];
                 if (verts[i] > maxX) maxX = verts[i];
                 if (verts[i+1] < minY) minY = verts[i+1];
